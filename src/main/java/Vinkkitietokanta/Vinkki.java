@@ -8,7 +8,11 @@ package Vinkkitietokanta;
 /**
  *
  */
-public class Tietokanta implements TietokantaRajapinta{
-    public Tietokanta(){
+public class Vinkki {
+    String kirjoittaja;
+    String otsikko;
+    public Vinkki(String kirjoittaja, String otsikko){
+        this.kirjoittaja = kirjoittaja;
+        this.otsikko = otsikko;
     }
 }

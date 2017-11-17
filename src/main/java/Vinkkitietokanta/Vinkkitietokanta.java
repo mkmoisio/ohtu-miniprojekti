@@ -5,11 +5,36 @@
  */
 package Vinkkitietokanta;
 
+import java.util.List;
+
 /**
- *
+ * Tämä hoitaa tiedon muokkaamisen oikeanlaiseksi niin tietokannalle, kuin
+ * tietokannasta. Mietityttää hieman tarvitaanko tätä luokkaa edes.
  */
 public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
+    
     public Vinkkitietokanta(){
-        Tietokanta db = new Tietokanta();
     }
+
+    @Override
+    public boolean poistaKirja(String otsikko) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean lisaaKirja(String kirjoittaja, String otsikko) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<String> haeKaikkiString() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Vinkki> haeKaikki() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
 }

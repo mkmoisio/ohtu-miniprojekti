@@ -5,9 +5,16 @@
  */
 package Vinkkitietokanta;
 
+import java.util.List;
+
 /**
  *
  * 
  */
 public interface VinkkitietokantaRajapinta {
+    public boolean poistaKirja(String otsikko);
+    public boolean lisaaKirja(String kirjoittaja, String otsikko);
+    
+    public List<String> haeKaikkiString();
+    public List<Vinkki> haeKaikki();
 }
