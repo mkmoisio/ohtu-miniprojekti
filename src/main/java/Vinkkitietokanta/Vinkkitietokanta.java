@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Tämä hoitaa tiedon muokkaamisen oikeanlaiseksi niin tietokannalle, kuin
- * tietokannasta. Mietityttää hieman tarvitaanko tätä luokkaa edes.
+ * tietokannasta.
  */
 public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     
