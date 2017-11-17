@@ -1,5 +1,11 @@
+
+import Kayttoliittyma.Kayttoliittyma;
+import Vinkkitietokanta.Vinkkitietokanta;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello gradle!");
+        //Luo kayttoliittyma ja tietokantasovellus
+        Vinkkitietokanta tietokanta = new Vinkkitietokanta();
+        Kayttoliittyma UI = new Kayttoliittyma(tietokanta);
     }
 }
