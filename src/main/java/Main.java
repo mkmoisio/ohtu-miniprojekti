@@ -7,5 +7,7 @@ public class Main {
         //Luo kayttoliittyma ja tietokantasovellus
         Vinkkitietokanta tietokanta = new Vinkkitietokanta();
         Kayttoliittyma UI = new Kayttoliittyma(tietokanta);
+        
+        
     }
 }
