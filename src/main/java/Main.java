@@ -8,6 +8,6 @@ public class Main {
         Vinkkitietokanta tietokanta = new Vinkkitietokanta();
         Kayttoliittyma UI = new Kayttoliittyma(tietokanta);
         
-        
+        UI.suorita();
     }
 }

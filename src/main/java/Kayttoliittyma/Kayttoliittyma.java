@@ -26,7 +26,7 @@ public class Kayttoliittyma {
 
         while (true) {
             String komento = scanner.nextLine();
-            
+
             if (komento.equals("lisää")) {
                 System.out.println("Kirjoittaja");
                 String kirjoittaja = scanner.nextLine();
@@ -43,7 +43,11 @@ public class Kayttoliittyma {
     }
 
     public boolean lisaaKirjavinkki(String kirjoittaja, String otsikko) {
-        return this.tk.lisaaKirja(kirjoittaja, otsikko);
+        if (kirjoittaja.isEmpty() || otsikko.isEmpty()) {
+            return false;
+        } else {
+            return this.tk.lisaaKirja(kirjoittaja, otsikko);
+        }
     }
 
 }
