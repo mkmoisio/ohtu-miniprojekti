@@ -6,3 +6,4 @@ build
 .settings
 .build
 /.nb-gradle/
+.DS_Store
