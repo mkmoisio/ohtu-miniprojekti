@@ -37,7 +37,7 @@ public class KayttoliittymaTest {
 
     @Before
     public void setUp() {
-        this.tietokanta = new Vinkkitietokanta();
+      //  this.tietokanta = new Vinkkitietokanta();
         this.UI = new Kayttoliittyma(tietokanta);
     }
 
