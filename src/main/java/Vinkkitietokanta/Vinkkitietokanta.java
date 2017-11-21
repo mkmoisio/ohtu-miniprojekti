@@ -23,8 +23,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
 
     @Override
     public boolean lisaaKirja(String kirjoittaja, String otsikko) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+return true;    }
 
     @Override
     public List<String> haeKaikkiString() {

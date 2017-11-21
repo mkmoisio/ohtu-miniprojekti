@@ -29,11 +29,21 @@ public class Kayttoliittyma {
         this.tulostus = new Tulostaja(System.out);
         
     }
-    
-    public Kayttoliittyma(VinkkitietokantaRajapinta tk, LukijaRajapinta lukija) {
-         this.tk = tk;
-         this.lukija = lukija;
+
+    public void setLukija(LukijaRajapinta lukija) {
+        this.lukija = lukija;
     }
+
+    public void setTulostus(TulostusRajapinta tulostus) {
+        this.tulostus = tulostus;
+    }
+    
+    
+    
+//    public Kayttoliittyma(VinkkitietokantaRajapinta tk, LukijaRajapinta lukija) {
+//         this.tk = tk;
+//         this.lukija = lukija;
+//    }
     
   
     public void suorita() {
@@ -52,6 +62,10 @@ public class Kayttoliittyma {
                 } else {
                     this.tulostus.println("Kirjavinkkiä ei lisätty");
                 }
+            }
+            
+            if (komento.equals("lopeta")) {
+                return;
             }
         }
 

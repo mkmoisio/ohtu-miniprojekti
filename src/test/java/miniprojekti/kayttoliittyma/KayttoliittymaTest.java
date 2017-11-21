@@ -7,6 +7,7 @@ package miniprojekti.kayttoliittyma;
 
 import Kayttoliittyma.Kayttoliittyma;
 import Vinkkitietokanta.Vinkkitietokanta;
+import io.LukijaRajapinta;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -44,8 +45,26 @@ public class KayttoliittymaTest {
     public void tearDown() {
     }
 
+//    @Test
+//    public void kirjavinkinLisaaminenOnnistuuValidillaSyotteellaa() {
+//        assertTrue(UI.lisaaKirjavinkki("Cormen", "Introduction.to.Algorithms.3rd.Edition.Sep.2010"));       
+//    }
     @Test
     public void kirjavinkinLisaaminenOnnistuuValidillaSyotteellaa() {
-        assertTrue(UI.lisaaKirjavinkki("Cormen", "Introduction.to.Algorithms.3rd.Edition.Sep.2010"));       
+        LukijaStub lukija = new LukijaStub();
+        TulostusStub tulostus = new TulostusStub();
+        lukija.lisaaSyote("lisää");
+        lukija.lisaaSyote("Cormen");
+        lukija.lisaaSyote("Introduction.to.Algorithms.3rd.Edition.Sep.2010");
+        lukija.lisaaSyote("lopeta");
+        this.UI.setLukija(lukija);
+        this.UI.setTulostus(tulostus);
+        this.UI.suorita();
+        
+        assertEquals("Anna komento", tulostus.pop());
+        assertEquals("Kirjoittaja", tulostus.pop());
+        assertEquals("Otsikko", tulostus.pop());
+        assertEquals("Kirjavinkki lisätty", tulostus.pop());
+        // assertTrue(UI.lisaaKirjavinkki(, ));       
     }
 }

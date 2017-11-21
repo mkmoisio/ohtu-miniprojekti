@@ -13,20 +13,21 @@ import java.util.List;
  *
  * @author mikkomo
  */
-public class LukijaStub implements LukijaRajapinta{
-    
+public class LukijaStub implements LukijaRajapinta {
+
     private ArrayDeque<String> output;
-    
-    public LukijaStub(){
+
+    public LukijaStub() {
+        this.output = new ArrayDeque();
     }
-    
+
     public void lisaaSyote(String string) {
-        output.add(string);
+        this.output.add(string);
     }
 
     @Override
     public String nextLine() {
         return output.pop();
     }
-    
+
 }
