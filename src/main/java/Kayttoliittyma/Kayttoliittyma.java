@@ -7,6 +7,7 @@ package Kayttoliittyma;
 
 import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -48,6 +49,10 @@ public class Kayttoliittyma {
         } else {
             return this.tk.lisaaKirja(kirjoittaja, otsikko);
         }
+    }
+    
+    public List<Vinkki> haeKaikki(String kirjoittaja) {
+       return this.tk.haeKaikki();
     }
 
 }
