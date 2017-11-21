@@ -4,7 +4,7 @@
 
 Definition of Done: Task on tehty, kun se on koodattu, testattu erikseen ja liitetty muuhun koodiin sekä testattu toimivaksi järjestelmätasolla. Tähän tulevat myöhemmin linkit hyväksymäkriteerit määritteleviin tiedostoihin (dokumentoitu Cucumberin featureiksi).
 
-[![Build Status](https://travis-ci.org/mkmoisio/ohtu-miniprojekti.svg?branch=master)](https://travis-ci.org/mkmoisio/ohtu-miniprojekti)
+Travis [![Build Status](https://travis-ci.org/mkmoisio/ohtu-miniprojekti.svg?branch=master)](https://travis-ci.org/mkmoisio/ohtu-miniprojekti)
 
 Tähän tulee linkki sovelluksen toimivaan versioon.
 
