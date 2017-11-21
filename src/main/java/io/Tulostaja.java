@@ -5,7 +5,9 @@
  */
 package io;
 
+import Vinkkitietokanta.Vinkki;
 import java.io.PrintStream;
+import java.util.List;
 
 /**
  *
@@ -22,5 +24,12 @@ public class Tulostaja implements TulostusRajapinta {
     public void println(String x) {
         ps.println(x);
     }
-
+    
+    public void tulosta(List<Vinkki> lista) {
+        for (Vinkki v : lista) {
+            this.ps.append(v.toString() + "\n");
+        }
+        this.ps.flush();
+    }
+ 
 }

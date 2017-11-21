@@ -7,6 +7,7 @@ package miniprojekti.kayttoliittyma;
 
 import io.LukijaRajapinta;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,8 +22,12 @@ public class LukijaStub implements LukijaRajapinta {
         this.output = new ArrayDeque();
     }
 
-    public void lisaaSyote(String string) {
-        this.output.add(string);
+    public void lisaaSyote(String syote) {
+        this.output.add(syote);
+    }
+    
+    public void lisaaSyote(String... syote) {
+        this.output.addAll(Arrays.asList(syote));
     }
 
     @Override

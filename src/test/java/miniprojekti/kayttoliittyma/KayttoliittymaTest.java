@@ -45,26 +45,29 @@ public class KayttoliittymaTest {
     public void tearDown() {
     }
 
-//    @Test
-//    public void kirjavinkinLisaaminenOnnistuuValidillaSyotteellaa() {
-//        assertTrue(UI.lisaaKirjavinkki("Cormen", "Introduction.to.Algorithms.3rd.Edition.Sep.2010"));       
-//    }
     @Test
     public void kirjavinkinLisaaminenOnnistuuValidillaSyotteellaa() {
+        assertTrue(alustaJaSuoritaSyotteella("lisää", "Cormen", "Introduction.to.Algorithms.3rd.Edition.Sep.2010", "lopeta", "Kirjavinkki lisätty"));
+    }
+
+    @Test
+    public void kirjavinkkiaEiListataTyhjallaKirjoittajalla() {
+        assertTrue(alustaJaSuoritaSyotteella("lisää", "", "Introduction.to.Algorithms.3rd.Edition.Sep.2010", "lopeta", "Kirjavinkkiä ei lisätty"));
+    }
+    
+    @Test
+    public void kirjavinkkiaEiListataTyhjallaOtsikolla() {
+        assertTrue(alustaJaSuoritaSyotteella("lisää", "Cormen", "", "lopeta", "Kirjavinkkiä ei lisätty"));
+    }
+
+    private boolean alustaJaSuoritaSyotteella(String komento, String kirjoittaja, String otsikko, String komento2, String halutaan) {
         LukijaStub lukija = new LukijaStub();
         TulostusStub tulostus = new TulostusStub();
-        lukija.lisaaSyote("lisää");
-        lukija.lisaaSyote("Cormen");
-        lukija.lisaaSyote("Introduction.to.Algorithms.3rd.Edition.Sep.2010");
-        lukija.lisaaSyote("lopeta");
+        lukija.lisaaSyote(komento, kirjoittaja, otsikko, komento2, halutaan);
         this.UI.setLukija(lukija);
         this.UI.setTulostus(tulostus);
         this.UI.suorita();
-        
-        assertEquals("Anna komento", tulostus.pop());
-        assertEquals("Kirjoittaja", tulostus.pop());
-        assertEquals("Otsikko", tulostus.pop());
-        assertEquals("Kirjavinkki lisätty", tulostus.pop());
-        // assertTrue(UI.lisaaKirjavinkki(, ));       
+        return tulostus.tulosteessaEsiintyy(halutaan);
     }
+
 }

@@ -87,6 +87,10 @@ public class Kayttoliittyma {
        return this.tk.poistaKirja(otsikko);
     }
     
+    public void tulostaKirjavinkit() {
+        this.tulostus.tulosta(this.tk.haeKaikki());
+    }
+    
     private void tulostaKomennot() {
        
     }

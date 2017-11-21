@@ -15,4 +15,11 @@ public class Vinkki {
         this.kirjoittaja = kirjoittaja;
         this.otsikko = otsikko;
     }
+
+    @Override
+    public String toString() {
+        return "Vinkki{" + "kirjoittaja=" + kirjoittaja + ", otsikko=" + otsikko + '}';
+    }
+    
+    
 }

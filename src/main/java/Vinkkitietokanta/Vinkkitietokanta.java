@@ -12,8 +12,8 @@ import java.util.List;
  * tietokannasta.
  */
 public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
-    
-    public Vinkkitietokanta(){
+
+    public Vinkkitietokanta() {
     }
 
     @Override
@@ -23,7 +23,8 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
 
     @Override
     public boolean lisaaKirja(String kirjoittaja, String otsikko) {
-return true;    }
+        return true;
+    }
 
     @Override
     public List<String> haeKaikkiString() {
@@ -34,6 +35,5 @@ return true;    }
     public List<Vinkki> haeKaikki() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 
 }

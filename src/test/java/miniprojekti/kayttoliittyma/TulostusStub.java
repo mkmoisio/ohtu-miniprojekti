@@ -5,19 +5,23 @@
  */
 package miniprojekti.kayttoliittyma;
 
+import Vinkkitietokanta.Vinkki;
 import io.TulostusRajapinta;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *
  * @author mikkomo
  */
-public class TulostusStub implements TulostusRajapinta{
-    
-    private Deque<String> tulosteet;
-    
-    public TulostusStub(){
+public class TulostusStub implements TulostusRajapinta {
+
+    private final Deque<String> tulosteet;
+
+    public TulostusStub() {
         this.tulosteet = new ArrayDeque();
     }
 
@@ -25,8 +29,33 @@ public class TulostusStub implements TulostusRajapinta{
     public void println(String x) {
         this.tulosteet.add(x);
     }
-    
+
     public String pop() {
         return this.tulosteet.pop();
+    }
+
+    public List<String> tulosteetListana() {
+        List<String> lista = new ArrayList();
+
+        for (Iterator<String> s = this.tulosteet.iterator(); s.hasNext();) {
+            lista.add(s.next());
+        }
+        return lista;
+    }
+    
+    public boolean tulosteessaEsiintyy(String string) {
+        return this.tulosteetListana().contains(string);
+    }
+
+    public void nollaa() {
+        this.tulosteet.clear();
+    }
+
+    @Override
+    public void tulosta(List<Vinkki> lista) {
+        
+        for (Vinkki v : lista) {
+            this.tulosteet.add(v.toString() + "\n");
+        }
     }
 }
