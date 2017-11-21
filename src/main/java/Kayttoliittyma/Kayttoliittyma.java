@@ -7,6 +7,10 @@ package Kayttoliittyma;
 
 import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
+import io.Lukija;
+import io.LukijaRajapinta;
+import io.Tulostaja;
+import io.TulostusRajapinta;
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,28 +20,52 @@ import java.util.Scanner;
 public class Kayttoliittyma {
 
     VinkkitietokantaRajapinta tk;
+    LukijaRajapinta lukija;
+    TulostusRajapinta tulostus;
 
     public Kayttoliittyma(VinkkitietokantaRajapinta tk) {
         this.tk = tk;
+        this.lukija = new Lukija(System.in);
+        this.tulostus = new Tulostaja(System.out);
+        
     }
 
+    public void setLukija(LukijaRajapinta lukija) {
+        this.lukija = lukija;
+    }
+
+    public void setTulostus(TulostusRajapinta tulostus) {
+        this.tulostus = tulostus;
+    }
+    
+    
+    
+//    public Kayttoliittyma(VinkkitietokantaRajapinta tk, LukijaRajapinta lukija) {
+//         this.tk = tk;
+//         this.lukija = lukija;
+//    }
+    
+  
     public void suorita() {
 
-        Scanner scanner = new Scanner(System.in);
-
         while (true) {
-            String komento = scanner.nextLine();
+            this.tulostus.println("Anna komento");
+            String komento = this.lukija.nextLine();
 
             if (komento.equals("lisää")) {
-                System.out.println("Kirjoittaja");
-                String kirjoittaja = scanner.nextLine();
-                System.out.println("Otsikko");
-                String otsikko = scanner.nextLine();
+                this.tulostus.println("Kirjoittaja");
+                String kirjoittaja = this.lukija.nextLine();
+                this.tulostus.println("Otsikko");
+                String otsikko = this.lukija.nextLine();
                 if (this.lisaaKirjavinkki(kirjoittaja, otsikko)) {
-                    System.out.println("Kirjavinkki lisätty");
+                    this.tulostus.println("Kirjavinkki lisätty");
                 } else {
-                    System.out.println("Kirjavinkkiä ei lisätty");
+                    this.tulostus.println("Kirjavinkkiä ei lisätty");
                 }
+            }
+            
+            if (komento.equals("lopeta")) {
+                return;
             }
         }
 
@@ -53,6 +81,14 @@ public class Kayttoliittyma {
     
     public List<Vinkki> haeKaikki(String kirjoittaja) {
        return this.tk.haeKaikki();
+    }
+    
+    public boolean poistaKirja(String otsikko) {
+       return this.tk.poistaKirja(otsikko);
+    }
+    
+    private void tulostaKomennot() {
+       
     }
 
 }
