@@ -17,10 +17,7 @@ import java.util.List;
  * tietokannasta.
  */
 public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
-<<<<<<< HEAD
 
-    public Vinkkitietokanta() {
-=======
     Connection conn = null;
     
     public Vinkkitietokanta(String tkPath){
@@ -43,7 +40,6 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     public boolean tietokantaliitetty(){
         if(conn==null) return false;
         return true;
->>>>>>> 87362a76117914046caa2fd4ffe28864171d8c91
     }
 
     @Override
@@ -54,12 +50,8 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
 
     @Override
     public boolean lisaaKirja(String kirjoittaja, String otsikko) {
-<<<<<<< HEAD
-        return true;
-=======
         //INSERT INTO vinkki VALUES ('hermanni', 'surkea päivä', 'kirja')
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
->>>>>>> 87362a76117914046caa2fd4ffe28864171d8c91
     }
 
     @Override
