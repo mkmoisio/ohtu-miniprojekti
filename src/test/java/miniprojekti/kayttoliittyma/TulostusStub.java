@@ -42,7 +42,7 @@ public class TulostusStub implements TulostusRajapinta {
         return lista;
     }
 
-    public boolean tulosteessaEsiintyy(String string) {
+    public boolean tulosteSisaltaa(String string) {
         return this.tulosteetListana().contains(string);
     }
 
@@ -54,4 +54,10 @@ public class TulostusStub implements TulostusRajapinta {
     public void print(String x) {
         this.tulosteet.add(x);
     }
+    
+//    public void kaikki() {
+//        for (String s : this.tulosteetListana()) {
+//            System.out.println(s);
+//        }
+//    }
 }

@@ -23,6 +23,8 @@ public class KayttoliittymaTest {
 
     Vinkkitietokanta tietokanta;
     Kayttoliittyma UI;
+    LukijaStub lukija;
+    TulostusStub tulostus;
 
     public KayttoliittymaTest() {
     }
@@ -37,8 +39,12 @@ public class KayttoliittymaTest {
 
     @Before
     public void setUp() {
-      //  this.tietokanta = new Vinkkitietokanta();
-        this.UI = new Kayttoliittyma(tietokanta);
+        //  this.tietokanta = new Vinkkitietokanta();
+        this.UI = new Kayttoliittyma(new Kanta());
+        this.lukija = new LukijaStub();
+        this.tulostus = new TulostusStub();
+        this.UI.setLukija(lukija);
+        this.UI.setTulostus(tulostus);
     }
 
     @After
@@ -46,28 +52,63 @@ public class KayttoliittymaTest {
     }
 
     @Test
-    public void kirjavinkinLisaaminenOnnistuuValidillaSyotteellaa() {
-        assertTrue(alustaJaSuoritaSyotteella("lisää", "Cormen", "Introduction.to.Algorithms.3rd.Edition.Sep.2010", "lopeta", "Kirjavinkki lisätty"));
+    public void kirjavinkinLisaaminenPalauttaaLisattyTulosteenValidillaSyoteella() {
+        this.lukija.nollaa();
+        this.lisaaLukijaanLisays("Cormen", "Introduction.to.Algorithms.3rd.Edition.Sep.2010");
+        this.suoritaJaLopeta();
+        assertTrue(this.tulostus.tulosteSisaltaa("Kirjavinkki lisätty"));
+        this.tulostus.nollaa();
     }
 
     @Test
-    public void kirjavinkkiaEiListataTyhjallaKirjoittajalla() {
-        assertTrue(alustaJaSuoritaSyotteella("lisää", "", "Introduction.to.Algorithms.3rd.Edition.Sep.2010", "lopeta", "Kirjavinkkiä ei lisätty"));
-    }
-    
-    @Test
-    public void kirjavinkkiaEiListataTyhjallaOtsikolla() {
-        assertTrue(alustaJaSuoritaSyotteella("lisää", "Cormen", "", "lopeta", "Kirjavinkkiä ei lisätty"));
+    public void kirjavinkinLisaaminenPalauttaaEiLisattyTulosteenEiValidillaSyoteella() {
+        this.lukija.nollaa();
+        this.lisaaLukijaanLisays("", "Introduction.to.Algorithms.3rd.Edition.Sep.2010");
+        this.lisaaLukijaanLisays("", "");
+        this.lisaaLukijaanLisays("Cormen", "");
+        this.suoritaJaLopeta();
+        assertTrue(this.tulostus.tulosteSisaltaa("Kirjavinkkiä ei lisätty"));
+        assertTrue(!this.tulostus.tulosteSisaltaa("Kirjavinkki lisätty"));
     }
 
-    private boolean alustaJaSuoritaSyotteella(String komento, String kirjoittaja, String otsikko, String komento2, String halutaan) {
-        LukijaStub lukija = new LukijaStub();
-        TulostusStub tulostus = new TulostusStub();
-        lukija.lisaaSyote(komento, kirjoittaja, otsikko, komento2, halutaan);
-        this.UI.setLukija(lukija);
-        this.UI.setTulostus(tulostus);
+    @Test
+    public void kirjavinkkiEsiintyyKaikkienVinkkienTulosteessaLisaamisenJalkeen() {
+        this.lukija.nollaa();
+        this.tulostus.nollaa();
+        this.lisaaLukijaanLisays("E. L. James", "Fifty Shades of Grey");
+        this.lisaaLukijaanTulostus();
+//        this.lukija.kaikki();
+        this.suoritaJaLopeta();
+        assertTrue(this.tulostus.tulosteSisaltaa("Vinkki (tyyppi)" + "\n\tkirjoaittaja " + "E. L. James" + "\n\totsikko " + "Fifty Shades of Grey"));
+
+    }
+
+    @Test
+    public void kirjaVinkkiEiEsiinnyTulosteesaPoistamisenJalkeen() {
+        this.lukija.nollaa();
+        this.tulostus.nollaa();
+        this.lisaaLukijaanLisays("Kivi", "abc");
+        this.lisaaLukijaanPoisto("abc");
+        this.lisaaLukijaanTulostus();
+        
+        this.suoritaJaLopeta();
+        assertTrue(!this.tulostus.tulosteSisaltaa("Vinkki (tyyppi)" + "\n\tkirjoittaja " + "Kivi" + "\n\totsikko " + "abc"));
+    }
+
+    private void suoritaJaLopeta() {
+        this.lukija.lisaaSyote("lopeta");
+        
         this.UI.suorita();
-        return tulostus.tulosteessaEsiintyy(halutaan);
+    }
+
+    private void lisaaLukijaanTulostus() {
+        this.lukija.lisaaSyote("tulosta");
+    }
+    private void lisaaLukijaanPoisto(String otsikko) {
+        this.lukija.lisaaSyote("poista", otsikko);
+    }
+    private void lisaaLukijaanLisays(String kirjoittaja, String otsikko) {
+        this.lukija.lisaaSyote("lisää", kirjoittaja, otsikko);
     }
 
 }

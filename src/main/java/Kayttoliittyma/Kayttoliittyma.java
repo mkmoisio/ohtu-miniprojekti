@@ -68,11 +68,12 @@ public class Kayttoliittyma {
 
                 case "tulosta":
                     this.tulostaKirjavinkit();
+                    break;
                 case "poista":
                     this.tulostus.println("Anna otsikko:");
                     otsikko = this.lukija.nextLine();
                     if (this.poistaKirja(otsikko)) {
-                        this.tulostus.println("Kirjavinkki poistetu");
+                        this.tulostus.println("Kirjavinkki poistettu");
                     } else {
                         this.tulostus.println("Kirjavinkkiä ei poistettu");
                     }
@@ -105,7 +106,9 @@ public class Kayttoliittyma {
     }
 
     private void tulostaKirjavinkit() {
-        this.tulostus.println(this.muotoileTulosteVinkkilistasta(this.haeKaikki()));
+        for (Vinkki v : this.haeKaikki()) {
+            this.tulostus.println(v.toString());
+        }
     }
 
     private void tulostaKomennot() {

@@ -33,5 +33,16 @@ public class LukijaStub implements LukijaRajapinta {
     public String nextLine() {
         return output.pop();
     }
+    
+    public void nollaa() {
+        this.output.clear();
+    }
+    
+//    public void kaikki() {
+//       
+//        for (String s : this.output) {
+//            System.out.println(s);
+//        }
+//    }
 
 }
