@@ -1,5 +1,6 @@
 bin
 build
+nbproject
 .classpath
 .gradle
 .project
@@ -7,3 +8,6 @@ build
 .build
 /.nb-gradle/
 .DS_Store
+ohtuminiTEST2.db
+.directory
+.gitignore~

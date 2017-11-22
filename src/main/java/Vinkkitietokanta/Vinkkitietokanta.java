@@ -8,8 +8,10 @@ package Vinkkitietokanta;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,21 +21,37 @@ import java.util.List;
 public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
 
     Connection conn = null;
-    
+    Statement stmt = null;
+     
     public Vinkkitietokanta(String tkPath){
         //Liitä tietokanta        
         try{
             conn=DriverManager.getConnection(tkPath);
-            System.out.println("Connection established");
+            //System.out.println("tietokanta liitetty");
+            stmt = conn.createStatement();            
+            //System.out.println("statement luotu");
         }catch(SQLException e){
-            System.err.println(e.getMessage());
-        }finally{
-            try{
-                if(conn!=null) conn.close();
-            }catch(SQLException ex){System.err.println(ex.getMessage());};
+            System.out.println(e.getMessage());
         }
     }
     
+    
+    //Sulje yhteydet tietokantaan
+    public void sulje(){
+        try{
+        if(stmt!=null)
+            conn.close();
+        }catch(SQLException se){
+        }
+        try{
+           if(conn!=null)
+              conn.close();
+        }catch(SQLException se){
+           se.printStackTrace();
+        }
+    }
+    
+    //Tallentuuko suoraan vai pitääkö erikseen kutsua jotain tallenna tietokanta?
     private void tallennaTietokanta(){    
     }
     
@@ -44,26 +62,73 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
 
     @Override
     public boolean poistaKirja(String otsikko) {
-        //DELETE FROM vinkki where otsikko = 'surkea päivä'    
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //Toivotaan, että syöte on kunnollista
+        //DELETE FROM vinkki where otsikko = 'surkea päivä'   
+        try{
+            String sql = "DELETE FROM vinkki where otsikko = '"+otsikko+"'";
+            stmt.executeUpdate(sql);
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        //Kirjan poistaminen antaa nyt aina true:n tarvitaan joku
+        //tapa tarkistaa, että onnistuuko poisto todella
+        return true;
     }
 
     @Override
     public boolean lisaaKirja(String kirjoittaja, String otsikko) {
         //INSERT INTO vinkki VALUES ('hermanni', 'surkea päivä', 'kirja')
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //Toivotaan, että syöte on kunnollista
+        try{
+            String sql = "INSERT INTO vinkki VALUES ('"+kirjoittaja+"','"+otsikko+"', 'kirja')";
+            stmt.executeUpdate(sql);
+        }catch(SQLException se){
+            System.out.println(se.toString());
+        }
+        //Kirjan lisääminen antaa nyt aina true:n tarvitaan joku
+        //tapa tarkistaa, että onnistuuko poisto todella
+        return true;
     }
 
     @Override
     public List<String> haeKaikkiString() {
+        List<String> lista = new ArrayList<>();
+        try{
+            String sql = "SELECT * FROM Vinkki";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                String kirjoittaja  = rs.getString("kirjoittaja");
+                String otsikko = rs.getString("otsikko");
+                Vinkki vinkki = new Vinkki(kirjoittaja,otsikko);
+                lista.add(vinkki.toString());
+            }
+            rs.close();
+        }catch(SQLException se){
+            System.out.println(se.toString());
+        }
+        
+        return lista;
         //"SELECT * FROM vinkki"
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public List<Vinkki> haeKaikki() {
-        //"SELECT * FROM vinkki"
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //Pasta koodia siivoa joskus 
+        List<Vinkki> lista = new ArrayList<>();
+        try{
+            String sql = "SELECT * FROM vinkki";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                String kirjoittaja  = rs.getString("kirjoittaja");
+                String otsikko = rs.getString("otsikko");
+                Vinkki vinkki = new Vinkki(kirjoittaja,otsikko);
+                lista.add(vinkki);
+            }
+            rs.close();
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        return lista;
     }
 
 }
