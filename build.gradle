@@ -32,7 +32,10 @@ repositories {
     jcenter()
 }
 
-
+project.ext {
+    cucumberVersion = '1.2.5'
+    seleniumVersion = '2.41.0'
+}
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
@@ -46,5 +49,7 @@ dependencies {
     // 'test.useTestNG()' to your build script.
        testCompile 'junit:junit:4.12'
   //  testCompile 'junit:junit:3.8.2'
+    testCompile 'info.cukes:cucumber-java:' + cucumberVersion
+    testCompile 'info.cukes:cucumber-junit:' + cucumberVersion   
 }
 
