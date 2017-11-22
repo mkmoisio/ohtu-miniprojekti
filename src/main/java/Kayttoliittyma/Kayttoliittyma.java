@@ -12,7 +12,6 @@ import io.LukijaRajapinta;
 import io.Tulostaja;
 import io.TulostusRajapinta;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Itse käyttöliittymä.
@@ -45,11 +44,10 @@ public class Kayttoliittyma {
         this.tulostus = tulostus;
     }
 
-//    public Kayttoliittyma(VinkkitietokantaRajapinta tk, LukijaRajapinta lukija) {
-//         this.tk = tk;
-//         this.lukija = lukija;
-//    }
     public void suorita() {
+
+        String kirjoittaja;
+        String otsikko;
 
         while (true) {
             this.tulostaKomennot();
@@ -57,24 +55,35 @@ public class Kayttoliittyma {
 
             switch (komento) {
                 case "lisää":
-                    this.tulostus.println("Kirjoittaja");
-                    String kirjoittaja = this.lukija.nextLine();
-                    this.tulostus.println("Otsikko");
-                    String otsikko = this.lukija.nextLine();
+                    this.tulostus.println("Anna kirjoittaja:");
+                    kirjoittaja = this.lukija.nextLine();
+                    this.tulostus.println("Anna otsikko:");
+                    otsikko = this.lukija.nextLine();
                     if (this.lisaaKirjavinkki(kirjoittaja, otsikko)) {
                         this.tulostus.println("Kirjavinkki lisätty");
                     } else {
                         this.tulostus.println("Kirjavinkkiä ei lisätty");
                     }
                     break;
+
                 case "tulosta":
+                    this.tulostaKirjavinkit();
                 case "poista":
+                    this.tulostus.println("Anna otsikko:");
+                    otsikko = this.lukija.nextLine();
+                    if (this.poistaKirja(otsikko)) {
+                        this.tulostus.println("Kirjavinkki poistetu");
+                    } else {
+                        this.tulostus.println("Kirjavinkkiä ei poistettu");
+                    }
+
+                    break;
                 case "lopeta":
                     return;
                 default:
 
             }
-          
+
         }
 
     }
@@ -87,7 +96,7 @@ public class Kayttoliittyma {
         }
     }
 
-    public List<Vinkki> haeKaikki(String kirjoittaja) {
+    public List<Vinkki> haeKaikki() {
         return this.tk.haeKaikki();
     }
 
@@ -95,12 +104,20 @@ public class Kayttoliittyma {
         return this.tk.poistaKirja(otsikko);
     }
 
-    public void tulostaKirjavinkit() {
-        this.tulostus.tulosta(this.tk.haeKaikki());
+    private void tulostaKirjavinkit() {
+        this.tulostus.println(this.muotoileTulosteVinkkilistasta(this.haeKaikki()));
     }
 
     private void tulostaKomennot() {
         this.tulostus.println(this.KOMENNOT);
     }
 
+    private String muotoileTulosteVinkkilistasta(List<Vinkki> list) {
+        StringBuilder sb = new StringBuilder();
+
+        for (Vinkki v : list) {
+            sb.append(v.toString());
+        }
+        return sb.toString();
+    }
 }

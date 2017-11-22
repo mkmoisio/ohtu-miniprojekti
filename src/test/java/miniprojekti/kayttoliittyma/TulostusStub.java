@@ -5,7 +5,6 @@
  */
 package miniprojekti.kayttoliittyma;
 
-import Vinkkitietokanta.Vinkki;
 import io.TulostusRajapinta;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public class TulostusStub implements TulostusRajapinta {
         }
         return lista;
     }
-    
+
     public boolean tulosteessaEsiintyy(String string) {
         return this.tulosteetListana().contains(string);
     }
@@ -52,10 +51,7 @@ public class TulostusStub implements TulostusRajapinta {
     }
 
     @Override
-    public void tulosta(List<Vinkki> lista) {
-        
-        for (Vinkki v : lista) {
-            this.tulosteet.add(v.toString() + "\n");
-        }
+    public void print(String x) {
+        this.tulosteet.add(x);
     }
 }

@@ -23,14 +23,12 @@ public class Tulostaja implements TulostusRajapinta {
     @Override
     public void println(String x) {
         ps.println(x);
+        
     }
     
     @Override
-    public void tulosta(List<Vinkki> lista) {
-        for (Vinkki v : lista) {
-            this.ps.append(v.toString() + "\n");
-        }
-        this.ps.flush();
+    public void print(String x) {
+        ps.print(x);
     }
- 
+
 }

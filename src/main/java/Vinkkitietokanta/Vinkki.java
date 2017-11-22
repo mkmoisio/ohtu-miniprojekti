@@ -18,7 +18,7 @@ public class Vinkki {
 
     @Override
     public String toString() {
-        return "Vinkki{" + "kirjoittaja=" + kirjoittaja + ", otsikko=" + otsikko + '}';
+        return "Vinkki (tyyppi)" + "\n\tkirjoittaja " + kirjoittaja + "\n\totsikko " + otsikko;
     }
     
     
