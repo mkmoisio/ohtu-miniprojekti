@@ -25,6 +25,7 @@ public class Tulostaja implements TulostusRajapinta {
         ps.println(x);
     }
     
+    @Override
     public void tulosta(List<Vinkki> lista) {
         for (Vinkki v : lista) {
             this.ps.append(v.toString() + "\n");

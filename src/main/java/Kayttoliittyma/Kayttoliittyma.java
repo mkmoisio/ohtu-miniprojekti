@@ -19,6 +19,13 @@ import java.util.Scanner;
  */
 public class Kayttoliittyma {
 
+    private final String KOMENNOT = "Komennot:"
+            + "\n\t lisää - vinkin lisääminen"
+            + "\n\t tulosta - tulosta kaikki vinkit"
+            + "\n\t poista - poista vinkki"
+            + "\n\t lopeta - lopeta ohjelma "
+            + "\n";
+
     VinkkitietokantaRajapinta tk;
     LukijaRajapinta lukija;
     TulostusRajapinta tulostus;
@@ -27,7 +34,7 @@ public class Kayttoliittyma {
         this.tk = tk;
         this.lukija = new Lukija(System.in);
         this.tulostus = new Tulostaja(System.out);
-        
+
     }
 
     public void setLukija(LukijaRajapinta lukija) {
@@ -37,36 +44,37 @@ public class Kayttoliittyma {
     public void setTulostus(TulostusRajapinta tulostus) {
         this.tulostus = tulostus;
     }
-    
-    
-    
+
 //    public Kayttoliittyma(VinkkitietokantaRajapinta tk, LukijaRajapinta lukija) {
 //         this.tk = tk;
 //         this.lukija = lukija;
 //    }
-    
-  
     public void suorita() {
 
         while (true) {
-            this.tulostus.println("Anna komento");
+            this.tulostaKomennot();
             String komento = this.lukija.nextLine();
 
-            if (komento.equals("lisää")) {
-                this.tulostus.println("Kirjoittaja");
-                String kirjoittaja = this.lukija.nextLine();
-                this.tulostus.println("Otsikko");
-                String otsikko = this.lukija.nextLine();
-                if (this.lisaaKirjavinkki(kirjoittaja, otsikko)) {
-                    this.tulostus.println("Kirjavinkki lisätty");
-                } else {
-                    this.tulostus.println("Kirjavinkkiä ei lisätty");
-                }
+            switch (komento) {
+                case "lisää":
+                    this.tulostus.println("Kirjoittaja");
+                    String kirjoittaja = this.lukija.nextLine();
+                    this.tulostus.println("Otsikko");
+                    String otsikko = this.lukija.nextLine();
+                    if (this.lisaaKirjavinkki(kirjoittaja, otsikko)) {
+                        this.tulostus.println("Kirjavinkki lisätty");
+                    } else {
+                        this.tulostus.println("Kirjavinkkiä ei lisätty");
+                    }
+                    break;
+                case "tulosta":
+                case "poista":
+                case "lopeta":
+                    return;
+                default:
+
             }
-            
-            if (komento.equals("lopeta")) {
-                return;
-            }
+          
         }
 
     }
@@ -78,21 +86,21 @@ public class Kayttoliittyma {
             return this.tk.lisaaKirja(kirjoittaja, otsikko);
         }
     }
-    
+
     public List<Vinkki> haeKaikki(String kirjoittaja) {
-       return this.tk.haeKaikki();
+        return this.tk.haeKaikki();
     }
-    
+
     public boolean poistaKirja(String otsikko) {
-       return this.tk.poistaKirja(otsikko);
+        return this.tk.poistaKirja(otsikko);
     }
-    
+
     public void tulostaKirjavinkit() {
         this.tulostus.tulosta(this.tk.haeKaikki());
     }
-    
+
     private void tulostaKomennot() {
-       
+        this.tulostus.println(this.KOMENNOT);
     }
 
 }
