@@ -31,7 +31,8 @@ http://sqlfiddle.com/#!7/4cb80 kautta voi myös katsoa tauluja ja kokeilla komen
 Listaa valituntyyppiset vinkit (esim. video)
 ............................................................................
 
-SELECT vinkki.*, video.*
+SELECT vinkki.*, video.*, GROUP_CONCAT(tekija.tekija_nimi)
+tekija
 FROM Vinkki
 INNER JOIN Video ON vinkki_id=video.vinkki
 INNER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki
