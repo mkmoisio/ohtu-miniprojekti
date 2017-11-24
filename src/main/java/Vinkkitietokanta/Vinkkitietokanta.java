@@ -31,7 +31,8 @@ http://sqlfiddle.com/#!7/4cb80 kautta voi myös katsoa tauluja ja kokeilla komen
 Listaa valituntyyppiset vinkit (esim. video)
 ............................................................................
 
-SELECT vinkki.*, video.*
+SELECT vinkki.*, video.*, GROUP_CONCAT(tekija.tekija_nimi)
+tekija
 FROM Vinkki
 INNER JOIN Video ON vinkki_id=video.vinkki
 INNER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki
@@ -46,12 +47,12 @@ vinkki_id   otsikko luettu  video_id    url vinkki  tekija
 Listaa kaikki vinkit ja onko luettu
 ....................................................................................................................
 
-SELECT vinkki.*, video.*, GROUP_CONCAT(tekija.tekija_nimi)
-tekija
-FROM Vinkki
-INNER JOIN Video ON vinkki_id=video.vinkki
-INNER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki
-INNER JOIN Tekija on tekija_id=tekija;
+SELECT vinkki_id, luettu, GROUP_CONCAT(tekija.tekija_nimi)
+tekija, otsikko
+FROM vinkki
+  JOIN vinkkitekija on tekija_id=tekija 
+  JOIN tekija on vinkki_id=vinkkitekija.vinkki  
+GROUP BY vinkki_id;
 
 Antaa tulosteen:
 vinkki_id   luettu  tekija  otsikko
