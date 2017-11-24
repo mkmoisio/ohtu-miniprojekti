@@ -21,7 +21,7 @@ import java.util.List;
  */
 
 /*
-MI/24.11.2017 Tauluissa Vinkki, Kirja, Podcast, Video ja Kirjoittaja on päällä juokseva id numerointi kun tauluun lisää rivin.
+MI/24.11.2017 Tauluissa Vinkki, Kirja, Podcast, Video ja Tekija on päällä juokseva id numerointi kun tauluun lisää rivin.
 
 Dumppaan tähän Sprint2:een tarvittavat SQL-komennot liittyen lisäämiseen, poistamiseen ja listaukseen!
 (Eivät ole parametrisoituja tarkoituksella, siitä taisi olla Timolla taski)
@@ -63,7 +63,7 @@ pitää olla jokin tekijä ( eli myös videolla). Voi olla että liittyy siihen,
 en osannut. Voitko laittaa koodiin:
 Joko käyttöliittymään validoinnit jokaiselle vinkille että pakko syöttää tekijä (myös videolle) 
 TAI
-Jos käyttäjä ei ole syöttänyt tekijää, ohjelma syöttää antaa hänen puolestaan tekijälle dummyarvon (esim. 'tuntematon')
+Jos käyttäjä ei ole syöttänyt tekijää, ohjelma lisää hänen puolestaan tekijälle dummyarvon (esim. 'tuntematon')
 
 
 Lisää 
