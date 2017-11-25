@@ -5,21 +5,141 @@
  */
 package Vinkkitietokanta;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  *
  */
-public class Vinkki {
-    String kirjoittaja;
-    String otsikko;
-    public Vinkki(String kirjoittaja, String otsikko){
-        this.kirjoittaja = kirjoittaja;
+
+public class Vinkki{
+    private Formaatit formaatti;
+    private String otsikko;
+    private boolean luettu;
+    private List<String> tekijat;
+    private HashMap<Attribuutit, String> attribuutit;
+
+   
+    public Vinkki(String otsikko, Formaatit formaatti){
         this.otsikko = otsikko;
+        this.formaatti = formaatti;
+        this.luettu = false;
+        this.tekijat = new ArrayList<>();
+        attribuutit = new HashMap<>();
     }
 
-    @Override
-    public String toString() {
-        return "Vinkki (tyyppi)" + "\n\tkirjoittaja " + kirjoittaja + "\n\totsikko " + otsikko;
+    //ehkä palauttaa geneerisen Object tyypin? Helpompi käyttöliittymälle
+    public String haeOminaisuus(Attribuutit attribuutti) {
+        if(null!=attribuutti) switch (attribuutti) {
+            case OTSIKKO:
+                return otsikko;
+            case FORMAATTI:
+                return formaatti.name();
+            case LUETTU:
+                return String.valueOf(luettu);
+            case TEKIJAT:
+                if(tekijat.isEmpty()) return "0";
+                return printtaaTekijat();
+            default:
+                if(attribuutit.containsKey(attribuutti)){
+                    return attribuutit.get(attribuutti);
+                }else{
+                    return "0";
+                }
+        }
+        return "VIRHE!";
+    }
+
+    //Myös muokkaa
+    public boolean lisaaOminaisuus(Attribuutit attribuutti, Object arvo) {
+        if(null!=attribuutti) switch (attribuutti) {
+            case OTSIKKO:
+                if(!String.class.isInstance(arvo)) return false;
+                otsikko = arvo.toString();
+            case FORMAATTI:
+                if(!Formaatit.class.isInstance(arvo)) return false;
+                formaatti = (Formaatit)arvo;
+            case LUETTU:
+                if(!Boolean.class.isInstance(arvo)) return false;
+                luettu = (Boolean)arvo;
+            case TEKIJAT:
+                if(!String.class.isInstance(arvo)) return false;
+                if(!tekijat.contains(arvo.toString())){
+                    tekijat.add(arvo.toString());   
+                }        
+            default:
+                if(!String.class.isInstance(arvo)) return false;
+                attribuutit.put(attribuutti,arvo.toString());
+        }
+        return false;
     }
     
+    public void lisaaTekijat(String tekijatStr){
+        if(tekijatStr==null) return;
+        String erotin = "[,]";
+        for(String tekija: tekijatStr.split(erotin)){
+            if(tekija.equals("(null)")) return;
+            if(!tekijat.contains(tekija)) tekijat.add(tekija);
+        }
+    }
+    
+    public void lisaaTekija(String tekija){
+        if(!tekijat.contains(tekija)) tekijat.add(tekija);
+    }
+    
+    public List<String> haeTekijat(){
+        return tekijat;
+    }
+    
+    public String printtaaTekijat(){
+        String tekijatStr = "";
+        for(String tekija: tekijat){
+            tekijatStr = tekijatStr + tekija + ",";
+        }
+        return tekijatStr;
+    }
+    
+    public void poistaTekijat(){
+        tekijat.clear();
+    }
+    
+    public Formaatit formaatti(){
+        return formaatti;
+    }
+    
+    public boolean luettu() {
+        return luettu;
+    }
+
+    public void merkitseLuetuksi() {
+        luettu = true;
+    }
+
+
+    public void merkitseLukemattomaksi() {
+        luettu = false;
+    }
+    
+    public String Otsikko() {
+        return otsikko;
+    }
+
+    
+    @Override
+    public String toString(){
+        if(null!=formaatti)switch (formaatti) {
+            case KIRJA:
+                return "Vinkki (tyyppi) "+"\n\tkirjoittaja " + haeOminaisuus(Attribuutit.TEKIJAT) + "\n\totsikko " + Otsikko();
+            case PODCAST:
+                return Otsikko()+", luettu, "+luettu;
+            case VIDEO:
+                return Otsikko()+", luettu, "+luettu;
+            case NULL:
+                return Otsikko()+", luettu, "+luettu;
+        }
+        return "hups";
+    }
+
     
 }
