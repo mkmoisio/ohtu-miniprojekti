@@ -23,9 +23,12 @@ public class Kayttoliittyma {
     private final String KOMENNOT = "Komennot:"
             + "\n\t lisää kirja - kirjavinkin lisääminen"
             + "\n\t lisää podcast - podcast-vinkin lisääminen"
+            + "\n\t lisää video - videovinkin lisääminen"
             + "\n\t tulosta kaikki - tulosta kaikki vinkit"
+            + "\n\t tulosta lukemattomat - tulosta kaikki lukemattomat vinkit"
             + "\n\t tulosta kirjat - tulosta kaikki kirjavinkit"
             + "\n\t tulosta podcastit - tulosta kaikki podcastit"
+            + "\n\t tulosta videot - tulosta kaikki videot"
             + "\n\t poista - poista vinkki"
             + "\n\t lopeta - lopeta ohjelma "
             + "\n";
@@ -50,46 +53,48 @@ public class Kayttoliittyma {
     }
 
     public void suorita() {
-
-        String kirjoittaja;
-        String otsikko;
-        String nimi;
+        
         while (true) {
             this.tulostaKomennot();
-            String komento = this.lukija.nextLine();
+            String komento = this.lukija.nextLine().toLowerCase();
 
             switch (komento) {
+                
+                /* LISÄÄMINEN ALKAA */
                 case "lisää kirja":
                     this.lisaaKirjavinkki();
                     break;
-
                 case "lisää podcast":
                     this.lisaaPodcast();
-                    break;
-                //break; MUISTA TÄLLÄ KERTAA LAITTAA BREAK KUN LISÄÄT TÄTÄ
-                case "tulosta kirjat":
-                    this.tulostaKirjavinkit();
-                    break;
+                    break;             
+                case "lisää video":
+                    this.lisaaVideo();
+                    break;                
+                /* LISÄÄMINEN LOPPUU */
+                    
+                /* TULOSTUS ALKAA */
                 case "tulosta kaikki":
                     this.tulostaKaikkiVinkit();
                     break;
                 case "tulosta lukemattomat":
                     this.tulostaKaikkiLukemattomat();
                     break;
-
+                case "tulosta kirjat":
+                    this.tulostaKirjavinkit();
+                    break;
                 case "tulosta podcastit":
                     this.tulostaPodcastit();
                     break;
+                case "tulosta videot":
+                    this.tulostaVideot();
+                    break;
+                /* TULOSTUS LOPPUU */
+                    
                 case "poista":
-                    this.tulostus.println("Anna otsikko:");
-                    otsikko = this.lukija.nextLine();
-                    if (this.poistaKirja(otsikko)) {
-                        this.tulostus.println("Kirjavinkki poistettu");
-                    } else {
-                        this.tulostus.println("Kirjavinkkiä ei poistettu");
-                    }
+                    this.poista();
 
                     break;
+                    
                 case "lopeta":
                     return;
                 default:
@@ -98,6 +103,17 @@ public class Kayttoliittyma {
 
         }
 
+    }
+// POISTAA VAIN KIRJAN
+
+    private void poista() {
+        this.tulostus.println("Anna otsikko:");
+        String otsikko = this.lukija.nextLine();
+        if (this.poistaKirja(otsikko)) {
+            this.tulostus.println("Kirjavinkki poistettu");
+        } else {
+            this.tulostus.println("Kirjavinkkiä ei poistettu");
+        }
     }
 
     private void lisaaPodcast() {
@@ -136,6 +152,13 @@ public class Kayttoliittyma {
     }
 
     /* KANNAN METODEITA KUTSUVAT METODIT */
+    private List<Vinkki> haeKaikkiVinkit() {
+        return this.tk.haeKaikki();
+    }
+
+    private List<Vinkki> haeKaikkuLukemattomat() {
+        return this.tk.haeKaikki(LukuStatus.LUKEMATTOMAT);
+    }
 
     public List<Vinkki> haeKaikkiKirjavinkit() {
         return this.tk.haeKaikkiKirjat(LukuStatus.KAIKKI);
@@ -145,22 +168,16 @@ public class Kayttoliittyma {
         return this.tk.haeKaikkiPodcast(LukuStatus.KAIKKI);
     }
 
+    public List<Vinkki> haeKaikkiVideovinkit() {
+        return this.tk.haeKaikkiVideot(LukuStatus.KAIKKI);
+    }
+
     public boolean poistaKirja(String otsikko) {
         return this.tk.poistaKirja(otsikko);
     }
-    
-    // KAIKKI
-     private List<Vinkki> haeKaikkiVinkit() {
-        return this.tk.haeKaikki();
-    }
-     
-    private List<Vinkki> haeKaikkuLukemattomat() {
-        return this.tk.haeKaikki(LukuStatus.LUKEMATTOMAT);
-    }
-
     /* KANTAA KUTSUVAT METODIT LOPPUVAT TÄHÄN*/
     
-    
+    /* TULOSTUS */
     private void tulostaKirjavinkit() {
         tulostaLista(this.haeKaikkiKirjavinkit());
     }
@@ -168,6 +185,10 @@ public class Kayttoliittyma {
     private void tulostaPodcastit() {
         tulostaLista(this.haeKaikkiPodcastvinkit());
     }
+    
+     private void tulostaVideot() {
+         tulostaLista(this.haeKaikkiVideovinkit());
+     }
 
     private void tulostaKomennot() {
         this.tulostus.println(this.KOMENNOT);
@@ -176,7 +197,6 @@ public class Kayttoliittyma {
     private void tulostaKaikkiVinkit() {
         this.tulostaLista(this.haeKaikkiVinkit());
     }
-
 
     private void tulostaKaikkiLukemattomat() {
         this.tulostaLista(this.haeKaikkuLukemattomat());
@@ -187,9 +207,6 @@ public class Kayttoliittyma {
             this.tulostus.println(v.toString());
         }
     }
-
-
-    
-    
-
+    /* TULOSTUS PÄÄTTYY*/
+   
 }

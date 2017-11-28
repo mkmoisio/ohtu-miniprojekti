@@ -470,8 +470,8 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     @Override
     public List<Vinkki> haeKaikki(LukuStatus status) {
         List<Vinkki> lista = haeKaikkiKirjatBase(status, null);
-        //haeKaikkiVideotBase(status, lista);
-        //haeKaikkiPodcastBase(status, lista);
+        lista = haeKaikkiVideotBase(status, lista);
+        lista = haeKaikkiPodcastBase(status, lista);
         return lista;
     }
 
@@ -552,16 +552,16 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
                     } else {
                         podcast.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.TRUE);
                     }
-                  
+
                     podcast.lisaaTekijat(rs.getString("tekijat"));
                     podcast.lisaaOminaisuus(Attribuutit.KUVAUS, rs.getString("kuvaus"));
                     podcast.lisaaOminaisuus(Attribuutit.NIMI, rs.getString("nimi"));
                     lista.add(podcast);
                 }
             }
-            
+
             komento.close();
-             return lista;
+            return lista;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -569,7 +569,48 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     }
 
     private List<Vinkki> haeKaikkiVideotBase(LukuStatus status, List<Vinkki> list) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        String haePodcastitString = "SELECT vinkki.otsikko, vinkki.luettu, video.url, group_concat(tekija_nimi, ' ') as tekijat \n"
+                + "FROM Vinkki \n"
+                + "INNER JOIN Video ON vinkki_id=video.vinkki \n"
+                + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
+                + "LEFT OUTER JOIN Tekija on tekija_id=tekija \n"
+                + "GROUP BY vinkki_id";
+
+        try {
+            PreparedStatement komento = conn.prepareStatement(haePodcastitString);
+            List<Vinkki> lista = null;
+            if (list == null) {
+                lista = new ArrayList<>();
+            } else {
+                lista = list;
+            }
+
+            ResultSet rs = komento.executeQuery();
+            while (rs.next()) {
+                int luettu = Integer.parseInt(rs.getString("luettu"));
+                if (luettu == status.getValue() || status == LukuStatus.KAIKKI) {
+                    Vinkki video = new Vinkki(rs.getString("otsikko"), Formaatit.VIDEO);
+                    if (luettu == 0) {
+                        video.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.FALSE);
+                    } else {
+                        video.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.TRUE);
+                    }
+
+                    video.lisaaTekijat(rs.getString("tekijat"));
+                    video.lisaaOminaisuus(Attribuutit.URL, rs.getString("url"));
+                    // video.lisaaOminaisuus(Attribuutit.NIMI, rs.getString("nimi"));
+                    lista.add(video);
+                }
+            }
+
+            komento.close();
+            return lista;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+
     }
 
     @Override
