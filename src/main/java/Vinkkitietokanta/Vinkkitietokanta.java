@@ -384,7 +384,19 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     }
 
     private boolean lisaaVideo(String vinkkiID, Vinkki vinkki) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String query = " INSERT INTO Video (url, vinkki) VALUES (?, ?)";
+        try {
+            PreparedStatement komento = conn.prepareStatement(query);
+            komento.setString(1, vinkki.haeOminaisuus(Attribuutit.URL));
+            komento.setInt(2, Integer.parseInt(vinkkiID));
+            komento.executeUpdate();
+            komento.close();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+
+        }
+        return false;
     }
 
     @Override
