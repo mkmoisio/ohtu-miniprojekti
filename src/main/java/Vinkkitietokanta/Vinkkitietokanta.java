@@ -570,7 +570,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
 
     private List<Vinkki> haeKaikkiVideotBase(LukuStatus status, List<Vinkki> list) {
 
-        String haePodcastitString = "SELECT vinkki.otsikko, vinkki.luettu, video.url, group_concat(tekija_nimi, ' ') as tekijat \n"
+        String haeVideoString = "SELECT vinkki.otsikko, vinkki.luettu, video.url, group_concat(tekija_nimi, ' ') as tekijat \n"
                 + "FROM Vinkki \n"
                 + "INNER JOIN Video ON vinkki_id=video.vinkki \n"
                 + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
@@ -578,7 +578,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
                 + "GROUP BY vinkki_id";
 
         try {
-            PreparedStatement komento = conn.prepareStatement(haePodcastitString);
+            PreparedStatement komento = conn.prepareStatement(haeVideoString);
             List<Vinkki> lista = null;
             if (list == null) {
                 lista = new ArrayList<>();
