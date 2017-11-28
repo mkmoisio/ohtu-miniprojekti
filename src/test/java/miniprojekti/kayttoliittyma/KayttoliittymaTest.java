@@ -79,7 +79,7 @@ public class KayttoliittymaTest {
         this.lisaaLukijaanTulostus();
 //        this.lukija.kaikki();
         this.suoritaJaLopeta();
-        assertTrue(this.tulostus.tulosteSisaltaa("Vinkki (tyyppi)" + "\n\tkirjoittaja " + "E. L. James" + "\n\totsikko " + "Fifty Shades of Grey"));
+        assertTrue(this.tulostus.tulosteSisaltaa("Vinkki (Kirja)" + "\n\tKirjoittaja: " + "E. L. James" + "\n\tOtsikko: " + "Fifty Shades of Grey"));
 
     }
 

@@ -7,6 +7,7 @@ package Kayttoliittyma;
 
 import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
+import apuviritykset.Validator;
 import io.Lukija;
 import io.LukijaRajapinta;
 import io.Tulostaja;
@@ -19,7 +20,8 @@ import java.util.List;
 public class Kayttoliittyma {
 
     private final String KOMENNOT = "Komennot:"
-            + "\n\t lisää - vinkin lisääminen"
+            + "\n\t lisää kirja - kirjavinkin lisääminen"
+            + "\n\t lisää podcast - podcast-vinkin lisääminen"
             + "\n\t tulosta - tulosta kaikki vinkit"
             + "\n\t poista - poista vinkki"
             + "\n\t lopeta - lopeta ohjelma "
@@ -54,7 +56,7 @@ public class Kayttoliittyma {
             String komento = this.lukija.nextLine();
 
             switch (komento) {
-                case "lisää":
+                case "lisää kirja":
                     this.tulostus.println("Anna kirjoittaja:");
                     kirjoittaja = this.lukija.nextLine();
                     this.tulostus.println("Anna otsikko:");
@@ -65,7 +67,10 @@ public class Kayttoliittyma {
                         this.tulostus.println("Kirjavinkkiä ei lisätty");
                     }
                     break;
-
+                    
+                case "lisää podcast":
+                    throw new UnsupportedOperationException("Podcastia ei vielä pysty");
+                    //break; MUISTA TÄLLÄ KERTAA LAITTAA BREAK KUN LISÄÄT TÄTÄ
                 case "tulosta":
                     this.tulostaKirjavinkit();
                     break;
@@ -90,11 +95,10 @@ public class Kayttoliittyma {
     }
 
     public boolean lisaaKirjavinkki(String kirjoittaja, String otsikko) {
-        if (kirjoittaja.isEmpty() || otsikko.isEmpty()) {
-            return false;
-        } else {
+        if (Validator.kirjavinkinSyoteOk(kirjoittaja, otsikko)) {
             return this.tk.lisaaKirja(kirjoittaja, otsikko);
-        }
+        }       
+        return false;            
     }
 
     public List<Vinkki> haeKaikki() {
