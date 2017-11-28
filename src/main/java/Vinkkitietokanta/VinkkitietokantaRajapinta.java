@@ -22,11 +22,12 @@ public interface VinkkitietokantaRajapinta {
     public boolean lisaaKirja(Vinkki vinkki);
     public boolean lisaaKirja(String otsikko);
     
+    public boolean lisaaPodcast(String nimi, String otsikko, String kuvaus);
     public boolean lisaaPodcast(Vinkki vinkki);
     public boolean lisaaVideo(Vinkki vinkki);
     
     public boolean lisaaVinkki(Vinkki vinkki);
-    
+   
     public List<Vinkki> haeKaikkiKirjat(LukuStatus status);
     public List<String> haeKaikkiKirjatString(LukuStatus status);
     

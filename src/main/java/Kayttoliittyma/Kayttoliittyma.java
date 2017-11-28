@@ -5,6 +5,7 @@
  */
 package Kayttoliittyma;
 
+import Vinkkitietokanta.LukuStatus;
 import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
 import apuviritykset.Validator;
@@ -22,7 +23,9 @@ public class Kayttoliittyma {
     private final String KOMENNOT = "Komennot:"
             + "\n\t lisää kirja - kirjavinkin lisääminen"
             + "\n\t lisää podcast - podcast-vinkin lisääminen"
-            + "\n\t tulosta - tulosta kaikki vinkit"
+            + "\n\t tulosta kaikki - tulosta kaikki vinkit"
+            + "\n\t tulosta kirjat - tulosta kaikki kirjavinkit"
+            + "\n\t tulosta podcastit - tulosta kaikki podcastit"
             + "\n\t poista - poista vinkki"
             + "\n\t lopeta - lopeta ohjelma "
             + "\n";
@@ -50,29 +53,32 @@ public class Kayttoliittyma {
 
         String kirjoittaja;
         String otsikko;
-
+        String nimi;
         while (true) {
             this.tulostaKomennot();
             String komento = this.lukija.nextLine();
 
             switch (komento) {
                 case "lisää kirja":
-                    this.tulostus.println("Anna kirjoittaja:");
-                    kirjoittaja = this.lukija.nextLine();
-                    this.tulostus.println("Anna otsikko:");
-                    otsikko = this.lukija.nextLine();
-                    if (this.lisaaKirjavinkki(kirjoittaja, otsikko)) {
-                        this.tulostus.println("Kirjavinkki lisätty");
-                    } else {
-                        this.tulostus.println("Kirjavinkkiä ei lisätty");
-                    }
+                    this.lisaaKirjavinkki();
                     break;
-                    
+
                 case "lisää podcast":
-                    throw new UnsupportedOperationException("Podcastia ei vielä pysty");
-                    //break; MUISTA TÄLLÄ KERTAA LAITTAA BREAK KUN LISÄÄT TÄTÄ
-                case "tulosta":
+                    this.lisaaPodcast();
+                    break;
+                //break; MUISTA TÄLLÄ KERTAA LAITTAA BREAK KUN LISÄÄT TÄTÄ
+                case "tulosta kirjat":
                     this.tulostaKirjavinkit();
+                    break;
+                case "tulosta kaikki":
+                    this.tulostaKaikkiVinkit();
+                    break;
+                case "tulosta lukemattomat":
+                    this.tulostaKaikkiLukemattomat();
+                    break;
+
+                case "tulosta podcastit":
+                    this.tulostaPodcastit();
                     break;
                 case "poista":
                     this.tulostus.println("Anna otsikko:");
@@ -94,37 +100,96 @@ public class Kayttoliittyma {
 
     }
 
-    public boolean lisaaKirjavinkki(String kirjoittaja, String otsikko) {
-        if (Validator.kirjavinkinSyoteOk(kirjoittaja, otsikko)) {
-            return this.tk.lisaaKirja(kirjoittaja, otsikko);
-        }       
-        return false;            
+    private void lisaaPodcast() {
+        this.tulostus.println("Anna nimi:");
+        String nimi = this.lukija.nextLine();
+        this.tulostus.println("Anna otsikko:");
+        String otsikko = this.lukija.nextLine();
+        this.tulostus.println("Anna kuvaus:");
+        String kuvaus = this.lukija.nextLine();
+
+        if (Validator.podcastvinkinSyoteOk(nimi, otsikko, kuvaus)) {
+            if (this.tk.lisaaPodcast(nimi, otsikko, kuvaus)) {
+                this.tulostus.println("Podcast lisätty");
+                return;
+            }
+        }
+        this.tulostus.println("Podcastia ei lisätty");
     }
 
-    public List<Vinkki> haeKaikki() {
-        return this.tk.haeKaikki();
+    private void lisaaKirjavinkki() {
+        this.tulostus.println("Anna kirjoittaja:");
+        String kirjoittaja = this.lukija.nextLine();
+        this.tulostus.println("Anna otsikko:");
+        String otsikko = this.lukija.nextLine();
+
+        if (Validator.kirjavinkinSyoteOk(kirjoittaja, otsikko)) {
+            this.tk.lisaaKirja(kirjoittaja, otsikko);
+            this.tulostus.println("Kirjavinkki lisätty");
+            return;
+        }
+        this.tulostus.println("Kirjavinkkiä ei lisätty");
+    }
+
+    private void lisaaVideo() {
+
+    }
+
+    /* KANNAN METODEITA KUTSUVAT METODIT */
+
+    public List<Vinkki> haeKaikkiKirjavinkit() {
+        return this.tk.haeKaikkiKirjat(LukuStatus.KAIKKI);
+    }
+
+    public List<Vinkki> haeKaikkiPodcastvinkit() {
+        return this.tk.haeKaikkiPodcast(LukuStatus.KAIKKI);
     }
 
     public boolean poistaKirja(String otsikko) {
         return this.tk.poistaKirja(otsikko);
     }
+    
+    // KAIKKI
+     private List<Vinkki> haeKaikkiVinkit() {
+        return this.tk.haeKaikki();
+    }
+     
+    private List<Vinkki> haeKaikkuLukemattomat() {
+        return this.tk.haeKaikki(LukuStatus.LUKEMATTOMAT);
+    }
 
+    /* KANTAA KUTSUVAT METODIT LOPPUVAT TÄHÄN*/
+    
+    
     private void tulostaKirjavinkit() {
-        for (Vinkki v : this.haeKaikki()) {
-            this.tulostus.println(v.toString());
-        }
+        tulostaLista(this.haeKaikkiKirjavinkit());
+    }
+
+    private void tulostaPodcastit() {
+        tulostaLista(this.haeKaikkiPodcastvinkit());
     }
 
     private void tulostaKomennot() {
         this.tulostus.println(this.KOMENNOT);
     }
 
-    private String muotoileTulosteVinkkilistasta(List<Vinkki> list) {
-        StringBuilder sb = new StringBuilder();
-
-        for (Vinkki v : list) {
-            sb.append(v.toString());
-        }
-        return sb.toString();
+    private void tulostaKaikkiVinkit() {
+        this.tulostaLista(this.haeKaikkiVinkit());
     }
+
+
+    private void tulostaKaikkiLukemattomat() {
+        this.tulostaLista(this.haeKaikkuLukemattomat());
+    }
+
+    private void tulostaLista(List<Vinkki> lista) {
+        for (Vinkki v : lista) {
+            this.tulostus.println(v.toString());
+        }
+    }
+
+
+    
+    
+
 }

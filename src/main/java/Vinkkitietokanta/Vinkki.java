@@ -130,9 +130,12 @@ public class Vinkki{
     public String toString(){
         if(null!=formaatti)switch (formaatti) {
             case KIRJA:
-                return "Vinkki (tyyppi) "+"\n\tkirjoittaja " + haeOminaisuus(Attribuutit.TEKIJAT) + "\n\totsikko " + Otsikko();
+                return "Kirjavinkki \n\tOtsikko: " + this.Otsikko() 
+                        + "\n\tKirjoitaja: " + haeOminaisuus(Attribuutit.TEKIJAT); 
             case PODCAST:
-                return Otsikko()+", luettu, "+luettu;
+                return "Podcastvinkki \n\tOtsikko: " + this.Otsikko() 
+                        + "\n\tNimi: " + haeOminaisuus(Attribuutit.NIMI)
+                        + "\n\tKuvaus: " + haeOminaisuus(Attribuutit.KUVAUS);
             case VIDEO:
                 return Otsikko()+", luettu, "+luettu;
             case NULL:

@@ -3,9 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Vinkkitietokanta;
+package apuviritykset;
 
-public enum Attribuutit{
-    OTSIKKO, TEKIJAT, LUETTU, ISBN, URL, KUVAUS, VINKKI, FORMAATTI, NIMI
+/**
+ *
+ * @author mikkomo
+ */
+public class Muotoilut {
+    
 }
-
