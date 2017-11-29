@@ -25,8 +25,8 @@ public class Kayttoliittyma {
             + "\n\t lisää podcast - podcast-vinkin lisääminen"
             + "\n\t lisää video - videovinkin lisääminen"
             + "\n\t tulosta kaikki - tulosta kaikki vinkit"
-            + "\n\t tulosta lukemattomat - tulosta kaikki lukemattomat vinkit"
-            + "\n\t tulosta luetut - tulosta kaikki luetut vinkit"
+            + "\n\t lukemattomat - tulosta kaikki lukemattomat vinkit"
+            + "\n\t luetut - tulosta kaikki luetut vinkit"
             + "\n\t tulosta kirjat - tulosta kaikki kirjavinkit"
             + "\n\t tulosta podcastit - tulosta kaikki podcastit"
             + "\n\t tulosta videot - tulosta kaikki videot"
@@ -78,10 +78,10 @@ public class Kayttoliittyma {
                 case "tulosta kaikki":
                     this.tulostaKaikkiVinkit();
                     break;
-                case "tulosta lukemattomat":
+                case "lukemattomat":
                     this.tulostaKaikkiLukemattomat();
                     break;
-                case "tulosta luetut":
+                case "luetut":
                     this.tulostaKaikkiLuetut();
                     break;
                 case "tulosta kirjat":
