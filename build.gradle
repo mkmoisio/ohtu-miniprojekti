@@ -12,7 +12,7 @@
 // Include capability to run the application
 apply plugin: 'java'
 apply plugin: 'application'
-apply plugin: "jacoco" 
+apply plugin: "jacoco"
 
 //Specification of the main class
 mainClassName = 'Main'
@@ -22,7 +22,11 @@ run {
     standardInput = System.in
 }
 
-
+jar {
+    manifest {
+        attributes 'Main-Class': 'Main'
+    }
+}
 
 
 // In this section you declare where to find the dependencies of your project
