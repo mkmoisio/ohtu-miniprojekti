@@ -1,0 +1,661 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Vinkkitietokanta.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ohtu-miniprojekti</a> &gt; <a href="index.source.html" class="el_package">Vinkkitietokanta</a> &gt; <span class="el_source">Vinkkitietokanta.java</span></div><h1>Vinkkitietokanta.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Vinkkitietokanta;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Tämä hoitaa tiedon muokkaamisen oikeanlaiseksi niin tietokannalle, kuin
+ * tietokannasta.
+ */
+
+/*
+ MI/24.11.2017 Tauluissa Vinkki, Kirja, Podcast, Video ja Tekija on päällä juokseva id numerointi kun tauluun lisää rivin.
+
+ Dumppaan tähän Sprint2:een tarvittavat SQL-komennot liittyen lisäämiseen, poistamiseen ja listaukseen!
+ (Eivät ole parametrisoituja tarkoituksella, siitä taisi olla Timolla taski)
+
+ http://sqlfiddle.com/#!7/4cb80 kautta voi myös katsoa tauluja ja kokeilla komentoja
+
+ Listaa valituntyyppiset vinkit (esim. video)
+ ............................................................................
+
+ SELECT vinkki.*, video.*, GROUP_CONCAT(tekija.tekija_nimi)
+ tekija
+ FROM Vinkki
+ INNER JOIN Video ON vinkki_id=video.vinkki
+ INNER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki
+ INNER JOIN Tekija on tekija_id=tekija;
+
+ Ja laita videon tilalle kirja tai podcast niiden vastaaville
+
+ Antaa tulosteen: (HUOM yhdistää useamman tekijän samaan sarakkeeseen, tämän voi muuttaakin)
+ vinkki_id   otsikko luettu  video_id    url vinkki  tekija
+ 4   otsikko5    1   1   https://www.youtube.com/watch?v=Jr9R9NT9lk8 4   Maiju,Maria
+
+ Listaa kaikki vinkit ja onko luettu
+ ....................................................................................................................
+
+ SELECT vinkki_id, luettu, GROUP_CONCAT(tekija.tekija_nimi)
+ tekija, otsikko
+ FROM vinkki
+ JOIN vinkkitekija on tekija_id=tekija 
+ JOIN tekija on vinkki_id=vinkkitekija.vinkki  
+ GROUP BY vinkki_id;
+
+ Antaa tulosteen:
+ vinkki_id   luettu  tekija  otsikko
+ 1   0   Matti   otsikko1
+
+ HUOM SINÄ JAVA-KOODISSA SQL-KOMENTOJA KÄSITTELEVÄ: en saanut tätä toimimaan muuten kuin siten, että jokaisella vinkillä
+ pitää olla jokin tekijä ( eli myös videolla). Voi olla että liittyy siihen, että SQLite ei tue FULLJOIN-komentoa. Tai sit vaan
+ en osannut. Voitko laittaa koodiin:
+ Joko käyttöliittymään validoinnit jokaiselle vinkille että pakko syöttää tekijä (myös videolle) 
+ TAI
+ Jos käyttäjä ei ole syöttänyt tekijää, ohjelma lisää hänen puolestaan tekijälle dummyarvon (esim. 'tuntematon')
+
+
+ Lisää 
+ .......
+
+ 1. Käyttöliittymä kysyy otsikkoa
+ INSERT INTO Vinkki (otsikko,luettu) VALUES ('otsikko', '0');
+ HUOM!!! SQLite ei tue TRUE/FALSE-tyylistä joten vaikka luettu on boolean, tietokannassa 
+ sen arvot ovat joko 0 eli false tai 1 eli true.
+
+ 2. Käyttöliittymä kysyy tekijää (huom katso kommenttini kohdassa &quot;Listaa kaikki vinkit ja onko luettu&quot;)
+
+ INSERT INTO Tekija (nimi) VALUES ('James Bond');
+ INSERT INTO VinkkiTekija (vinkki,tekija) VALUES ('','');
+
+ 3. Käyttöliittymä kysyy tyyppiä ja sen mukaisesti jatkokysymykset
+
+ INSERT INTO Kirja (isbn,kuvaus,vinkki) VALUES ();
+
+ INSERT INTO Video (url, vinkki) VALUES (); 
+
+ INSERT INTO Podcast (nimi,kuvaus,vinkki) VALUES ();
+
+ // missä vinkki on viiteavain Vinkki-tauluun
+
+
+
+ Poista
+ .................................................................................
+ Tämä on tosi rumasti tehty mutta sprintin aika loppui kesken tutkimisen ja halusin tämä toimimaan edes jotenkuten. 
+ Cascade-toiminto ei toimi lainkaan, ks. lisää konstruktorin kommentissa. Jos jollain riittää aika saa laittaa paremmaksi!! 
+
+ 1. Käyttöliittymä kysyy otsikkoa 
+
+ SELECT vinkki_id FROM Vinkki WHERE otsikko='Käyttäjän syöttämä otsikko';
+ DELETE FROM Kirja WHERE vinkki='' //edellisen haun tulos tähän
+ DELETE FROM Vinkki WHERE vinkki_id= '' 
+ SELECT tekija FROM VinkkiTekija WHERE vinkki= ''
+ DELETE FROM vinkkitekija WHERE vinkki_id= ''
+ DELETE FROM tekija WHERE tekija_id= '' //Select tekija..haun tulos tuohon
+
+ Ja vastaavasti videolle ja podcastille
+ 
+ */
+public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
+
+<span class="fc" id="L113">    Connection conn = null;</span>
+
+<span class="fc" id="L115">    public Vinkkitietokanta(String tkPath) {</span>
+        //Liitä tietokanta        
+        try {
+
+            /*MI/23.11 Tämä osa kommentoitu pois ainakin sprint 2 kohdalla.
+             SQLitessa silleen että vaikka on ON DELETE CASCADE viiteavainten kohdalla niin joku viiteavainsupport ei ole oletuksena päällä
+             eikä CASCADE siis oikeasti toimi suoraan: foreign keys pitää ensin laittaa päälle.
+             Kun laitoin tämän viiteavainsupportin päälle (suoraan tietokannassa, allaolevassa koodissa oli ajatuksena että
+             sama tehdään koodillisesti aina kun tietokantayhteys avataan) niin vinkin poistaminen ei toiminut lainkaan. Siksi vastaava 
+             koodi alla ei käytössä enkä ehdi sprint2 kohdalla tutkia enempää.
+             Tästä johtuen poistaminen on tällä hetkellä niin manuaalista eli pitää käydä joka taulussa poistamassa tietoja.
+	
+             Nämä koodirivit ovat täältä: http://code-know-how.blogspot.fi/2011/10/how-to-enable-foreign-keys-in-sqlite3.html				
+             SQLiteConfig config = new SQLiteConfig();  
+             config.enforceForeignKeys(true);*/
+<span class="fc" id="L130">            conn = DriverManager.getConnection(tkPath);</span>
+            //System.out.println(&quot;tietokanta liitetty&quot;);      
+            //System.out.println(&quot;statement luotu&quot;);
+<span class="nc" id="L133">        } catch (SQLException e) {</span>
+<span class="nc" id="L134">            System.out.println(e.getMessage());</span>
+<span class="fc" id="L135">        }</span>
+<span class="fc" id="L136">    }</span>
+
+    //Sulje yhteydet tietokantaan
+    public void sulje() {
+        try {
+<span class="nc bnc" id="L141" title="All 2 branches missed.">            if (conn != null) {</span>
+<span class="nc" id="L142">                conn.close();</span>
+            }
+<span class="nc" id="L144">        } catch (SQLException se) {</span>
+<span class="nc" id="L145">            se.printStackTrace();</span>
+<span class="nc" id="L146">        }</span>
+<span class="nc" id="L147">    }</span>
+
+    public boolean tietokantaliitetty() {
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (conn == null) {</span>
+<span class="nc" id="L151">            return false;</span>
+        }
+<span class="nc" id="L153">        return true;</span>
+    }
+
+    @Override
+    public boolean lisaaPodcast(Vinkki podcast) {
+<span class="nc" id="L158">        return lisaaVinkki(podcast);</span>
+    }
+
+    @Override
+    public boolean lisaaVideo(Vinkki video) {
+<span class="nc" id="L163">        return lisaaVinkki(video);</span>
+    }
+
+    @Override
+    public boolean lisaaKirja(Vinkki kirja) {
+<span class="nc" id="L168">        return lisaaVinkki(kirja);</span>
+    }
+
+    @Override
+    public boolean lisaaKirja(String otsikko) {
+<span class="nc" id="L173">        return lisaaKirja(&quot;&quot;, otsikko);</span>
+    }
+
+    @Override
+    public boolean lisaaKirja(String kirjoittajat, String otsikko) {
+<span class="fc" id="L178">        Vinkki kirja = new Vinkki(otsikko, Formaatit.KIRJA);</span>
+<span class="pc bpc" id="L179" title="3 of 4 branches missed.">        if (kirjoittajat != null || !kirjoittajat.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L180">            kirja.lisaaTekijat(kirjoittajat);</span>
+        }
+<span class="fc" id="L182">        lisaaVinkki(kirja);</span>
+<span class="fc" id="L183">        return true;</span>
+    }
+
+    @Override
+    public boolean lisaaPodcast(String nimi, String otsikko, String kuvaus) {
+<span class="nc" id="L188">        Vinkki podcast = new Vinkki(otsikko, Formaatit.PODCAST);</span>
+<span class="nc" id="L189">        podcast.lisaaOminaisuus(Attribuutit.KUVAUS, kuvaus);</span>
+<span class="nc" id="L190">        podcast.lisaaOminaisuus(Attribuutit.NIMI, nimi);</span>
+<span class="nc" id="L191">        return lisaaVinkki(podcast);</span>
+
+    }
+
+    @Override
+    public boolean poistaKirja(String otsikko) {
+<span class="nc" id="L197">        return poistaVinkki(otsikko);</span>
+    }
+
+    //EI me haluta kaikkia tekijöitä poistaa
+    @Override
+    public boolean poistaVinkki(String otsikko) {
+<span class="nc" id="L203">        String vinkkiID = haeOtsikolla(otsikko);</span>
+        //System.out.println(&quot;ID&quot;+vinkkiID);
+<span class="nc bnc" id="L205" title="All 2 branches missed.">        if (vinkkiID.isEmpty()) {</span>
+<span class="nc" id="L206">            return false;</span>
+        }
+        //String poistaKirja = &quot;DELETE FROM Kirja WHERE vinkki_id=?&quot;;
+<span class="nc" id="L209">        String poistaVinkki = &quot;DELETE FROM Vinkki WHERE vinkki_id=?&quot;;</span>
+        //String poistaVinkkiTekijä = &quot;DELETE FROM VinkkiTekijä WHERE vinkki_id=?&quot;;
+        try {
+            //PreparedStatement komento1 = conn.prepareStatement(poistaKirja);
+<span class="nc" id="L213">            PreparedStatement komento2 = conn.prepareStatement(poistaVinkki);</span>
+            //PreparedStatement komento3 = conn.prepareStatement(poistaVinkkiTekijä);
+            //komento1.setInt(1,Integer.parseInt(vinkkiID));
+<span class="nc" id="L216">            komento2.setInt(1, Integer.parseInt(vinkkiID));</span>
+            //komento3.setInt(1,Integer.parseInt(vinkkiID));
+            //komento1.executeUpdate();
+<span class="nc" id="L219">            komento2.executeUpdate();</span>
+            //komento3.executeUpdate();
+
+<span class="nc" id="L222">        } catch (SQLException e) {</span>
+<span class="nc" id="L223">            System.out.println(e.getMessage());</span>
+<span class="nc" id="L224">        }</span>
+
+<span class="nc" id="L226">        return false;</span>
+    }
+
+    private boolean tekijaLiitetty(String vinkkiID, String tekijaID) {
+<span class="fc" id="L230">        String haeTekija = &quot;SELECT * FROM VinkkiTekija WHERE vinkki=? AND tekija=?&quot;;</span>
+        try {
+<span class="fc" id="L232">            PreparedStatement komento = conn.prepareStatement(haeTekija);</span>
+<span class="fc" id="L233">            komento.setInt(1, Integer.parseInt(vinkkiID));</span>
+<span class="fc" id="L234">            komento.setInt(2, Integer.parseInt(tekijaID));</span>
+<span class="fc" id="L235">            ResultSet rs = komento.executeQuery();</span>
+<span class="fc" id="L236">            boolean loyty = false;</span>
+<span class="pc bpc" id="L237" title="1 of 2 branches missed.">            while (rs.next()) {</span>
+<span class="nc" id="L238">                loyty = true;</span>
+            }
+<span class="fc" id="L240">            return loyty;</span>
+<span class="nc" id="L241">        } catch (SQLException e) {</span>
+<span class="nc" id="L242">            System.out.println(e.getMessage());</span>
+        }
+<span class="nc" id="L244">        return false;</span>
+    }
+
+    private void liitaTekija(String vinkkiID, String tekijaID) {
+<span class="fc" id="L248">        String lisaaVinkkiin = &quot;INSERT INTO VinkkiTekija (vinkki,tekija) VALUES (?,?)&quot;;</span>
+        try {
+<span class="fc" id="L250">            PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);</span>
+<span class="fc" id="L251">            komento.setInt(1, Integer.parseInt(vinkkiID));</span>
+<span class="fc" id="L252">            komento.setInt(2, Integer.parseInt(tekijaID));</span>
+<span class="fc" id="L253">            komento.executeUpdate();</span>
+<span class="fc" id="L254">            komento.close();</span>
+<span class="nc" id="L255">        } catch (SQLException e) {</span>
+<span class="nc" id="L256">            System.out.println(e.getMessage());</span>
+<span class="fc" id="L257">        }</span>
+<span class="fc" id="L258">    }</span>
+
+    private void liitaTekijat(String vinkkiID, List&lt;String&gt; tekijaIDt) {
+<span class="fc bfc" id="L261" title="All 2 branches covered.">        for (String tekijaID : tekijaIDt) {</span>
+<span class="pc bpc" id="L262" title="1 of 2 branches missed.">            if (!tekijaLiitetty(vinkkiID, tekijaID)) {</span>
+<span class="fc" id="L263">                liitaTekija(vinkkiID, tekijaID);</span>
+            }
+<span class="fc" id="L265">        }</span>
+<span class="fc" id="L266">    }</span>
+
+    ;
+    
+    private String haeTekija(String nimi) {
+<span class="fc" id="L271">        String haeTekija = &quot;SELECT tekija_id FROM Tekija WHERE tekija_nimi=?&quot;;</span>
+        try {
+<span class="fc" id="L273">            PreparedStatement komento = conn.prepareStatement(haeTekija);</span>
+<span class="fc" id="L274">            komento.setString(1, nimi);</span>
+<span class="fc" id="L275">            ResultSet rs = komento.executeQuery();</span>
+<span class="fc" id="L276">            String kirjaID = &quot;&quot;;</span>
+<span class="fc bfc" id="L277" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L278">                kirjaID = Integer.toString(rs.getInt(&quot;tekija_id&quot;));</span>
+            }
+<span class="fc" id="L280">            return kirjaID;</span>
+<span class="nc" id="L281">        } catch (SQLException e) {</span>
+<span class="nc" id="L282">            System.out.println(e.getMessage());</span>
+        }
+<span class="nc" id="L284">        return &quot;&quot;;</span>
+    }
+
+    private void luoTekija(String nimi) {
+<span class="nc" id="L288">        String lisaaVinkkiin = &quot;INSERT INTO Tekija (tekija_nimi) VALUES (?)&quot;;</span>
+        try {
+<span class="nc" id="L290">            PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);</span>
+<span class="nc" id="L291">            komento.setString(1, nimi);</span>
+<span class="nc" id="L292">            komento.executeUpdate();</span>
+<span class="nc" id="L293">            komento.close();</span>
+<span class="nc" id="L294">        } catch (SQLException e) {</span>
+<span class="nc" id="L295">            System.out.println(e.getMessage());</span>
+<span class="nc" id="L296">        }</span>
+<span class="nc" id="L297">    }</span>
+
+    public String haeOtsikolla(String otsikko) {
+<span class="fc" id="L300">        String haeID = &quot;SELECT vinkki_id FROM Vinkki WHERE otsikko=?&quot;;</span>
+        try {
+<span class="fc" id="L302">            PreparedStatement komento = conn.prepareStatement(haeID);</span>
+<span class="fc" id="L303">            komento.setString(1, otsikko);</span>
+<span class="fc" id="L304">            ResultSet rs = komento.executeQuery();</span>
+<span class="fc" id="L305">            String kirjaID = &quot;&quot;;</span>
+<span class="fc bfc" id="L306" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L307">                kirjaID = rs.getString(&quot;vinkki_id&quot;);</span>
+            }
+<span class="fc" id="L309">            return kirjaID;</span>
+<span class="nc" id="L310">        } catch (SQLException e) {</span>
+<span class="nc" id="L311">            System.out.println(e.getMessage());</span>
+        }
+<span class="nc" id="L313">        return &quot;&quot;;</span>
+    }
+
+    public void luoVinkki(String otsikko, boolean luettu) {
+<span class="fc" id="L317">        String lisaaVinkkiin = &quot;INSERT INTO Vinkki (otsikko,luettu) VALUES (?, ?)&quot;;</span>
+        try {
+<span class="fc" id="L319">            PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);</span>
+<span class="fc" id="L320">            komento.setString(1, otsikko);</span>
+<span class="fc" id="L321">            komento.setBoolean(2, luettu);</span>
+<span class="fc" id="L322">            komento.executeUpdate();</span>
+<span class="fc" id="L323">            komento.close();</span>
+<span class="nc" id="L324">        } catch (SQLException e) {</span>
+<span class="nc" id="L325">            System.out.println(e.getMessage());</span>
+<span class="fc" id="L326">        }</span>
+<span class="fc" id="L327">    }</span>
+
+    private String haeJaLuoVinkkiID(Vinkki vinkki) {
+<span class="fc" id="L330">        String kirjaID = haeOtsikolla(vinkki.Otsikko());</span>
+<span class="pc bpc" id="L331" title="1 of 2 branches missed.">        if (kirjaID.isEmpty()) {</span>
+<span class="fc" id="L332">            luoVinkki(vinkki.Otsikko(), vinkki.luettu());</span>
+        }
+<span class="fc" id="L334">        return haeOtsikolla(vinkki.Otsikko());</span>
+    }
+
+    private List&lt;String&gt; haeJaPaivitaTekijat(String vinkkiID, List&lt;String&gt; tekijat) {
+<span class="fc" id="L338">        List&lt;String&gt; tekijaIDt = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L339" title="All 2 branches covered.">        for (String tekija : tekijat) {</span>
+<span class="fc" id="L340">            String tekijaID = haeTekija(tekija);</span>
+<span class="pc bpc" id="L341" title="1 of 2 branches missed.">            if (tekijaID.isEmpty()) {</span>
+<span class="nc" id="L342">                luoTekija(tekija);</span>
+<span class="nc" id="L343">                tekijaID = haeTekija(tekija);</span>
+            }
+<span class="fc" id="L345">            tekijaIDt.add(tekijaID);</span>
+<span class="fc" id="L346">        }</span>
+<span class="fc" id="L347">        return tekijaIDt;</span>
+    }
+
+    public boolean lisaaKirja(String vinkkiID, Vinkki kirja) {
+        //INSERT INTO Kirja (isbn,kuvaus,vinkki) VALUES ();
+<span class="fc" id="L352">        String lisaaVinkkiin = &quot;INSERT INTO Kirja (isbn,kuvaus,vinkki) VALUES (?,?,?)&quot;;</span>
+        try {
+<span class="fc" id="L354">            PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);</span>
+<span class="fc" id="L355">            komento.setString(1, kirja.haeOminaisuus(Attribuutit.ISBN));</span>
+<span class="fc" id="L356">            komento.setString(1, kirja.haeOminaisuus(Attribuutit.KUVAUS)); // &lt;__ Onko tässä tarkotuksella parametrinä int 1 eikä 2?</span>
+<span class="fc" id="L357">            komento.setInt(3, Integer.parseInt(vinkkiID));</span>
+<span class="fc" id="L358">            komento.executeUpdate();</span>
+<span class="fc" id="L359">            komento.close();</span>
+<span class="fc" id="L360">            return true;</span>
+<span class="nc" id="L361">        } catch (SQLException e) {</span>
+<span class="nc" id="L362">            System.out.println(e.getMessage());</span>
+<span class="nc" id="L363">            return false;</span>
+        }
+
+    }
+
+    //////////////IMPLEMENTOI NÄMÄ -- testaamatta!!
+    private boolean lisaaPodcast(String vinkkiID, Vinkki vinkki) {
+
+<span class="nc" id="L371">        String query = &quot;INSERT INTO Podcast (nimi, kuvaus, vinkki) VALUES (?,?,?)&quot;;</span>
+        try {
+<span class="nc" id="L373">            PreparedStatement komento = conn.prepareStatement(query);</span>
+<span class="nc" id="L374">            komento.setString(1, vinkki.haeOminaisuus(Attribuutit.NIMI));</span>
+<span class="nc" id="L375">            komento.setString(2, vinkki.haeOminaisuus(Attribuutit.KUVAUS));</span>
+<span class="nc" id="L376">            komento.setInt(3, Integer.parseInt(vinkkiID));</span>
+<span class="nc" id="L377">            komento.executeUpdate();</span>
+<span class="nc" id="L378">            komento.close();</span>
+<span class="nc" id="L379">            return true;</span>
+<span class="nc" id="L380">        } catch (SQLException e) {</span>
+<span class="nc" id="L381">            System.out.println(e.getMessage());</span>
+        }
+<span class="nc" id="L383">        return false;</span>
+    }
+
+    private boolean lisaaVideo(String vinkkiID, Vinkki vinkki) {
+<span class="nc" id="L387">        String query = &quot; INSERT INTO Video (url, vinkki) VALUES (?, ?)&quot;;</span>
+        try {
+<span class="nc" id="L389">            PreparedStatement komento = conn.prepareStatement(query);</span>
+<span class="nc" id="L390">            komento.setString(1, vinkki.haeOminaisuus(Attribuutit.URL));</span>
+<span class="nc" id="L391">            komento.setInt(2, Integer.parseInt(vinkkiID));</span>
+<span class="nc" id="L392">            komento.executeUpdate();</span>
+<span class="nc" id="L393">            komento.close();</span>
+<span class="nc" id="L394">            return true;</span>
+<span class="nc" id="L395">        } catch (SQLException e) {</span>
+<span class="nc" id="L396">            System.out.println(e.getMessage());</span>
+
+        }
+<span class="nc" id="L399">        return false;</span>
+    }
+
+    @Override
+    public boolean lisaaVinkki(Vinkki vinkki) {
+<span class="pc bpc" id="L404" title="1 of 2 branches missed.">        if (null != vinkki.formaatti()) {</span>
+<span class="fc" id="L405">            String vinkkiID = haeJaLuoVinkkiID(vinkki);</span>
+<span class="fc" id="L406">            List&lt;String&gt; tekijaIDt = haeJaPaivitaTekijat(vinkkiID, vinkki.haeTekijat());</span>
+<span class="fc" id="L407">            liitaTekijat(vinkkiID, tekijaIDt);</span>
+<span class="pc bpc" id="L408" title="3 of 4 branches missed.">            switch (vinkki.formaatti()) {</span>
+                case KIRJA:
+<span class="fc" id="L410">                    return lisaaKirja(vinkkiID, vinkki);</span>
+                case PODCAST:
+<span class="nc" id="L412">                    return lisaaPodcast(vinkkiID, vinkki);</span>
+                case VIDEO:
+<span class="nc" id="L414">                    return lisaaVideo(vinkkiID, vinkki);</span>
+            }
+        }
+<span class="nc" id="L417">        return false;</span>
+    }
+
+    private boolean merkitseLukuStatus(String vinkkiID, boolean luettu) {
+<span class="nc" id="L421">        String lisaaVinkkiin = &quot;UPDATE vinkki SET luettu=? WHERE vinkki_id=?&quot;;</span>
+        try {
+<span class="nc" id="L423">            PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);</span>
+<span class="nc" id="L424">            komento.setBoolean(1, luettu);</span>
+<span class="nc" id="L425">            komento.setInt(2, Integer.parseInt(vinkkiID));</span>
+<span class="nc" id="L426">            komento.executeUpdate();</span>
+<span class="nc" id="L427">            komento.close();</span>
+<span class="nc" id="L428">            return true;</span>
+<span class="nc" id="L429">        } catch (SQLException e) {</span>
+<span class="nc" id="L430">            System.out.println(e.getMessage());</span>
+        }
+<span class="nc" id="L432">        return false;</span>
+    }
+
+    @Override
+    public boolean merkitseLuetuksi(String otsikko) {
+<span class="nc" id="L437">        String vinkkiID = haeOtsikolla(otsikko);</span>
+<span class="nc bnc" id="L438" title="All 2 branches missed.">        if (vinkkiID.isEmpty()) {</span>
+<span class="nc" id="L439">            return false;</span>
+        }
+<span class="nc" id="L441">        return merkitseLukuStatus(vinkkiID, true);</span>
+    }
+
+    @Override
+    public boolean merkitseLukemattomaksi(String otsikko) {
+<span class="nc" id="L446">        String vinkkiID = haeOtsikolla(otsikko);</span>
+<span class="nc bnc" id="L447" title="All 2 branches missed.">        if (vinkkiID.isEmpty()) {</span>
+<span class="nc" id="L448">            return false;</span>
+        }
+<span class="nc" id="L450">        return merkitseLukuStatus(vinkkiID, false);</span>
+    }
+
+    ///////////////////////////////////////
+    ///////////////////////////////////////
+    ///HAE KAIKKI METODIT
+    @Override
+    public List&lt;Vinkki&gt; haeKaikkiKirjat(LukuStatus status) {
+<span class="nc" id="L458">        return haeKaikkiKirjatBase(status, null);</span>
+    }
+
+    @Override
+    public List&lt;String&gt; haeKaikkiKirjatString(LukuStatus status) {
+<span class="nc" id="L463">        List&lt;Vinkki&gt; vinkkiLista = haeKaikkiKirjatBase(status, null);</span>
+<span class="nc" id="L464">        return muunnaVinkkiLista(vinkkiLista);</span>
+    }
+
+    private List&lt;String&gt; muunnaVinkkiLista(List&lt;Vinkki&gt; vinkkiLista) {
+<span class="nc" id="L468">        List&lt;String&gt; lista = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L469" title="All 2 branches missed.">        for (Vinkki vinkki : vinkkiLista) {</span>
+<span class="nc" id="L470">            lista.add(vinkki.toString());</span>
+<span class="nc" id="L471">        }</span>
+<span class="nc" id="L472">        return lista;</span>
+    }
+
+    @Override
+    public List&lt;String&gt; haeKaikkiString(LukuStatus status) {
+<span class="nc" id="L477">        List&lt;Vinkki&gt; vinkkiLista = haeKaikki(status);</span>
+<span class="nc" id="L478">        return muunnaVinkkiLista(vinkkiLista);</span>
+    }
+
+    //////////////IMPLEMENTOI NÄMÄ
+    @Override
+    public List&lt;Vinkki&gt; haeKaikki(LukuStatus status) {
+<span class="fc" id="L484">        List&lt;Vinkki&gt; lista = haeKaikkiKirjatBase(status, null);</span>
+<span class="fc" id="L485">        lista = haeKaikkiVideotBase(status, lista);</span>
+<span class="fc" id="L486">        lista = haeKaikkiPodcastBase(status, lista);</span>
+<span class="fc" id="L487">        return lista;</span>
+    }
+
+    private List&lt;Vinkki&gt; haeKaikkiKirjatBase(LukuStatus status, List&lt;Vinkki&gt; list) {
+        /*
+         SELECT vinkki.otsikko, kirja.isbn, kirja.kuvaus, group_concat(tekija_nimi, ' ') as tekijat
+         FROM Vinkki
+         INNER JOIN kirja ON vinkki_id=kirja.vinkki
+         LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki
+         LEFT OUTER JOIN Tekija on tekija_id=tekija
+         GROUP BY vinkki_id
+         */
+<span class="fc" id="L499">        String haeKirjatString = &quot;SELECT vinkki.otsikko, vinkki.luettu, kirja.isbn, kirja.kuvaus, group_concat(tekija_nimi, ' ') as tekijat \n&quot;</span>
+                + &quot;FROM Vinkki \n&quot;
+                + &quot;INNER JOIN kirja ON vinkki_id=kirja.vinkki \n&quot;
+                + &quot;LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n&quot;
+                + &quot;LEFT OUTER JOIN Tekija on tekija_id=tekija \n&quot;
+                + &quot;GROUP BY vinkki_id&quot;;
+        try {
+<span class="fc" id="L506">            PreparedStatement komento = conn.prepareStatement(haeKirjatString);</span>
+<span class="fc" id="L507">            List&lt;Vinkki&gt; lista = null;</span>
+<span class="pc bpc" id="L508" title="1 of 2 branches missed.">            if (list == null) {</span>
+<span class="fc" id="L509">                lista = new ArrayList&lt;&gt;();</span>
+            } else {
+<span class="nc" id="L511">                lista = list;</span>
+            }
+
+<span class="fc" id="L514">            ResultSet rs = komento.executeQuery();</span>
+<span class="fc bfc" id="L515" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L516">                int luettu = Integer.parseInt(rs.getString(&quot;luettu&quot;));</span>
+<span class="pc bpc" id="L517" title="2 of 4 branches missed.">                if (luettu == status.getValue() || status == LukuStatus.KAIKKI) {</span>
+<span class="fc" id="L518">                    Vinkki kirja = new Vinkki(rs.getString(&quot;otsikko&quot;), Formaatit.KIRJA);</span>
+<span class="pc bpc" id="L519" title="1 of 2 branches missed.">                    if (luettu == 0) {</span>
+<span class="fc" id="L520">                        kirja.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.FALSE);</span>
+                    } else {
+<span class="nc" id="L522">                        kirja.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.TRUE);</span>
+                    }
+<span class="fc" id="L524">                    kirja.lisaaOminaisuus(Attribuutit.ISBN, rs.getString(&quot;isbn&quot;));</span>
+<span class="fc" id="L525">                    kirja.lisaaTekijat(rs.getString(&quot;tekijat&quot;));</span>
+<span class="fc" id="L526">                    kirja.lisaaOminaisuus(Attribuutit.KUVAUS, rs.getString(&quot;kuvaus&quot;));</span>
+<span class="fc" id="L527">                    lista.add(kirja);</span>
+                }
+<span class="fc" id="L529">            }</span>
+<span class="fc" id="L530">            komento.close();</span>
+<span class="fc" id="L531">            return lista;</span>
+<span class="nc" id="L532">        } catch (SQLException e) {</span>
+<span class="nc" id="L533">            System.out.println(e.getMessage());</span>
+        }
+<span class="nc" id="L535">        return null;</span>
+    }
+
+    //////////////IMPLEMENTOI NÄMÄ
+    private List&lt;Vinkki&gt; haeKaikkiPodcastBase(LukuStatus status, List&lt;Vinkki&gt; list) {
+
+<span class="fc" id="L541">        String haePodcastitString = &quot;SELECT vinkki.otsikko, vinkki.luettu, podcast.nimi, podcast.kuvaus, group_concat(tekija_nimi, ' ') as tekijat \n&quot;</span>
+                + &quot;FROM Vinkki \n&quot;
+                + &quot;INNER JOIN Podcast ON vinkki_id=podcast.vinkki \n&quot;
+                + &quot;LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n&quot;
+                + &quot;LEFT OUTER JOIN Tekija on tekija_id=tekija \n&quot;
+                + &quot;GROUP BY vinkki_id&quot;;
+
+        try {
+<span class="fc" id="L549">            PreparedStatement komento = conn.prepareStatement(haePodcastitString);</span>
+<span class="fc" id="L550">            List&lt;Vinkki&gt; lista = null;</span>
+<span class="pc bpc" id="L551" title="1 of 2 branches missed.">            if (list == null) {</span>
+<span class="nc" id="L552">                lista = new ArrayList&lt;&gt;();</span>
+            } else {
+<span class="fc" id="L554">                lista = list;</span>
+            }
+
+<span class="fc" id="L557">            ResultSet rs = komento.executeQuery();</span>
+<span class="fc bfc" id="L558" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L559">                int luettu = Integer.parseInt(rs.getString(&quot;luettu&quot;));</span>
+<span class="pc bpc" id="L560" title="2 of 4 branches missed.">                if (luettu == status.getValue() || status == LukuStatus.KAIKKI) {</span>
+<span class="fc" id="L561">                    Vinkki podcast = new Vinkki(rs.getString(&quot;otsikko&quot;), Formaatit.PODCAST);</span>
+<span class="pc bpc" id="L562" title="1 of 2 branches missed.">                    if (luettu == 0) {</span>
+<span class="fc" id="L563">                        podcast.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.FALSE);</span>
+                    } else {
+<span class="nc" id="L565">                        podcast.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.TRUE);</span>
+                    }
+
+<span class="fc" id="L568">                    podcast.lisaaTekijat(rs.getString(&quot;tekijat&quot;));</span>
+<span class="fc" id="L569">                    podcast.lisaaOminaisuus(Attribuutit.KUVAUS, rs.getString(&quot;kuvaus&quot;));</span>
+<span class="fc" id="L570">                    podcast.lisaaOminaisuus(Attribuutit.NIMI, rs.getString(&quot;nimi&quot;));</span>
+<span class="fc" id="L571">                    lista.add(podcast);</span>
+                }
+<span class="fc" id="L573">            }</span>
+
+<span class="fc" id="L575">            komento.close();</span>
+<span class="fc" id="L576">            return lista;</span>
+<span class="nc" id="L577">        } catch (SQLException e) {</span>
+<span class="nc" id="L578">            System.out.println(e.getMessage());</span>
+        }
+<span class="nc" id="L580">        return null;</span>
+    }
+
+    private List&lt;Vinkki&gt; haeKaikkiVideotBase(LukuStatus status, List&lt;Vinkki&gt; list) {
+
+<span class="fc" id="L585">        String haeVideoString = &quot;SELECT vinkki.otsikko, vinkki.luettu, video.url, group_concat(tekija_nimi, ' ') as tekijat \n&quot;</span>
+                + &quot;FROM Vinkki \n&quot;
+                + &quot;INNER JOIN Video ON vinkki_id=video.vinkki \n&quot;
+                + &quot;LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n&quot;
+                + &quot;LEFT OUTER JOIN Tekija on tekija_id=tekija \n&quot;
+                + &quot;GROUP BY vinkki_id&quot;;
+
+        try {
+<span class="fc" id="L593">            PreparedStatement komento = conn.prepareStatement(haeVideoString);</span>
+<span class="fc" id="L594">            List&lt;Vinkki&gt; lista = null;</span>
+<span class="pc bpc" id="L595" title="1 of 2 branches missed.">            if (list == null) {</span>
+<span class="nc" id="L596">                lista = new ArrayList&lt;&gt;();</span>
+            } else {
+<span class="fc" id="L598">                lista = list;</span>
+            }
+
+<span class="fc" id="L601">            ResultSet rs = komento.executeQuery();</span>
+<span class="fc bfc" id="L602" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L603">                int luettu = Integer.parseInt(rs.getString(&quot;luettu&quot;));</span>
+<span class="pc bpc" id="L604" title="2 of 4 branches missed.">                if (luettu == status.getValue() || status == LukuStatus.KAIKKI) {</span>
+<span class="fc" id="L605">                    Vinkki video = new Vinkki(rs.getString(&quot;otsikko&quot;), Formaatit.VIDEO);</span>
+<span class="fc bfc" id="L606" title="All 2 branches covered.">                    if (luettu == 0) {</span>
+<span class="fc" id="L607">                        video.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.FALSE);</span>
+                    } else {
+<span class="fc" id="L609">                        video.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.TRUE);</span>
+                    }
+
+<span class="fc" id="L612">                    video.lisaaTekijat(rs.getString(&quot;tekijat&quot;));</span>
+<span class="fc" id="L613">                    video.lisaaOminaisuus(Attribuutit.URL, rs.getString(&quot;url&quot;));</span>
+                    // video.lisaaOminaisuus(Attribuutit.NIMI, rs.getString(&quot;nimi&quot;));
+<span class="fc" id="L615">                    lista.add(video);</span>
+                }
+<span class="fc" id="L617">            }</span>
+
+<span class="fc" id="L619">            komento.close();</span>
+<span class="fc" id="L620">            return lista;</span>
+<span class="nc" id="L621">        } catch (SQLException e) {</span>
+<span class="nc" id="L622">            System.out.println(e.getMessage());</span>
+        }
+<span class="nc" id="L624">        return null;</span>
+
+    }
+
+    @Override
+    public List&lt;Vinkki&gt; haeKaikkiVideot(LukuStatus status) {
+<span class="nc" id="L630">        return haeKaikkiVideotBase(status, null);</span>
+    }
+
+    @Override
+    public List&lt;String&gt; haeKaikkiVideotString(LukuStatus status) {
+<span class="nc" id="L635">        List&lt;Vinkki&gt; vinkkiLista = haeKaikkiVideotBase(status, null);</span>
+<span class="nc" id="L636">        return muunnaVinkkiLista(vinkkiLista);</span>
+    }
+
+    @Override
+    public List&lt;Vinkki&gt; haeKaikkiPodcast(LukuStatus status) {
+<span class="nc" id="L641">        return haeKaikkiPodcastBase(status, null);</span>
+    }
+
+    @Override
+    public List&lt;String&gt; haeKaikkiPodcastString(LukuStatus status) {
+<span class="nc" id="L646">        List&lt;Vinkki&gt; vinkkiLista = haeKaikkiPodcastBase(status, null);</span>
+<span class="nc" id="L647">        return muunnaVinkkiLista(vinkkiLista);</span>
+    }
+
+    @Override
+    public List&lt;Vinkki&gt; haeKaikki() {
+<span class="fc" id="L652">        return haeKaikki(LukuStatus.KAIKKI);</span>
+    }
+
+    @Override
+    public List&lt;String&gt; haeKaikkiString() {
+<span class="nc" id="L657">        return haeKaikkiString(LukuStatus.KAIKKI);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

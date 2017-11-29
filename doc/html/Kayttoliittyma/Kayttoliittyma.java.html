@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Kayttoliittyma.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ohtu-miniprojekti</a> &gt; <a href="index.source.html" class="el_package">Kayttoliittyma</a> &gt; <span class="el_source">Kayttoliittyma.java</span></div><h1>Kayttoliittyma.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Kayttoliittyma;
+
+import Vinkkitietokanta.LukuStatus;
+import Vinkkitietokanta.Vinkki;
+import Vinkkitietokanta.VinkkitietokantaRajapinta;
+import apuviritykset.Validator;
+import io.Lukija;
+import io.LukijaRajapinta;
+import io.Tulostaja;
+import io.TulostusRajapinta;
+import java.util.List;
+
+/**
+ * Itse käyttöliittymä.
+ */
+public class Kayttoliittyma {
+
+<span class="fc" id="L23">    private final String KOMENNOT = &quot;Komennot:&quot;</span>
+            + &quot;\n\t lisää kirja - kirjavinkin lisääminen&quot;
+            + &quot;\n\t lisää podcast - podcast-vinkin lisääminen&quot;
+            + &quot;\n\t lisää video - videovinkin lisääminen&quot;
+            + &quot;\n\t tulosta kaikki - tulosta kaikki vinkit&quot;
+            + &quot;\n\t tulosta lukemattomat - tulosta kaikki lukemattomat vinkit&quot;
+            + &quot;\n\t tulosta luetut - tulosta kaikki luetut vinkit&quot;
+            + &quot;\n\t tulosta kirjat - tulosta kaikki kirjavinkit&quot;
+            + &quot;\n\t tulosta podcastit - tulosta kaikki podcastit&quot;
+            + &quot;\n\t tulosta videot - tulosta kaikki videot&quot;
+            + &quot;\n\t merkitse luetuksi - merkitse luetuksi&quot;
+            + &quot;\n\t poista - poista vinkki&quot;
+            + &quot;\n\t lopeta - lopeta ohjelma &quot;
+            + &quot;\n&quot;;
+
+    VinkkitietokantaRajapinta tk;
+    LukijaRajapinta lukija;
+    TulostusRajapinta tulostus;
+
+<span class="fc" id="L42">    public Kayttoliittyma(VinkkitietokantaRajapinta tk) {</span>
+<span class="fc" id="L43">        this.tk = tk;</span>
+<span class="fc" id="L44">        this.lukija = new Lukija(System.in);</span>
+<span class="fc" id="L45">        this.tulostus = new Tulostaja(System.out);</span>
+
+<span class="fc" id="L47">    }</span>
+
+    public void setLukija(LukijaRajapinta lukija) {
+<span class="fc" id="L50">        this.lukija = lukija;</span>
+<span class="fc" id="L51">    }</span>
+
+    public void setTulostus(TulostusRajapinta tulostus) {
+<span class="fc" id="L54">        this.tulostus = tulostus;</span>
+<span class="fc" id="L55">    }</span>
+
+    public void suorita() {
+
+        while (true) {
+<span class="fc" id="L60">            this.tulostaKomennot();</span>
+<span class="fc" id="L61">            String komento = this.lukija.nextLine().toLowerCase();</span>
+
+<span class="pc bpc" id="L63" title="41 of 50 branches missed.">            switch (komento) {</span>
+
+                /* LISÄÄMINEN ALKAA */
+                case &quot;lisää kirja&quot;:
+<span class="fc" id="L67">                    this.lisaaKirjavinkki();</span>
+<span class="fc" id="L68">                    break;</span>
+                case &quot;lisää podcast&quot;:
+<span class="nc" id="L70">                    this.lisaaPodcast();</span>
+<span class="nc" id="L71">                    break;</span>
+                case &quot;lisää video&quot;:
+<span class="nc" id="L73">                    this.lisaaVideo();</span>
+<span class="nc" id="L74">                    break;</span>
+                /* LISÄÄMINEN LOPPUU */
+
+                /* TULOSTUS ALKAA */
+                case &quot;tulosta kaikki&quot;:
+<span class="fc" id="L79">                    this.tulostaKaikkiVinkit();</span>
+<span class="fc" id="L80">                    break;</span>
+                case &quot;tulosta lukemattomat&quot;:
+<span class="nc" id="L82">                    this.tulostaKaikkiLukemattomat();</span>
+<span class="nc" id="L83">                    break;</span>
+                case &quot;tulosta luetut&quot;:
+<span class="nc" id="L85">                    this.tulostaKaikkiLuetut();</span>
+<span class="nc" id="L86">                    break;</span>
+                case &quot;tulosta kirjat&quot;:
+<span class="nc" id="L88">                    this.tulostaKirjavinkit();</span>
+<span class="nc" id="L89">                    break;</span>
+                case &quot;tulosta podcastit&quot;:
+<span class="nc" id="L91">                    this.tulostaPodcastit();</span>
+<span class="nc" id="L92">                    break;</span>
+                case &quot;tulosta videot&quot;:
+<span class="nc" id="L94">                    this.tulostaVideot();</span>
+<span class="nc" id="L95">                    break;</span>
+                /* TULOSTUS LOPPUU */
+
+                case &quot;merkitse luetuksi&quot;:
+<span class="nc" id="L99">                    this.merkitseLuetuksi();</span>
+<span class="nc" id="L100">                    break;</span>
+                case &quot;poista&quot;:
+<span class="nc" id="L102">                    this.poista();</span>
+<span class="nc" id="L103">                    break;</span>
+
+                case &quot;lopeta&quot;:
+<span class="fc" id="L106">                    return;</span>
+                default:
+
+            }
+
+<span class="fc" id="L111">        }</span>
+
+    }
+
+    private void poista() {
+<span class="nc" id="L116">        this.tulostus.println(&quot;Anna otsikko:&quot;);</span>
+<span class="nc" id="L117">        String otsikko = this.lukija.nextLine();</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if (this.poistaVinkki(otsikko)) {</span>
+<span class="nc" id="L119">            this.tulostus.println(&quot;Vinkki poistettu&quot;);</span>
+        } else {
+<span class="nc" id="L121">            this.tulostus.println(&quot;Vinkkiä ei poistettu&quot;);</span>
+        }
+<span class="nc" id="L123">    }</span>
+
+    private void lisaaPodcast() {
+<span class="nc" id="L126">        this.tulostus.println(&quot;Anna nimi:&quot;);</span>
+<span class="nc" id="L127">        String nimi = this.lukija.nextLine();</span>
+<span class="nc" id="L128">        this.tulostus.println(&quot;Anna otsikko:&quot;);</span>
+<span class="nc" id="L129">        String otsikko = this.lukija.nextLine();</span>
+<span class="nc" id="L130">        this.tulostus.println(&quot;Anna kuvaus:&quot;);</span>
+<span class="nc" id="L131">        String kuvaus = this.lukija.nextLine();</span>
+
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (Validator.podcastvinkinSyoteOk(nimi, otsikko, kuvaus)) {</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">            if (this.tk.lisaaPodcast(nimi, otsikko, kuvaus)) {</span>
+<span class="nc" id="L135">                this.tulostus.println(&quot;Podcast lisätty&quot;);</span>
+<span class="nc" id="L136">                return;</span>
+            }
+        }
+<span class="nc" id="L139">        this.tulostus.println(&quot;Podcastia ei lisätty&quot;);</span>
+<span class="nc" id="L140">    }</span>
+
+    private void lisaaKirjavinkki() {
+<span class="fc" id="L143">        this.tulostus.println(&quot;Anna kirjoittaja:&quot;);</span>
+<span class="fc" id="L144">        String kirjoittaja = this.lukija.nextLine();</span>
+<span class="fc" id="L145">        this.tulostus.println(&quot;Anna otsikko:&quot;);</span>
+<span class="fc" id="L146">        String otsikko = this.lukija.nextLine();</span>
+
+<span class="fc bfc" id="L148" title="All 2 branches covered.">        if (Validator.kirjavinkinSyoteOk(kirjoittaja, otsikko)) {</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">            if (this.tk.lisaaKirja(kirjoittaja, otsikko)) {</span>
+<span class="fc" id="L150">                this.tulostus.println(&quot;Kirjavinkki lisätty&quot;);</span>
+<span class="fc" id="L151">                return;</span>
+            }
+
+        }
+<span class="fc" id="L155">        this.tulostus.println(&quot;Kirjavinkkiä ei lisätty&quot;);</span>
+<span class="fc" id="L156">    }</span>
+
+    private void merkitseLuetuksi() {
+<span class="nc" id="L159">        throw new UnsupportedOperationException(&quot;Not supported yet.&quot;); //To change body of generated methods, choose Tools | Templates.</span>
+    }
+
+    private void lisaaVideo() {
+
+<span class="nc" id="L164">    }</span>
+
+    /* KANNAN METODEITA KUTSUVAT METODIT */
+    private List&lt;Vinkki&gt; haeKaikkiVinkit() {
+<span class="fc" id="L168">        return this.tk.haeKaikki();</span>
+    }
+
+    private List&lt;Vinkki&gt; haeKaikkuLukemattomat() {
+<span class="nc" id="L172">        return this.tk.haeKaikki(LukuStatus.LUKEMATTOMAT);</span>
+    }
+
+    private List&lt;Vinkki&gt; haeKaikkiLuetut() {
+<span class="nc" id="L176">        return this.tk.haeKaikki(LukuStatus.LUETTU);</span>
+    }
+
+    public List&lt;Vinkki&gt; haeKaikkiKirjavinkit() {
+<span class="nc" id="L180">        return this.tk.haeKaikkiKirjat(LukuStatus.KAIKKI);</span>
+    }
+
+    public List&lt;Vinkki&gt; haeKaikkiPodcastvinkit() {
+<span class="nc" id="L184">        return this.tk.haeKaikkiPodcast(LukuStatus.KAIKKI);</span>
+    }
+
+    public List&lt;Vinkki&gt; haeKaikkiVideovinkit() {
+<span class="nc" id="L188">        return this.tk.haeKaikkiVideot(LukuStatus.KAIKKI);</span>
+    }
+
+    private boolean poistaVinkki(String otsikko) {
+<span class="nc" id="L192">        return this.tk.poistaVinkki(otsikko);</span>
+    }
+
+    public boolean poistaKirja(String otsikko) {
+<span class="nc" id="L196">        return this.tk.poistaKirja(otsikko);</span>
+    }
+    /* KANTAA KUTSUVAT METODIT LOPPUVAT TÄHÄN*/
+
+    /* TULOSTUS */
+    private void tulostaKirjavinkit() {
+<span class="nc" id="L202">        tulostaLista(this.haeKaikkiKirjavinkit());</span>
+<span class="nc" id="L203">    }</span>
+
+    private void tulostaPodcastit() {
+<span class="nc" id="L206">        tulostaLista(this.haeKaikkiPodcastvinkit());</span>
+<span class="nc" id="L207">    }</span>
+
+    private void tulostaVideot() {
+<span class="nc" id="L210">        tulostaLista(this.haeKaikkiVideovinkit());</span>
+<span class="nc" id="L211">    }</span>
+
+    private void tulostaKomennot() {
+<span class="fc" id="L214">        this.tulostus.println(this.KOMENNOT);</span>
+<span class="fc" id="L215">    }</span>
+
+    private void tulostaKaikkiVinkit() {
+<span class="fc" id="L218">        this.tulostaLista(this.haeKaikkiVinkit());</span>
+<span class="fc" id="L219">    }</span>
+
+    private void tulostaKaikkiLukemattomat() {
+<span class="nc" id="L222">        this.tulostaLista(this.haeKaikkuLukemattomat());</span>
+<span class="nc" id="L223">    }</span>
+
+    private void tulostaKaikkiLuetut() {
+<span class="nc" id="L226">        this.tulostaLista(this.haeKaikkiLuetut());</span>
+<span class="nc" id="L227">    }</span>
+
+    private void tulostaLista(List&lt;Vinkki&gt; lista) {
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        for (Vinkki v : lista) {</span>
+<span class="fc" id="L231">            this.tulostus.println(v.toString());</span>
+<span class="fc" id="L232">        }</span>
+<span class="fc" id="L233">    }</span>
+    /* TULOSTUS PÄÄTTYY*/
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>
