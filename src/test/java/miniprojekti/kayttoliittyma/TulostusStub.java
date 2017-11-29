@@ -55,9 +55,9 @@ public class TulostusStub implements TulostusRajapinta {
         this.tulosteet.add(x);
     }
     
-//    public void kaikki() {
-//        for (String s : this.tulosteetListana()) {
-//            System.out.println(s);
-//        }
-//    }
+    public void kaikki() {
+        for (String s : this.tulosteetListana()) {
+            System.out.println(s);
+        }
+    }
 }
