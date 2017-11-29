@@ -6,6 +6,8 @@ Definition of Done: Task on tehty, kun se on koodattu, testattu erikseen ja liit
 
 [![Build Status](https://travis-ci.org/mkmoisio/ohtu-miniprojekti.svg?branch=master)](https://travis-ci.org/mkmoisio/ohtu-miniprojekti)
 
+[Testikattavuus](https://htmlpreview.github.io/?https://github.com/mkmoisio/ohtu-miniprojekti/blob/master/doc/html/index.html)
+
 Tähän tulee linkki sovelluksen toimivaan versioon.
 
 Tähän tulee linkki asennus- ja käyttöohjeisiin.
