@@ -5,6 +5,7 @@
  */
 package Vinkkitietokanta;
 
+import apuviritykset.Muotoilut;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -152,17 +153,8 @@ public class Vinkki {
         StringBuilder sb = new StringBuilder();
         if (null != formaatti) {
             switch (formaatti) {
-                case KIRJA:
-                    sb.append("Kirjavinkki \n\tOtsikko: ");
-                    sb.append(this.Otsikko());
-                    if (this.luettu) {
-                        sb.append(" (luettu)");
-                    } else {
-                        sb.append(" (lukematon)");
-                    }
-                    sb.append("\n\tKirjoitaja: ");
-                    sb.append(haeOminaisuus(Attribuutit.TEKIJAT));
-                    return sb.toString();
+                case KIRJA:         
+                    return Muotoilut.muotoileKirjavinkinTuloste(this);
                     
                 case PODCAST:
                     sb.append("Podcastvinkki \n\tOtsikko: ");

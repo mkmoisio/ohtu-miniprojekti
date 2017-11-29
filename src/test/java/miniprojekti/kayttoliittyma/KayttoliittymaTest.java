@@ -7,7 +7,10 @@ package miniprojekti.kayttoliittyma;
 
 import Kayttoliittyma.Kayttoliittyma;
 import Vinkkitietokanta.Vinkkitietokanta;
+import apuviritykset.Muotoilut;
 import io.LukijaRajapinta;
+import java.io.File;
+import java.util.Random;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -21,10 +24,11 @@ import static org.junit.Assert.*;
  */
 public class KayttoliittymaTest {
 
-    Vinkkitietokanta tietokanta;
+ //   Vinkkitietokanta tietokanta;
     Kayttoliittyma UI;
     LukijaStub lukija;
     TulostusStub tulostus;
+    Random random;
 
     public KayttoliittymaTest() {
     }
@@ -40,21 +44,31 @@ public class KayttoliittymaTest {
     @Before
     public void setUp() {
         //  this.tietokanta = new Vinkkitietokanta();
-        this.UI = new Kayttoliittyma(new Kanta());
+        
+        File dbfile=new File("");
+           String url="jdbc:sqlite:"+dbfile.getAbsolutePath()+"/sprint2testikanta.db";
+        
+        Vinkkitietokanta tietokanta = new Vinkkitietokanta(url);
+        this.UI = new Kayttoliittyma(tietokanta);
         this.lukija = new LukijaStub();
         this.tulostus = new TulostusStub();
         this.UI.setLukija(lukija);
         this.UI.setTulostus(tulostus);
+        this.random = new Random();
     }
 
     @After
     public void tearDown() {
     }
-
+    
+    private String generoiSatunnainenOtsikko(){
+        return "Fifty Shades of Grey" + this.random.nextInt(10000);
+    }
+    
     @Test
     public void kirjavinkinLisaaminenPalauttaaLisattyTulosteenValidillaSyoteella() {
         this.lukija.nollaa();
-        this.lisaaLukijaanLisays("Cormen", "Introduction.to.Algorithms.3rd.Edition.Sep.2010");
+        this.lisaaLukijaanKirjavinkinLisays("Cormen", this.generoiSatunnainenOtsikko());
         this.suoritaJaLopeta();
         assertTrue(this.tulostus.tulosteSisaltaa("Kirjavinkki lisätty"));
         this.tulostus.nollaa();
@@ -63,9 +77,9 @@ public class KayttoliittymaTest {
     @Test
     public void kirjavinkinLisaaminenPalauttaaEiLisattyTulosteenEiValidillaSyoteella() {
         this.lukija.nollaa();
-        this.lisaaLukijaanLisays("", "Introduction.to.Algorithms.3rd.Edition.Sep.2010");
-        this.lisaaLukijaanLisays("", "");
-        this.lisaaLukijaanLisays("Cormen", "");
+        this.lisaaLukijaanKirjavinkinLisays("",  this.generoiSatunnainenOtsikko());
+        this.lisaaLukijaanKirjavinkinLisays("", "");
+        this.lisaaLukijaanKirjavinkinLisays("Cormen", "");
         this.suoritaJaLopeta();
         assertTrue(this.tulostus.tulosteSisaltaa("Kirjavinkkiä ei lisätty"));
         assertTrue(!this.tulostus.tulosteSisaltaa("Kirjavinkki lisätty"));
@@ -75,25 +89,27 @@ public class KayttoliittymaTest {
     public void kirjavinkkiEsiintyyKaikkienVinkkienTulosteessaLisaamisenJalkeen() {
         this.lukija.nollaa();
         this.tulostus.nollaa();
-        this.lisaaLukijaanLisays("E. L. James", "Fifty Shades of Grey");
-        this.lisaaLukijaanTulostus();
+        String otsikko = this.generoiSatunnainenOtsikko();
+        this.lisaaLukijaanKirjavinkinLisays("E. L. James", otsikko);
+        this.lisaaLukijaanKaikkienTulostus();
 //        this.lukija.kaikki();
         this.suoritaJaLopeta();
-        assertTrue(this.tulostus.tulosteSisaltaa("Vinkki (Kirja)" + "\n\tKirjoittaja: " + "E. L. James" + "\n\tOtsikko: " + "Fifty Shades of Grey"));
+        System.out.println(Muotoilut.muotoileKirjavinkinTuloste(otsikko, false, "E. L. James"));
+        assertTrue(this.tulostus.tulosteSisaltaa(Muotoilut.muotoileKirjavinkinTuloste(otsikko, false, "E. L. James")));
 
     }
 
-    @Test
-    public void kirjaVinkkiEiEsiinnyTulosteesaPoistamisenJalkeen() {
-        this.lukija.nollaa();
-        this.tulostus.nollaa();
-        this.lisaaLukijaanLisays("Kivi", "abc");
-        this.lisaaLukijaanPoisto("abc");
-        this.lisaaLukijaanTulostus();
-        
-        this.suoritaJaLopeta();
-        assertTrue(!this.tulostus.tulosteSisaltaa("Vinkki (tyyppi)" + "\n\tkirjoittaja " + "Kivi" + "\n\totsikko " + "abc"));
-    }
+//    @Test
+//    public void kirjaVinkkiEiEsiinnyTulosteesaPoistamisenJalkeen() {
+//        this.lukija.nollaa();
+//        this.tulostus.nollaa();
+//        this.lisaaLukijaanKirjavinkinLisays("Kivi", "abc");
+//        this.lisaaLukijaanPoisto("abc");
+//        this.lisaaLukijaanKaikkienTulostus();
+//        
+//        this.suoritaJaLopeta();
+//        assertTrue(!this.tulostus.tulosteSisaltaa("Vinkki (tyyppi)" + "\n\tkirjoittaja " + "Kivi" + "\n\totsikko " + "abc"));
+//    }
 
     private void suoritaJaLopeta() {
         this.lukija.lisaaSyote("lopeta");
@@ -101,14 +117,14 @@ public class KayttoliittymaTest {
         this.UI.suorita();
     }
 
-    private void lisaaLukijaanTulostus() {
-        this.lukija.lisaaSyote("tulosta");
+    private void lisaaLukijaanKaikkienTulostus() {
+        this.lukija.lisaaSyote("tulosta kaikki");
     }
     private void lisaaLukijaanPoisto(String otsikko) {
         this.lukija.lisaaSyote("poista", otsikko);
     }
-    private void lisaaLukijaanLisays(String kirjoittaja, String otsikko) {
-        this.lukija.lisaaSyote("lisää", kirjoittaja, otsikko);
+    private void lisaaLukijaanKirjavinkinLisays(String kirjoittaja, String otsikko) {
+        this.lukija.lisaaSyote("lisää kirja", kirjoittaja, otsikko);
     }
 
 }

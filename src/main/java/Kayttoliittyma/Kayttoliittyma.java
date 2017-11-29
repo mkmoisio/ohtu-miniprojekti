@@ -111,7 +111,6 @@ public class Kayttoliittyma {
         }
 
     }
-// POISTAA VAIN KIRJAN
 
     private void poista() {
         this.tulostus.println("Anna otsikko:");
