@@ -141,6 +141,10 @@ public class Kanta implements VinkkitietokantaRajapinta {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
-    
+    @Override
+    public boolean lisaaVideo(String url, String otsikko) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools |
+    }
+
+
 }

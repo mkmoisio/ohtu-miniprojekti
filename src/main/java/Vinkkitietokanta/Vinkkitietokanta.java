@@ -189,7 +189,13 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         podcast.lisaaOminaisuus(Attribuutit.KUVAUS, kuvaus);
         podcast.lisaaOminaisuus(Attribuutit.NIMI, nimi);
         return lisaaVinkki(podcast);
+    }
 
+    @Override
+    public boolean lisaaVideo(String url, String otsikko) {
+        Vinkki video = new Vinkki(otsikko, Formaatit.VIDEO);
+        video.lisaaOminaisuus(Attribuutit.URL, url);
+        return lisaaVinkki(video);
     }
 
     @Override
@@ -223,7 +229,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             System.out.println(e.getMessage());
         }
 
-        return false;
+        return true;
     }
 
     private boolean tekijaLiitetty(String vinkkiID, String tekijaID) {
@@ -264,8 +270,6 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             }
         }
     }
-
-    ;
     
     private String haeTekija(String nimi) {
         String haeTekija = "SELECT tekija_id FROM Tekija WHERE tekija_nimi=?";

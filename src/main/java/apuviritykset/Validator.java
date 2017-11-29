@@ -13,6 +13,8 @@ public class Validator {
     private static final int PODCAST_NIMI_MAX_PITUUS = 50;
     private static final int PODCAST_KUVAUS_MAX_PITUUS = 50;
     private static final int PODCAST_OTSIKKO_MAX_PITUUS = 50;
+    private static final int VIDEO_OTSIKKO_MAX_PITUUS = 50;
+    private static final int VIDEO_URL_MAX_PITUUS = 500;
 
     public static boolean podcastvinkinSyoteOk(String nimi, String otsikko, String kuvaus) {
         return (!nimi.isEmpty()
@@ -28,6 +30,14 @@ public class Validator {
                 && !otsikko.isEmpty()
                 && (kirjoittaja.length() <= KIRJA_KIRJOTTAJA_MAX_PITUUS)
                 && (otsikko.length() <= KIRJA_OTSIKKO_MAX_PITUUS));
+    }
+
+    public static boolean videovinkinSyoteOk(String url, String otsikko) {
+        return (!url.isEmpty()
+                && !otsikko.isEmpty()
+                && (url.length() <= VIDEO_URL_MAX_PITUUS)
+                && (otsikko.length() <= VIDEO_OTSIKKO_MAX_PITUUS));
+
     }
     
 }

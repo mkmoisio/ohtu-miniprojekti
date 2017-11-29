@@ -150,19 +150,29 @@ public class Kayttoliittyma {
                 this.tulostus.println("Kirjavinkki lisätty");
                 return;
             }
-
         }
         this.tulostus.println("Kirjavinkkiä ei lisätty");
+    }
+
+    private void lisaaVideo() {
+        this.tulostus.println("Anna url:");
+        String url = this.lukija.nextLine();
+        this.tulostus.println("Anna otsikko:");
+        String otsikko = this.lukija.nextLine();
+
+        if (Validator.videovinkinSyoteOk(url, otsikko)) {
+            if (this.tk.lisaaVideo(url, otsikko)) {
+                this.tulostus.println("Video lisätty");
+                return;
+            }
+        }
+        this.tulostus.println("Videota ei lisätty");
     }
 
     private void merkitseLuetuksi() {
         this.tulostus.println("Anna sen vinkin otsikko, joka merkitään luetuksi");
         String otsikko = this.lukija.nextLine();
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private void lisaaVideo() {
-
     }
 
     /* KANNAN METODEITA KUTSUVAT METODIT */
