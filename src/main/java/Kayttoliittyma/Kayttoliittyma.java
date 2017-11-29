@@ -156,6 +156,7 @@ public class Kayttoliittyma {
     }
 
     private void merkitseLuetuksi() {
+        this.tulostus.println("Anna sen vinkin otsikko, joka merkitään luetuksi");
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
