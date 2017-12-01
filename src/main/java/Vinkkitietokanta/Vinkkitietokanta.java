@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import org.sqlite.SQLiteConfig;
 
 /**
  * Tämä hoitaa tiedon muokkaamisen oikeanlaiseksi niin tietokannalle, kuin
@@ -127,11 +128,14 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
              Nämä koodirivit ovat täältä: http://code-know-how.blogspot.fi/2011/10/how-to-enable-foreign-keys-in-sqlite3.html				
              SQLiteConfig config = new SQLiteConfig();  
              config.enforceForeignKeys(true);*/
-            conn = DriverManager.getConnection(tkPath);
-            //System.out.println("tietokanta liitetty");      
-            //System.out.println("statement luotu");
+            SQLiteConfig config = new SQLiteConfig();  
+            config.enforceForeignKeys(true);
+            conn = DriverManager.getConnection(tkPath,config.toProperties());
+            
+            //System.err.println("tietokanta liitetty");      
+            //System.err.println("statement luotu");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 
@@ -142,7 +146,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
                 conn.close();
             }
         } catch (SQLException se) {
-            se.printStackTrace();
+            System.err.println(se.getMessage());
         }
     }
 
@@ -207,7 +211,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     @Override
     public boolean poistaVinkki(String otsikko) {
         String vinkkiID = haeOtsikolla(otsikko);
-        //System.out.println("ID"+vinkkiID);
+        //System.err.println("ID"+vinkkiID);
         if (vinkkiID.isEmpty()) {
             return false;
         }
@@ -223,10 +227,12 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             //komento3.setInt(1,Integer.parseInt(vinkkiID));
             //komento1.executeUpdate();
             komento2.executeUpdate();
+            komento2.close();
             //komento3.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("poistaVinkki: "+e.getMessage());
+            return false;
         }
 
         return true;
@@ -245,9 +251,9 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             }
             return loyty;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("tekijaLiitetty: "+e.getMessage());
+            return false;
         }
-        return false;
     }
 
     private void liitaTekija(String vinkkiID, String tekijaID) {
@@ -259,7 +265,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             komento.executeUpdate();
             komento.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("liitaTekija: "+e.getMessage());
         }
     }
 
@@ -283,7 +289,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             }
             return kirjaID;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("haeTekija: "+e.getMessage());
         }
         return "";
     }
@@ -296,7 +302,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             komento.executeUpdate();
             komento.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("luoTekija: "+e.getMessage());
         }
     }
 
@@ -312,7 +318,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             }
             return kirjaID;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("haeOtsikolla: "+e.getMessage());
         }
         return "";
     }
@@ -326,16 +332,8 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             komento.executeUpdate();
             komento.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("luoVinkki: "+e.getMessage());
         }
-    }
-
-    private String haeJaLuoVinkkiID(Vinkki vinkki) {
-        String kirjaID = haeOtsikolla(vinkki.Otsikko());
-        if (kirjaID.isEmpty()) {
-            luoVinkki(vinkki.Otsikko(), vinkki.luettu());
-        }
-        return haeOtsikolla(vinkki.Otsikko());
     }
 
     private List<String> haeJaPaivitaTekijat(String vinkkiID, List<String> tekijat) {
@@ -357,13 +355,15 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         try {
             PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);
             komento.setString(1, kirja.haeOminaisuus(Attribuutit.ISBN));
-            komento.setString(1, kirja.haeOminaisuus(Attribuutit.KUVAUS)); // <__ Onko tässä tarkotuksella parametrinä int 1 eikä 2?
+            // <__ Onko tässä tarkotuksella parametrinä int 1 eikä 2?
+            //TV: Vain bugi
+            komento.setString(2, kirja.haeOminaisuus(Attribuutit.KUVAUS)); 
             komento.setInt(3, Integer.parseInt(vinkkiID));
             komento.executeUpdate();
             komento.close();
             return true;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("lisaaKirja: "+ e.getMessage());
             return false;
         }
 
@@ -382,7 +382,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             komento.close();
             return true;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("lisaaPodcast: "+ e.getMessage());
         }
         return false;
     }
@@ -397,7 +397,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             komento.close();
             return true;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("lisaaVideo: "+ e.getMessage());
 
         }
         return false;
@@ -406,7 +406,10 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     @Override
     public boolean lisaaVinkki(Vinkki vinkki) {
         if (null != vinkki.formaatti()) {
-            String vinkkiID = haeJaLuoVinkkiID(vinkki);
+            if(!haeOtsikolla(vinkki.Otsikko()).isEmpty()) return false;
+            luoVinkki(vinkki.Otsikko(), vinkki.luettu());
+            String vinkkiID = haeOtsikolla(vinkki.Otsikko());
+            if(vinkkiID.isEmpty()) return false;
             List<String> tekijaIDt = haeJaPaivitaTekijat(vinkkiID, vinkki.haeTekijat());
             liitaTekijat(vinkkiID, tekijaIDt);
             switch (vinkki.formaatti()) {
@@ -431,7 +434,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             komento.close();
             return true;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("merkitseLukuStatus"+e.getMessage());
         }
         return false;
     }
@@ -500,7 +503,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
          LEFT OUTER JOIN Tekija on tekija_id=tekija
          GROUP BY vinkki_id
          */
-        String haeKirjatString = "SELECT vinkki.otsikko, vinkki.luettu, kirja.isbn, kirja.kuvaus, group_concat(tekija_nimi, ' ') as tekijat \n"
+        String haeKirjatString = "SELECT vinkki.otsikko, vinkki.luettu, kirja.isbn, kirja.kuvaus, group_concat(tekija_nimi, '----') as tekijat \n"
                 + "FROM Vinkki \n"
                 + "INNER JOIN kirja ON vinkki_id=kirja.vinkki \n"
                 + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
@@ -534,7 +537,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             komento.close();
             return lista;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("haeKaikkiKirjatBase:"+e.getMessage());
         }
         return null;
     }
@@ -542,7 +545,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     //////////////IMPLEMENTOI NÄMÄ
     private List<Vinkki> haeKaikkiPodcastBase(LukuStatus status, List<Vinkki> list) {
 
-        String haePodcastitString = "SELECT vinkki.otsikko, vinkki.luettu, podcast.nimi, podcast.kuvaus, group_concat(tekija_nimi, ' ') as tekijat \n"
+        String haePodcastitString = "SELECT vinkki.otsikko, vinkki.luettu, podcast.nimi, podcast.kuvaus, group_concat(tekija_nimi, '----') as tekijat \n"
                 + "FROM Vinkki \n"
                 + "INNER JOIN Podcast ON vinkki_id=podcast.vinkki \n"
                 + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
@@ -579,14 +582,14 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             komento.close();
             return lista;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("haeKaikkiPodcastBase:"+e.getMessage());
         }
         return null;
     }
 
     private List<Vinkki> haeKaikkiVideotBase(LukuStatus status, List<Vinkki> list) {
 
-        String haeVideoString = "SELECT vinkki.otsikko, vinkki.luettu, video.url, group_concat(tekija_nimi, ' ') as tekijat \n"
+        String haeVideoString = "SELECT vinkki.otsikko, vinkki.luettu, video.url, group_concat(tekija_nimi, '----') as tekijat \n"
                 + "FROM Vinkki \n"
                 + "INNER JOIN Video ON vinkki_id=video.vinkki \n"
                 + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
@@ -623,7 +626,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             komento.close();
             return lista;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("haeKaikkiVideotBase:"+e.getMessage());
         }
         return null;
 
