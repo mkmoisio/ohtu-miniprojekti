@@ -95,13 +95,15 @@ public class Vinkki {
         if (tekijatStr == null) {
             return;
         }
-        String erotin = "[,]";
+        String erotin = "[----]";
         for (String tekija : tekijatStr.split(erotin)) {
             if (tekija.equals("(null)")) {
                 return;
             }
-            if (!tekijat.contains(tekija)) {
-                tekijat.add(tekija);
+            String str=tekija.trim();
+            
+            if (!tekijat.contains(str) && !str.isEmpty()) {
+                tekijat.add(str);
             }
         }
     }
