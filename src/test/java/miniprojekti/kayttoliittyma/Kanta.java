@@ -146,5 +146,15 @@ public class Kanta implements VinkkitietokantaRajapinta {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools |
     }
 
+    @Override
+    public boolean lisaaBlogpost(Vinkki vinkki) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean lisaaBlogpost(String kirjoittaja, String url, String otsikko) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
 }
