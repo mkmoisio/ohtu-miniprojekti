@@ -6,5 +6,5 @@
 package Vinkkitietokanta;
 
 public enum Formaatit{
-    NULL,KIRJA, VIDEO, PODCAST
+    NULL,KIRJA, VIDEO, PODCAST, BLOGPOST
 }

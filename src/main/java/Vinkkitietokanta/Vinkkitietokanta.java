@@ -166,6 +166,11 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     public boolean lisaaVideo(Vinkki video) {
         return lisaaVinkki(video);
     }
+    
+    @Override
+    public boolean lisaaBlogpost(Vinkki blogpost) {
+        return lisaaVinkki(blogpost);
+    }
 
     @Override
     public boolean lisaaKirja(Vinkki kirja) {
@@ -202,6 +207,16 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         return lisaaVinkki(video);
     }
 
+    @Override
+    public boolean lisaaBlogpost(String url, String kirjoittajat, String otsikko) {
+        Vinkki blogpost = new Vinkki(otsikko, Formaatit.BLOGPOST);
+        blogpost.lisaaOminaisuus(Attribuutit.URL, url);
+        if (kirjoittajat != null || !kirjoittajat.equals("")) {
+            blogpost.lisaaTekijat(kirjoittajat);
+        }
+        return lisaaVinkki(blogpost);
+    }
+    
     @Override
     public boolean poistaKirja(String otsikko) {
         return poistaVinkki(otsikko);
@@ -402,6 +417,22 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         }
         return false;
     }
+    
+    private boolean lisaaBlogpost(String vinkkiID, Vinkki vinkki) {
+        String query = " INSERT INTO Blogpost (url, vinkki) VALUES (?, ?)";
+        try {
+            PreparedStatement komento = conn.prepareStatement(query);
+            komento.setString(1, vinkki.haeOminaisuus(Attribuutit.URL));
+            komento.setInt(2, Integer.parseInt(vinkkiID));
+            komento.executeUpdate();
+            komento.close();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("lisaaBlogpost: "+ e.getMessage());
+
+        }
+        return false;
+    }
 
     @Override
     public boolean lisaaVinkki(Vinkki vinkki) {
@@ -419,6 +450,8 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
                     return lisaaPodcast(vinkkiID, vinkki);
                 case VIDEO:
                     return lisaaVideo(vinkkiID, vinkki);
+                case BLOGPOST:
+                    return lisaaBlogpost(vinkkiID, vinkki);
             }
         }
         return false;

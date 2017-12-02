@@ -186,6 +186,19 @@ public class Vinkki {
                     sb.append(haeOminaisuus(Attribuutit.KUVAUS));                 
                     return  sb.toString();
                     
+                case BLOGPOST:
+                    sb.append("Blogpost-vinkki \n\tOtsikko: ");
+                    sb.append(this.Otsikko());
+                    if (this.luettu) {
+                        sb.append(" (luettu)");
+                    } else {
+                        sb.append(" (lukematon)");
+                    }
+                    sb.append("\n\tURL: ");
+                    sb.append(haeOminaisuus(Attribuutit.URL));
+                    sb.append("\n\tKuvaus: ");
+                    sb.append(haeOminaisuus(Attribuutit.KUVAUS));                 
+                    return  sb.toString();
                 case NULL:
                     return Otsikko() + ", luettu, " + luettu;
             }

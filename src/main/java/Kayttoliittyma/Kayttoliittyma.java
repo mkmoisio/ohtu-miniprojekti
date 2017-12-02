@@ -24,12 +24,14 @@ public class Kayttoliittyma {
             + "\n\t lisää kirja - kirjavinkin lisääminen"
             + "\n\t lisää podcast - podcast-vinkin lisääminen"
             + "\n\t lisää video - videovinkin lisääminen"
+            + "\n\t lisää blogpost - blogpost-vinkin lisääminen"
             + "\n\t tulosta kaikki - tulosta kaikki vinkit"
             + "\n\t lukemattomat - tulosta kaikki lukemattomat vinkit"
             + "\n\t luetut - tulosta kaikki luetut vinkit"
             + "\n\t tulosta kirjat - tulosta kaikki kirjavinkit"
             + "\n\t tulosta podcastit - tulosta kaikki podcastit"
             + "\n\t tulosta videot - tulosta kaikki videot"
+            + "\n\t tulosta blogpostit - tulosta kaikki blogpostit"
             + "\n\t merkitse luetuksi - merkitse luetuksi"
             + "\n\t poista - poista vinkki"
             + "\n\t lopeta - lopeta ohjelma "
@@ -72,6 +74,9 @@ public class Kayttoliittyma {
                 case "lisää video":
                     this.lisaaVideo();
                     break;
+                case "lisää blogpost":
+                    this.lisaaBlogpost();
+                    break;
                 /* LISÄÄMINEN LOPPUU */
 
                 /* TULOSTUS ALKAA */
@@ -92,6 +97,9 @@ public class Kayttoliittyma {
                     break;
                 case "tulosta videot":
                     this.tulostaVideot();
+                    break;
+                case "tulosta blogpostit":
+                    this.tulostaBlogpostit();
                     break;
                 /* TULOSTUS LOPPUU */
 
@@ -168,6 +176,16 @@ public class Kayttoliittyma {
         }
         this.tulostus.println("Videota ei lisätty");
     }
+    
+    private void lisaaBlogpost() {
+        this.tulostus.println("Anna url:");
+        String url = this.lukija.nextLine();
+        this.tulostus.println("Anna kirjoittaja:");
+        String kirjoittajat = this.lukija.nextLine();
+        this.tulostus.println("Anna otsikko:");
+        String otsikko = this.lukija.nextLine();
+        // Syötteen validointi puuttuu vielä
+    }
 
     private void merkitseLuetuksi() {
         this.tulostus.println("Anna sen vinkin otsikko, joka merkitään luetuksi");
@@ -199,6 +217,11 @@ public class Kayttoliittyma {
     public List<Vinkki> haeKaikkiVideovinkit() {
         return this.tk.haeKaikkiVideot(LukuStatus.KAIKKI);
     }
+    
+    public List<Vinkki> haeKaikkiBlogpostvinkit() {
+        return this.tk.haeKaikkiVideot(LukuStatus.KAIKKI);
+        // Tämä muutettava blogiposteiksi
+    }
 
     private boolean poistaVinkki(String otsikko) {
         return this.tk.poistaVinkki(otsikko);
@@ -220,6 +243,10 @@ public class Kayttoliittyma {
 
     private void tulostaVideot() {
         tulostaLista(this.haeKaikkiVideovinkit());
+    }
+    
+    private void tulostaBlogpostit() {
+        tulostaLista(this.haeKaikkiBlogpostvinkit());
     }
 
     private void tulostaKomennot() {
