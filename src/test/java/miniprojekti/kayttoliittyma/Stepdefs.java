@@ -26,7 +26,9 @@ public class Stepdefs {
         this.l.lisaaSyote("lopeta");
         this.ui.suorita();
     }
-
+    /*
+    LISÄYS ALKAA
+    */
     @Given("^Command \"([^\"]*)\" is entered$")
     public void command_entered(String command) throws Throwable {
         tk.nollaa();
@@ -64,17 +66,29 @@ public class Stepdefs {
 
         t.nollaa();
     }
-    
+    /*
+    LISÄYS LOPPUU
+    */
+    /*
+    LISTAUS ALKAA
+    */
     @Given("^database is reset$")
     public void database_is_reset() {
         tk.nollaa();
     }
     @Given("^command \"([^\"]*)\" is entered and author \"([^\"]*)\" and title \"([^\"]*)\" are entered$")
     public void command_and_author_and_title_entered(String command, String author, String title) {
-      
         ui.setLukija(l);
         ui.setTulostus(t);
         l.lisaaSyote(command, author, title);
+
+    }
+    
+    @Given("^command \"([^\"]*)\" is entered and url \"([^\"]*)\" and title \"([^\"]*)\" are entered$")
+    public void command_and_url_and_title_entered(String command, String url, String title) {
+        ui.setLukija(l);
+        ui.setTulostus(t);
+        l.lisaaSyote(command, url, title);
 
     }
 
@@ -85,9 +99,19 @@ public class Stepdefs {
         ui.suorita();
     }
 
-    @Then("^the application responds with a list containing an unread tip with author \"([^\"]*)\" and title \"([^\"]*)\"$")
-    public void response_contains(String author, String title) {
+    @Then("^the application responds with a list containing an unread book tip with author \"([^\"]*)\" and title \"([^\"]*)\"$")
+    public void response_contains_unread_book_tip(String author, String title) {
         assertTrue(t.tulosteSisaltaa(Muotoilut.muotoileKirjavinkinTuloste(title, false, author)));
     }
+    
+//      @Then("^the application responds with a list containing tip with url \"([^\"]*)\" and title \"([^\"]*)\"$")
+//    public void response_contains(String url, String title) {
+//        assertTrue(t.tulosteSisaltaa(Muotoilut.));
+//    }
+//    
+    
+     /*
+    LISTAUS LOPPUU
+    */
 
 }
