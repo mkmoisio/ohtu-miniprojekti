@@ -46,7 +46,7 @@ public class KayttoliittymaTest {
         //  this.tietokanta = new Vinkkitietokanta();
         
         File dbfile=new File("");
-           String url="jdbc:sqlite:"+dbfile.getAbsolutePath()+"/sprint2testikanta.db";
+           String url="jdbc:sqlite:"+dbfile.getAbsolutePath()+"/databases/test/sprint2testikanta.db";
         
         Vinkkitietokanta tietokanta = new Vinkkitietokanta(url);
         this.UI = new Kayttoliittyma(tietokanta);
