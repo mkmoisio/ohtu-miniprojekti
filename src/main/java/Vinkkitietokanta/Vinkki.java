@@ -40,15 +40,12 @@ public class Vinkki {
                 case LUETTU:
                     return String.valueOf(luettu);
                 case TEKIJAT:
-                    if (tekijat.isEmpty()) {
-                        return "0";
-                    }
                     return printtaaTekijat();
                 default:
                     if (attribuutit.containsKey(attribuutti)) {
                         return attribuutit.get(attribuutti);
                     } else {
-                        return "0";
+                        return "";
                     }
             }
         }
@@ -64,16 +61,20 @@ public class Vinkki {
                         return false;
                     }
                     otsikko = arvo.toString();
+                    break;
                 case FORMAATTI:
                     if (!Formaatit.class.isInstance(arvo)) {
                         return false;
                     }
+
                     formaatti = (Formaatit) arvo;
+                    break;
                 case LUETTU:
                     if (!Boolean.class.isInstance(arvo)) {
                         return false;
                     }
                     luettu = (Boolean) arvo;
+                    break;
                 case TEKIJAT:
                     if (!String.class.isInstance(arvo)) {
                         return false;
@@ -81,24 +82,27 @@ public class Vinkki {
                     if (!tekijat.contains(arvo.toString())) {
                         tekijat.add(arvo.toString());
                     }
+                    break;
                 default:
                     if (!String.class.isInstance(arvo)) {
                         return false;
                     }
                     attribuutit.put(attribuutti, arvo.toString());
+                    break;
             }
+            return true;
         }
         return false;
     }
 
-    public void lisaaTekijat(String tekijatStr) {
+    public boolean lisaaTekijat(String tekijatStr) {
         if (tekijatStr == null) {
-            return;
+            return false;
         }
         String erotin = "[----]";
         for (String tekija : tekijatStr.split(erotin)) {
             if (tekija.equals("(null)")) {
-                return;
+                return false;
             }
             String str=tekija.trim();
             
@@ -106,6 +110,7 @@ public class Vinkki {
                 tekijat.add(str);
             }
         }
+        return true;
     }
 
     public void lisaaTekija(String tekija) {
@@ -119,11 +124,7 @@ public class Vinkki {
     }
 
     public String printtaaTekijat() {
-        String tekijatStr = "";
-        for (String tekija : tekijat) {
-            tekijatStr = tekijatStr + tekija + ",";
-        }
-        return tekijatStr;
+        return String.join(",", tekijat);
     }
 
     public void poistaTekijat() {
