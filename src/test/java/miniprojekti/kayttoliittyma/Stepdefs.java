@@ -2,6 +2,7 @@ package miniprojekti.kayttoliittyma;
 
 import Kayttoliittyma.Kayttoliittyma;
 import Vinkkitietokanta.Vinkkitietokanta;
+import apuviritykset.Muotoilut;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -16,19 +17,22 @@ public class Stepdefs {
 
     File dbfile = new File("");
 
-    Kanta tk = new Kanta("jdbc:sqlite:" + dbfile.getAbsolutePath() + "/databases/test/cucumber-kanta.db"); 
+    Kanta tk = new Kanta("jdbc:sqlite:" + dbfile.getAbsolutePath() + "/databases/test/cucumber-kanta.db");
     Kayttoliittyma ui = new Kayttoliittyma(this.tk);
     LukijaStub l = new LukijaStub();
     TulostusStub t = new TulostusStub();
 
-    
-    
+    private void execute() {
+        this.l.lisaaSyote("lopeta");
+        this.ui.suorita();
+    }
+
     @Given("^Command \"([^\"]*)\" is entered$")
-    public void command_entered(String command) throws Throwable { 
-        tk.nollaa();   
+    public void command_entered(String command) throws Throwable {
+        tk.nollaa();
         ui.setLukija(l);
         ui.setTulostus(t);
-        
+
         l.lisaaSyote(command);
     }
 
@@ -57,8 +61,33 @@ public class Stepdefs {
     @Then("^the application responds with \"([^\"]*)\"$")
     public void responds_with(String response) {
         assertTrue(t.tulosteSisaltaa(response));
-        
+
         t.nollaa();
+    }
+    
+    @Given("^database is reset$")
+    public void database_is_reset() {
+        tk.nollaa();
+    }
+    @Given("^command \"([^\"]*)\" is entered and author \"([^\"]*)\" and title \"([^\"]*)\" are entered$")
+    public void command_and_author_and_title_entered(String command, String author, String title) {
+      
+        ui.setLukija(l);
+        ui.setTulostus(t);
+        l.lisaaSyote(command, author, title);
+
+    }
+
+    @When("^print command \"([^\"]*)\" is entered$")
+    public void print_command_entered(String command) {
+        l.lisaaSyote(command);
+        l.lisaaSyote("lopeta");
+        ui.suorita();
+    }
+
+    @Then("^the application responds with a list containing an unread tip with author \"([^\"]*)\" and title \"([^\"]*)\"$")
+    public void response_contains(String author, String title) {
+        assertTrue(t.tulosteSisaltaa(Muotoilut.muotoileKirjavinkinTuloste(title, false, author)));
     }
 
 }
