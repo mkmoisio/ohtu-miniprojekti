@@ -79,7 +79,7 @@ public class Kayttoliittyma {
                     break;
                 /* LISÄÄMINEN LOPPUU */
 
-                /* TULOSTUS ALKAA */
+ /* TULOSTUS ALKAA */
                 case "tulosta kaikki":
                     this.tulostaKaikkiVinkit();
                     break;
@@ -176,7 +176,7 @@ public class Kayttoliittyma {
         }
         this.tulostus.println("Videota ei lisätty");
     }
-    
+
     private void lisaaBlogpost() {
         this.tulostus.println("Anna url:");
         String url = this.lukija.nextLine();
@@ -217,10 +217,9 @@ public class Kayttoliittyma {
     public List<Vinkki> haeKaikkiVideovinkit() {
         return this.tk.haeKaikkiVideot(LukuStatus.KAIKKI);
     }
-    
+
     public List<Vinkki> haeKaikkiBlogpostvinkit() {
-        return this.tk.haeKaikkiVideot(LukuStatus.KAIKKI);
-        // Tämä muutettava blogiposteiksi
+        return this.tk.haeKaikkiBlogpost(LukuStatus.KAIKKI);
     }
 
     private boolean poistaVinkki(String otsikko) {
@@ -230,9 +229,10 @@ public class Kayttoliittyma {
     public boolean poistaKirja(String otsikko) {
         return this.tk.poistaKirja(otsikko);
     }
+
     /* KANTAA KUTSUVAT METODIT LOPPUVAT TÄHÄN*/
 
-    /* TULOSTUS */
+ /* TULOSTUS */
     private void tulostaKirjavinkit() {
         tulostaLista(this.haeKaikkiKirjavinkit());
     }
@@ -244,7 +244,7 @@ public class Kayttoliittyma {
     private void tulostaVideot() {
         tulostaLista(this.haeKaikkiVideovinkit());
     }
-    
+
     private void tulostaBlogpostit() {
         tulostaLista(this.haeKaikkiBlogpostvinkit());
     }

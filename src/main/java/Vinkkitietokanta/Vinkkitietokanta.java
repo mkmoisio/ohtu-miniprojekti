@@ -524,6 +524,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         List<Vinkki> lista = haeKaikkiKirjatBase(status, null);
         lista = haeKaikkiVideotBase(status, lista);
         lista = haeKaikkiPodcastBase(status, lista);
+        lista = haeKaikkiBlogpostBase(status, lista);
         return lista;
     }
 
@@ -664,6 +665,50 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         return null;
 
     }
+    
+    private List<Vinkki> haeKaikkiBlogpostBase(LukuStatus status, List<Vinkki> list) {
+
+        String haeBlogpostString = "SELECT vinkki.otsikko, vinkki.luettu, blogpost.url, group_concat(tekija_nimi, '----') as tekijat \n"
+                + "FROM Vinkki \n"
+                + "INNER JOIN Blogpost ON vinkki_id=blogpost.vinkki \n"
+                + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
+                + "LEFT OUTER JOIN Tekija on tekija_id=tekija \n"
+                + "GROUP BY vinkki_id";
+
+        try {
+            PreparedStatement komento = conn.prepareStatement(haeBlogpostString);
+            List<Vinkki> lista = null;
+            if (list == null) {
+                lista = new ArrayList<>();
+            } else {
+                lista = list;
+            }
+
+            ResultSet rs = komento.executeQuery();
+            while (rs.next()) {
+                int luettu = Integer.parseInt(rs.getString("luettu"));
+                if (luettu == status.getValue() || status == LukuStatus.KAIKKI) {
+                    Vinkki blogpost = new Vinkki(rs.getString("otsikko"), Formaatit.BLOGPOST);
+                    if (luettu == 0) {
+                        blogpost.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.FALSE);
+                    } else {
+                        blogpost.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.TRUE);
+                    }
+
+                    blogpost.lisaaTekijat(rs.getString("tekijat"));
+                    blogpost.lisaaOminaisuus(Attribuutit.URL, rs.getString("url"));
+                    lista.add(blogpost);
+                }
+            }
+
+            komento.close();
+            return lista;
+        } catch (SQLException e) {
+            System.err.println("haeKaikkiBlogpostBase:"+e.getMessage());
+        }
+        return null;
+
+    }
 
     @Override
     public List<Vinkki> haeKaikkiVideot(LukuStatus status) {
@@ -673,6 +718,17 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     @Override
     public List<String> haeKaikkiVideotString(LukuStatus status) {
         List<Vinkki> vinkkiLista = haeKaikkiVideotBase(status, null);
+        return muunnaVinkkiLista(vinkkiLista);
+    }
+    
+    @Override
+    public List<Vinkki> haeKaikkiBlogpost(LukuStatus status) {
+        return haeKaikkiBlogpostBase(status, null);
+    }
+
+    @Override
+    public List<String> haeKaikkiBlogpostString(LukuStatus status) {
+        List<Vinkki> vinkkiLista = haeKaikkiBlogpostBase(status, null);
         return muunnaVinkkiLista(vinkkiLista);
     }
 

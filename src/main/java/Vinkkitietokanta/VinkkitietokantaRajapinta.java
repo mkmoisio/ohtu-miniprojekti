@@ -35,7 +35,10 @@ public interface VinkkitietokantaRajapinta {
     public List<String> haeKaikkiKirjatString(LukuStatus status);
     
     public List<Vinkki> haeKaikkiVideot(LukuStatus status);
-    public List<String> haeKaikkiVideotString(LukuStatus status);  
+    public List<String> haeKaikkiVideotString(LukuStatus status);
+    
+    public List<Vinkki> haeKaikkiBlogpost(LukuStatus status);
+    public List<String> haeKaikkiBlogpostString(LukuStatus status);
  
     public List<Vinkki> haeKaikkiPodcast(LukuStatus status);
     public List<String> haeKaikkiPodcastString(LukuStatus status);  
