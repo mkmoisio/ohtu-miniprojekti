@@ -1,12 +1,10 @@
-# language: fi
-# Source: http://github.com/aslakhellesoy/cucumber/blob/master/examples/i18n/fi/features/jakolasku.feature
-# Updated: Tue May 25 15:51:49 +0200 2010
-Ominaisuus: Jakolasku
-  Välttyäkseen hölmöiltä virheiltä
-  Kassanhoitajan on voitava laskea osamäärä
+Feature: As a user I am able to print out a list of read tips via CLI
 
-  Tapaus: Kokonaislukujen jakolasku
-    Oletetaan että olen syöttänyt laskimeen luvun 3
-    Ja että olen syöttänyt laskimeen luvun 2
-    Kun painan "jaa"
-    Niin laskimen ruudulla pitäisi näkyä tulos 1.5
+# TOIMII
+  Scenario: A single book tip is added, it is marked read and then read tips are listed
+    Given database is reset
+    Given command "lisää kirja" is entered and author "Matti Nykänen" and title "Mattihan se sopan keitti" are entered
+    Given command "merkitse luetuksi" is entered and title ""Mattihan se sopan keitti"" is entered
+    When print command "lukemattomat" is entered 
+    Then the application responds with a list containing a read book tip with author "Matti Nykänen" and title "Mattihan se sopan keitti"
+
