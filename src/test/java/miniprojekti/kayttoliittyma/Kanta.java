@@ -5,156 +5,55 @@ package miniprojekti.kayttoliittyma;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-
 import Vinkkitietokanta.LukuStatus;
 import Vinkkitietokanta.Vinkki;
+import Vinkkitietokanta.Vinkkitietokanta;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 /**
  *
  * @author mikkomo
  */
-public class Kanta implements VinkkitietokantaRajapinta {
-    
-    Map<String, String> vinkit ;
-    
-    public Kanta() {
-        this.vinkit = new HashMap();
+public class Kanta extends Vinkkitietokanta {
+
+    public Kanta(String tkPath) {
+
+        super(tkPath);
     }
 
-    @Override
-    public boolean poistaKirja(String otsikko) {
-       String poistettu = this.vinkit.remove(otsikko);
-       return (poistettu != null);
-    }
+    /*
+     Tyhjentää koko tietokannan!
+     */
+    public void nollaa() {
+        Queue<String> queries = new ArrayDeque();
+        queries.add("DELETE FROM Vinkki;");
+        queries.add("DELETE FROM VinkkiTekija");
+        queries.add("DELETE FROM Tekija");
+        queries.add("DELETE FROM Kirja");
+        queries.add("DELETE FROM Podcast");
+        queries.add("DELETE FROM Video");
+        queries.add("DELETE FROM Vinkki");
 
-    @Override
-    public boolean lisaaKirja(String kirjoittaja, String otsikko) {
-        this.vinkit.put(otsikko, kirjoittaja);
-        return true;
-    }
+        for (String s : queries) {
+            try {
+                PreparedStatement stmt = super.getConn().prepareStatement(s);
 
-    @Override
-    public List<String> haeKaikkiString() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+                stmt.executeUpdate();
+                stmt.close();
+                //komento3.executeUpdate();
 
-    @Override
-    public List<Vinkki> haeKaikki() {
-        /*
-        List<Vinkki> list = new ArrayList();
-        for (Map.Entry<String, String> entry : vinkit.entrySet()) {
-            list.add(new Vinkki(entry.getValue(), entry.getKey()));
+            } catch (SQLException e) {
+                System.err.println("poistaVinkki: " + e.getMessage());
+
+            }
         }
-        return list;
-        */
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    public boolean poistaVinkki(String otsikko) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean merkitseLuetuksi(String otsikko) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean merkitseLukemattomaksi(String otsikko) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean lisaaVinkki(Vinkki vinkki) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<Vinkki> haeKaikkiKirjat(LukuStatus status) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<String> haeKaikkiKirjatString(LukuStatus status) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<Vinkki> haeKaikkiVideot(LukuStatus status) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<String> haeKaikkiVideotString(LukuStatus status) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<Vinkki> haeKaikkiPodcast(LukuStatus status) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<String> haeKaikkiPodcastString(LukuStatus status) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<Vinkki> haeKaikki(LukuStatus status) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<String> haeKaikkiString(LukuStatus status) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean lisaaKirja(String otsikko) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean lisaaKirja(Vinkki vinkki) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean lisaaPodcast(Vinkki vinkki) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean lisaaVideo(Vinkki vinkki) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean lisaaPodcast(String nimi, String otsikko, String kuvaus) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean lisaaVideo(String url, String otsikko) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools |
-    }
-
-    @Override
-    public boolean lisaaBlogpost(Vinkki vinkki) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean lisaaBlogpost(String kirjoittaja, String url, String otsikko) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-
 }
