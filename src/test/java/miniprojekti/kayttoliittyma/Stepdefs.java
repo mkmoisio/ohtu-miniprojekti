@@ -51,7 +51,6 @@ public class Stepdefs {
         l.lisaaSyote(url);
         l.lisaaSyote(title);
         l.lisaaSyote("lopeta");
-
         ui.suorita();
     }
 
