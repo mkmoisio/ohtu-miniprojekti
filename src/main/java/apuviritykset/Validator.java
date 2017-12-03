@@ -14,7 +14,7 @@ public class Validator {
     private static final int PODCAST_KUVAUS_MAX_PITUUS = 50;
     private static final int PODCAST_OTSIKKO_MAX_PITUUS = 50;
     private static final int VIDEO_OTSIKKO_MAX_PITUUS = 50;
-    private static final int VIDEO_URL_MAX_PITUUS = 500;
+    private static final int VIDEO_URL_MAX_PITUUS = 50;
 
     public static boolean podcastvinkinSyoteOk(String nimi, String otsikko, String kuvaus) {
         if (!nimi.isEmpty()
