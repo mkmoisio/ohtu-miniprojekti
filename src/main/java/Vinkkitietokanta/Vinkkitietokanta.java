@@ -752,5 +752,5 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     public List<String> haeKaikkiString() {
         return haeKaikkiString(LukuStatus.KAIKKI);
     }
-
+    
 }
