@@ -42,10 +42,8 @@ public class Muotoilut {
         StringBuilder sb = new StringBuilder(); 
         sb.append(Muotoilut.muotoileTulosteenAlkuosa(otsikko, luettu));
 
-        for (String s : tekijat) {
-            sb.append(s);
-            sb.append(",");
-        }
+ 
+        sb.append(String.join(",", tekijat));
 
         return sb.toString();
     }

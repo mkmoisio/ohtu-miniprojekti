@@ -419,11 +419,12 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     }
     
     private boolean lisaaBlogpost(String vinkkiID, Vinkki vinkki) {
-        String query = " INSERT INTO Blogpost (url, vinkki) VALUES (?, ?)";
+        String query = " INSERT INTO Blogpost (url, kuvaus, vinkki) VALUES (?, ?, ?)";
         try {
             PreparedStatement komento = conn.prepareStatement(query);
             komento.setString(1, vinkki.haeOminaisuus(Attribuutit.URL));
-            komento.setInt(2, Integer.parseInt(vinkkiID));
+            komento.setString(2, vinkki.haeOminaisuus(Attribuutit.KUVAUS));
+            komento.setInt(3, Integer.parseInt(vinkkiID));
             komento.executeUpdate();
             komento.close();
             return true;
@@ -668,7 +669,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     
     private List<Vinkki> haeKaikkiBlogpostBase(LukuStatus status, List<Vinkki> list) {
 
-        String haeBlogpostString = "SELECT vinkki.otsikko, vinkki.luettu, blogpost.url, group_concat(tekija_nimi, '----') as tekijat \n"
+        String haeBlogpostString = "SELECT vinkki.otsikko, vinkki.luettu, blogpost.url, blogpost.kuvaus, group_concat(tekija_nimi, '----') as tekijat \n"
                 + "FROM Vinkki \n"
                 + "INNER JOIN Blogpost ON vinkki_id=blogpost.vinkki \n"
                 + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
@@ -696,6 +697,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
                     }
 
                     blogpost.lisaaTekijat(rs.getString("tekijat"));
+                    blogpost.lisaaOminaisuus(Attribuutit.KUVAUS, rs.getString("kuvaus"));
                     blogpost.lisaaOminaisuus(Attribuutit.URL, rs.getString("url"));
                     lista.add(blogpost);
                 }
