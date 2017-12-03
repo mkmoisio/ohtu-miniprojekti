@@ -752,5 +752,9 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     public List<String> haeKaikkiString() {
         return haeKaikkiString(LukuStatus.KAIKKI);
     }
+
+    public Connection getConn() {
+        return conn;
+    }
     
 }
