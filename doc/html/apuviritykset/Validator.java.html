@@ -6,29 +6,45 @@
  */
 <span class="nc" id="L7">public class Validator {</span>
 
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     private static final int KIRJA_KIRJOTTAJA_MAX_PITUUS = 50;
     private static final int KIRJA_OTSIKKO_MAX_PITUUS = 50;
     private static final int PODCAST_NIMI_MAX_PITUUS = 50;
     private static final int PODCAST_KUVAUS_MAX_PITUUS = 50;
     private static final int PODCAST_OTSIKKO_MAX_PITUUS = 50;
+    private static final int VIDEO_OTSIKKO_MAX_PITUUS = 50;
+    private static final int VIDEO_URL_MAX_PITUUS = 50;
 
     public static boolean podcastvinkinSyoteOk(String nimi, String otsikko, String kuvaus) {
-<span class="nc bnc" id="L18" title="All 2 branches missed.">        return (!nimi.isEmpty()</span>
-<span class="nc bnc" id="L19" title="All 2 branches missed.">                &amp;&amp; !otsikko.isEmpty()</span>
-<span class="nc bnc" id="L20" title="All 2 branches missed.">                &amp;&amp; !kuvaus.isEmpty() </span>
-<span class="nc bnc" id="L21" title="All 2 branches missed.">                &amp;&amp; (nimi.length() &lt;= PODCAST_NIMI_MAX_PITUUS)</span>
-<span class="nc bnc" id="L22" title="All 2 branches missed.">                &amp;&amp; (otsikko.length() &lt;= PODCAST_OTSIKKO_MAX_PITUUS)</span>
-<span class="nc bnc" id="L23" title="All 2 branches missed.">                &amp;&amp; (kuvaus.length() &lt;= PODCAST_KUVAUS_MAX_PITUUS));</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        if (!nimi.isEmpty()</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">                &amp;&amp; !otsikko.isEmpty()</span>
+<span class="fc bfc" id="L22" title="All 2 branches covered.">                &amp;&amp; !kuvaus.isEmpty()</span>
+<span class="pc bpc" id="L23" title="1 of 2 branches missed.">                &amp;&amp; (nimi.length() &lt;= PODCAST_NIMI_MAX_PITUUS)</span>
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">                &amp;&amp; (otsikko.length() &lt;= PODCAST_OTSIKKO_MAX_PITUUS)</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">                &amp;&amp; (kuvaus.length() &lt;= PODCAST_KUVAUS_MAX_PITUUS)) {</span>
+            if (Validator.DEBUG) {
+                System.out.println(&quot;Validator: podcastvinkinSyoteOk: Pass&quot;);
+            }
+<span class="fc" id="L29">            return true;</span>
+        }
+<span class="fc" id="L31">        return false;</span>
     }
 
     public static boolean kirjavinkinSyoteOk(String kirjoittaja, String otsikko) {
-<span class="fc bfc" id="L27" title="All 2 branches covered.">        return (!kirjoittaja.isEmpty()</span>
-<span class="fc bfc" id="L28" title="All 2 branches covered.">                &amp;&amp; !otsikko.isEmpty()</span>
-<span class="pc bpc" id="L29" title="1 of 2 branches missed.">                &amp;&amp; (kirjoittaja.length() &lt;= KIRJA_KIRJOTTAJA_MAX_PITUUS)</span>
-<span class="pc bpc" id="L30" title="1 of 2 branches missed.">                &amp;&amp; (otsikko.length() &lt;= KIRJA_OTSIKKO_MAX_PITUUS));</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        return (!kirjoittaja.isEmpty()</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">                &amp;&amp; !otsikko.isEmpty()</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">                &amp;&amp; (kirjoittaja.length() &lt;= KIRJA_KIRJOTTAJA_MAX_PITUUS)</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">                &amp;&amp; (otsikko.length() &lt;= KIRJA_OTSIKKO_MAX_PITUUS));</span>
     }
-    
+
+    public static boolean videovinkinSyoteOk(String url, String otsikko) {
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        return (!url.isEmpty()</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">                &amp;&amp; !otsikko.isEmpty()</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">                &amp;&amp; (url.length() &lt;= VIDEO_URL_MAX_PITUUS)</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">                &amp;&amp; (otsikko.length() &lt;= VIDEO_OTSIKKO_MAX_PITUUS));</span>
+
+    }
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

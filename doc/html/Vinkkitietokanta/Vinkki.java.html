@@ -95,100 +95,115 @@ public class Vinkki {
 <span class="fc bfc" id="L95" title="All 2 branches covered.">        if (tekijatStr == null) {</span>
 <span class="fc" id="L96">            return;</span>
         }
-<span class="fc" id="L98">        String erotin = &quot;[,]&quot;;</span>
+<span class="fc" id="L98">        String erotin = &quot;[----]&quot;;</span>
 <span class="fc bfc" id="L99" title="All 2 branches covered.">        for (String tekija : tekijatStr.split(erotin)) {</span>
 <span class="pc bpc" id="L100" title="1 of 2 branches missed.">            if (tekija.equals(&quot;(null)&quot;)) {</span>
 <span class="nc" id="L101">                return;</span>
             }
-<span class="pc bpc" id="L103" title="1 of 2 branches missed.">            if (!tekijat.contains(tekija)) {</span>
-<span class="fc" id="L104">                tekijat.add(tekija);</span>
+<span class="fc" id="L103">            String str=tekija.trim();</span>
+            
+<span class="pc bpc" id="L105" title="1 of 4 branches missed.">            if (!tekijat.contains(str) &amp;&amp; !str.isEmpty()) {</span>
+<span class="fc" id="L106">                tekijat.add(str);</span>
             }
         }
-<span class="fc" id="L107">    }</span>
+<span class="fc" id="L109">    }</span>
 
     public void lisaaTekija(String tekija) {
-<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (!tekijat.contains(tekija)) {</span>
-<span class="nc" id="L111">            tekijat.add(tekija);</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        if (!tekijat.contains(tekija)) {</span>
+<span class="fc" id="L113">            tekijat.add(tekija);</span>
         }
-<span class="nc" id="L113">    }</span>
+<span class="fc" id="L115">    }</span>
 
     public List&lt;String&gt; haeTekijat() {
-<span class="fc" id="L116">        return tekijat;</span>
+<span class="fc" id="L118">        return tekijat;</span>
     }
 
     public String printtaaTekijat() {
-<span class="fc" id="L120">        String tekijatStr = &quot;&quot;;</span>
-<span class="fc bfc" id="L121" title="All 2 branches covered.">        for (String tekija : tekijat) {</span>
-<span class="fc" id="L122">            tekijatStr = tekijatStr + tekija + &quot;,&quot;;</span>
-<span class="fc" id="L123">        }</span>
-<span class="fc" id="L124">        return tekijatStr;</span>
+<span class="fc" id="L122">        String tekijatStr = &quot;&quot;;</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        for (String tekija : tekijat) {</span>
+<span class="fc" id="L124">            tekijatStr = tekijatStr + tekija + &quot;,&quot;;</span>
+<span class="fc" id="L125">        }</span>
+<span class="fc" id="L126">        return tekijatStr;</span>
     }
 
     public void poistaTekijat() {
-<span class="nc" id="L128">        tekijat.clear();</span>
-<span class="nc" id="L129">    }</span>
+<span class="nc" id="L130">        tekijat.clear();</span>
+<span class="nc" id="L131">    }</span>
 
     public Formaatit formaatti() {
-<span class="fc" id="L132">        return formaatti;</span>
+<span class="fc" id="L134">        return formaatti;</span>
     }
 
     public boolean luettu() {
-<span class="fc" id="L136">        return luettu;</span>
+<span class="fc" id="L138">        return luettu;</span>
     }
 
     public void merkitseLuetuksi() {
-<span class="nc" id="L140">        luettu = true;</span>
-<span class="nc" id="L141">    }</span>
+<span class="fc" id="L142">        luettu = true;</span>
+<span class="fc" id="L143">    }</span>
 
     public void merkitseLukemattomaksi() {
-<span class="nc" id="L144">        luettu = false;</span>
-<span class="nc" id="L145">    }</span>
+<span class="fc" id="L146">        luettu = false;</span>
+<span class="fc" id="L147">    }</span>
 
     public String Otsikko() {
-<span class="fc" id="L148">        return otsikko;</span>
+<span class="fc" id="L150">        return otsikko;</span>
     }
 
     @Override
     public String toString() {
-<span class="fc" id="L153">        StringBuilder sb = new StringBuilder();</span>
-<span class="pc bpc" id="L154" title="1 of 2 branches missed.">        if (null != formaatti) {</span>
-<span class="pc bpc" id="L155" title="2 of 5 branches missed.">            switch (formaatti) {</span>
+<span class="fc" id="L155">        StringBuilder sb = new StringBuilder();</span>
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">        if (null != formaatti) {</span>
+<span class="pc bpc" id="L157" title="3 of 6 branches missed.">            switch (formaatti) {</span>
                 case KIRJA:         
-<span class="fc" id="L157">                    return Muotoilut.muotoileKirjavinkinTuloste(this);</span>
+<span class="fc" id="L159">                    return Muotoilut.muotoileKirjavinkinTuloste(this);</span>
                     
                 case PODCAST:
-<span class="fc" id="L160">                    sb.append(&quot;Podcastvinkki \n\tOtsikko: &quot;);</span>
-<span class="fc" id="L161">                    sb.append(this.Otsikko());</span>
-<span class="pc bpc" id="L162" title="1 of 2 branches missed.">                    if (this.luettu) {</span>
-<span class="nc" id="L163">                        sb.append(&quot; (luettu)&quot;);</span>
+<span class="fc" id="L162">                    sb.append(&quot;Podcastvinkki \n\tOtsikko: &quot;);</span>
+<span class="fc" id="L163">                    sb.append(this.Otsikko());</span>
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">                    if (this.luettu) {</span>
+<span class="nc" id="L165">                        sb.append(&quot; (luettu)&quot;);</span>
                     } else {
-<span class="fc" id="L165">                        sb.append(&quot; (lukematon)&quot;);</span>
+<span class="fc" id="L167">                        sb.append(&quot; (lukematon)&quot;);</span>
                     }
-<span class="fc" id="L167">                    sb.append(&quot;\n\tNimi: &quot;);</span>
-<span class="fc" id="L168">                    sb.append(haeOminaisuus(Attribuutit.NIMI));</span>
-<span class="fc" id="L169">                    sb.append(&quot;\n\tKuvaus: &quot;);</span>
-<span class="fc" id="L170">                    sb.append(haeOminaisuus(Attribuutit.KUVAUS));</span>
-<span class="fc" id="L171">                    return sb.toString();</span>
+<span class="fc" id="L169">                    sb.append(&quot;\n\tNimi: &quot;);</span>
+<span class="fc" id="L170">                    sb.append(haeOminaisuus(Attribuutit.NIMI));</span>
+<span class="fc" id="L171">                    sb.append(&quot;\n\tKuvaus: &quot;);</span>
+<span class="fc" id="L172">                    sb.append(haeOminaisuus(Attribuutit.KUVAUS));</span>
+<span class="fc" id="L173">                    return sb.toString();</span>
                     
                 case VIDEO:
-<span class="fc" id="L174">                    sb.append(&quot;Videovinkki \n\tOtsikko: &quot;);</span>
-<span class="fc" id="L175">                    sb.append(this.Otsikko());</span>
-<span class="fc bfc" id="L176" title="All 2 branches covered.">                    if (this.luettu) {</span>
-<span class="fc" id="L177">                        sb.append(&quot; (luettu)&quot;);</span>
+<span class="fc" id="L176">                    sb.append(&quot;Videovinkki \n\tOtsikko: &quot;);</span>
+<span class="fc" id="L177">                    sb.append(this.Otsikko());</span>
+<span class="fc bfc" id="L178" title="All 2 branches covered.">                    if (this.luettu) {</span>
+<span class="fc" id="L179">                        sb.append(&quot; (luettu)&quot;);</span>
                     } else {
-<span class="fc" id="L179">                        sb.append(&quot; (lukematon)&quot;);</span>
+<span class="fc" id="L181">                        sb.append(&quot; (lukematon)&quot;);</span>
                     }
-<span class="fc" id="L181">                    sb.append(&quot;\n\tURL: &quot;);</span>
-<span class="fc" id="L182">                    sb.append(haeOminaisuus(Attribuutit.URL));</span>
-<span class="fc" id="L183">                    sb.append(&quot;\n\tKuvaus: &quot;);</span>
-<span class="fc" id="L184">                    sb.append(haeOminaisuus(Attribuutit.KUVAUS));                 </span>
-<span class="fc" id="L185">                    return  sb.toString();</span>
+<span class="fc" id="L183">                    sb.append(&quot;\n\tURL: &quot;);</span>
+<span class="fc" id="L184">                    sb.append(haeOminaisuus(Attribuutit.URL));</span>
+<span class="fc" id="L185">                    sb.append(&quot;\n\tKuvaus: &quot;);</span>
+<span class="fc" id="L186">                    sb.append(haeOminaisuus(Attribuutit.KUVAUS));                 </span>
+<span class="fc" id="L187">                    return  sb.toString();</span>
                     
+                case BLOGPOST:
+<span class="nc" id="L190">                    sb.append(&quot;Blogpost-vinkki \n\tOtsikko: &quot;);</span>
+<span class="nc" id="L191">                    sb.append(this.Otsikko());</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">                    if (this.luettu) {</span>
+<span class="nc" id="L193">                        sb.append(&quot; (luettu)&quot;);</span>
+                    } else {
+<span class="nc" id="L195">                        sb.append(&quot; (lukematon)&quot;);</span>
+                    }
+<span class="nc" id="L197">                    sb.append(&quot;\n\tURL: &quot;);</span>
+<span class="nc" id="L198">                    sb.append(haeOminaisuus(Attribuutit.URL));</span>
+<span class="nc" id="L199">                    sb.append(&quot;\n\tKuvaus: &quot;);</span>
+<span class="nc" id="L200">                    sb.append(haeOminaisuus(Attribuutit.KUVAUS));                 </span>
+<span class="nc" id="L201">                    return  sb.toString();</span>
                 case NULL:
-<span class="nc" id="L188">                    return Otsikko() + &quot;, luettu, &quot; + luettu;</span>
+<span class="nc" id="L203">                    return Otsikko() + &quot;, luettu, &quot; + luettu;</span>
             }
         }
-<span class="nc" id="L191">        return &quot;hups&quot;;</span>
+<span class="nc" id="L206">        return &quot;hups&quot;;</span>
     }
 
 }

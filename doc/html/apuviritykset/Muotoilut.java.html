@@ -16,44 +16,44 @@ import java.util.List;
  */
 <span class="nc" id="L17">public class Muotoilut {</span>
 
+    private static String muotoileTulosteenAlkuosa(String otsikko, boolean luettu) {
+<span class="fc" id="L20">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L21">        sb.append(&quot;Kirjavinkki \n\tOtsikko: &quot;);</span>
+<span class="fc" id="L22">        sb.append(otsikko);</span>
+<span class="pc bpc" id="L23" title="1 of 2 branches missed.">        if (luettu) {</span>
+<span class="nc" id="L24">            sb.append(&quot; (luettu)&quot;);</span>
+        } else {
+<span class="fc" id="L26">            sb.append(&quot; (lukematon)&quot;);</span>
+        }
+<span class="fc" id="L28">        sb.append(&quot;\n\tKirjoitaja: &quot;);</span>
+<span class="fc" id="L29">        return sb.toString();</span>
+
+    }
+
     public static String muotoileKirjavinkinTuloste(Vinkki kirja) {
+<span class="fc" id="L34">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L35">        sb.append(Muotoilut.muotoileTulosteenAlkuosa(kirja.Otsikko(), kirja.luettu()));</span>
+<span class="fc" id="L36">        sb.append(kirja.haeOminaisuus(Attribuutit.TEKIJAT));</span>
 
-<span class="fc" id="L21">        StringBuilder sb = new StringBuilder();</span>
-<span class="fc" id="L22">        sb.append(&quot;Kirjavinkki \n\tOtsikko: &quot;);</span>
-<span class="fc" id="L23">        sb.append(kirja.Otsikko());</span>
-<span class="pc bpc" id="L24" title="1 of 2 branches missed.">        if (kirja.luettu()) {</span>
-<span class="nc" id="L25">            sb.append(&quot; (luettu)&quot;);</span>
-        } else {
-<span class="fc" id="L27">            sb.append(&quot; (lukematon)&quot;);</span>
-        }
-<span class="fc" id="L29">        sb.append(&quot;\n\tKirjoitaja: &quot;);</span>
-<span class="fc" id="L30">        sb.append(kirja.haeOminaisuus(Attribuutit.TEKIJAT));</span>
-        
-<span class="fc" id="L32">        return sb.toString();</span>
+<span class="fc" id="L38">        return sb.toString();</span>
     }
-      public static String muotoileKirjavinkinTuloste(String otsikko, boolean luettu, List&lt;String&gt; tekijat) {
 
-<span class="fc" id="L36">        StringBuilder sb = new StringBuilder();</span>
-<span class="fc" id="L37">        sb.append(&quot;Kirjavinkki \n\tOtsikko: &quot;);</span>
-<span class="fc" id="L38">        sb.append(otsikko);</span>
-<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (luettu) {</span>
-<span class="nc" id="L40">            sb.append(&quot; (luettu)&quot;);</span>
-        } else {
-<span class="fc" id="L42">            sb.append(&quot; (lukematon)&quot;);</span>
-        }
-<span class="fc" id="L44">        sb.append(&quot;\n\tKirjoitaja: &quot;);</span>
-        
-<span class="fc bfc" id="L46" title="All 2 branches covered.">        for (String s : tekijat) {</span>
-<span class="fc" id="L47">            sb.append(s);</span>
-<span class="fc" id="L48">            sb.append(&quot;,&quot;);</span>
-<span class="fc" id="L49">        }</span>
-        
-<span class="fc" id="L51">        return sb.toString();</span>
+    public static String muotoileKirjavinkinTuloste(String otsikko, boolean luettu, List&lt;String&gt; tekijat) {
+<span class="fc" id="L42">        StringBuilder sb = new StringBuilder(); </span>
+<span class="fc" id="L43">        sb.append(Muotoilut.muotoileTulosteenAlkuosa(otsikko, luettu));</span>
+
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        for (String s : tekijat) {</span>
+<span class="fc" id="L46">            sb.append(s);</span>
+<span class="fc" id="L47">            sb.append(&quot;,&quot;);</span>
+<span class="fc" id="L48">        }</span>
+
+<span class="fc" id="L50">        return sb.toString();</span>
     }
-      public static String muotoileKirjavinkinTuloste(String otsikko, boolean luettu, String tekija) {
-<span class="fc" id="L54">          List&lt;String&gt; list = new ArrayList();</span>
-<span class="fc" id="L55">          list.add(tekija);</span>
-<span class="fc" id="L56">          return muotoileKirjavinkinTuloste( otsikko,  luettu,  list);</span>
-      }
+
+    public static String muotoileKirjavinkinTuloste(String otsikko, boolean luettu, String tekija) {
+<span class="fc" id="L54">        List&lt;String&gt; list = new ArrayList();</span>
+<span class="fc" id="L55">        list.add(tekija);</span>
+<span class="fc" id="L56">        return muotoileKirjavinkinTuloste(otsikko, luettu, list);</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>
