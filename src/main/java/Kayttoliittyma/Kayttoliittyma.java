@@ -190,7 +190,11 @@ public class Kayttoliittyma {
     private void merkitseLuetuksi() {
         this.tulostus.println("Anna sen vinkin otsikko, joka merkitään luetuksi");
         String otsikko = this.lukija.nextLine();
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(!this.tk.merkitseLuetuksi(otsikko)){
+            this.tulostus.println("Virhe: Vinkkiä "+otsikko+" ei löytynyt");
+            return;
+        }
+        this.tulostus.println("Vinkki otsikolla "+otsikko+" merkitty luetuksi ");
     }
 
     /* KANNAN METODEITA KUTSUVAT METODIT */
