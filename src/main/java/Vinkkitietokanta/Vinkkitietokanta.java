@@ -15,6 +15,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import org.sqlite.SQLiteConfig;
+import org.sqlite.SQLiteOpenMode;
 
 /**
  * Tämä hoitaa tiedon muokkaamisen oikeanlaiseksi niin tietokannalle, kuin
@@ -130,31 +131,33 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
              config.enforceForeignKeys(true);*/
             SQLiteConfig config = new SQLiteConfig();  
             config.enforceForeignKeys(true);
+            config.resetOpenMode(SQLiteOpenMode.CREATE);
             conn = DriverManager.getConnection(tkPath,config.toProperties());
             
             //System.err.println("tietokanta liitetty");      
             //System.err.println("statement luotu");
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            System.err.println("Vinkkitietokanta: " +e.getMessage());
         }
     }
 
     //Sulje yhteydet tietokantaan
     public void sulje() {
         try {
-            if (conn != null) {
-                conn.close();
-            }
+            if (conn != null) conn.close();
         } catch (SQLException se) {
-            System.err.println(se.getMessage());
+            System.err.println("sulje: " +se.getMessage());
         }
     }
 
     public boolean tietokantaliitetty() {
-        if (conn == null) {
-            return false;
+        if (conn == null) return false;
+        try {
+            return !conn.isClosed();
+        } catch (SQLException se) {
+            System.err.println("tietokantaliitetty: "+se.getMessage());
         }
-        return true;
+        return false;
     }
 
     @Override
@@ -185,11 +188,12 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     @Override
     public boolean lisaaKirja(String kirjoittajat, String otsikko) {
         Vinkki kirja = new Vinkki(otsikko, Formaatit.KIRJA);
-        if (kirjoittajat != null || !kirjoittajat.equals("")) {
-            kirja.lisaaTekijat(kirjoittajat);
+        if(kirjoittajat != null){
+            if (!kirjoittajat.isEmpty()) {
+                kirja.lisaaTekijat(kirjoittajat);
+            }
         }
-        lisaaVinkki(kirja);
-        return true;
+        return lisaaVinkki(kirja);
     }
 
     @Override
@@ -211,7 +215,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     public boolean lisaaBlogpost(String url, String kirjoittajat, String otsikko) {
         Vinkki blogpost = new Vinkki(otsikko, Formaatit.BLOGPOST);
         blogpost.lisaaOminaisuus(Attribuutit.URL, url);
-        if (kirjoittajat != null || !kirjoittajat.equals("")) {
+        if (!kirjoittajat.equals("") || kirjoittajat != null) {
             blogpost.lisaaTekijat(kirjoittajat);
         }
         return lisaaVinkki(blogpost);
