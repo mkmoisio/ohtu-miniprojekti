@@ -25,13 +25,26 @@ public class VinkkiTest {
         Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.PODCAST);
         assertTrue(vinkki.lisaaOminaisuus(Attribuutit.FORMAATTI, Formaatit.BLOGPOST));
         assertEquals(vinkki.haeOminaisuus(Attribuutit.FORMAATTI), Formaatit.BLOGPOST.toString());
+        assertFalse(vinkki.lisaaOminaisuus(Attribuutit.FORMAATTI, "asdasd"));
+        assertEquals(vinkki.haeOminaisuus(Attribuutit.FORMAATTI), Formaatit.BLOGPOST.toString());
     }
+
+    @Test
+    public void testaaHaeOminaisuusEiOlemassa() {
+        System.out.println("ominaisuus ei olemassa");
+        Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.PODCAST);
+        assertEquals(vinkki.haeOminaisuus(Attribuutit.URL), vinkki.virheTeksti);
+        assertEquals(vinkki.haeOminaisuus(null), vinkki.virheTeksti);
+    }
+    
     
     @Test
     public void testaaVaihdaOtsikkoa() {
         System.out.println("vaihda otsikkoa");
         Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.PODCAST);
         assertTrue(vinkki.lisaaOminaisuus(Attribuutit.OTSIKKO, "APACHE2 intiaanit"));
+        assertEquals(vinkki.haeOminaisuus(Attribuutit.OTSIKKO), "APACHE2 intiaanit");
+        assertFalse(vinkki.lisaaOminaisuus(Attribuutit.OTSIKKO, 1));
         assertEquals(vinkki.haeOminaisuus(Attribuutit.OTSIKKO), "APACHE2 intiaanit");
     }   
 
@@ -40,6 +53,8 @@ public class VinkkiTest {
         System.out.println("vaihda kuvausta");
         Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.PODCAST);
         assertTrue(vinkki.lisaaOminaisuus(Attribuutit.KUVAUS, "Surkea Kirja"));
+        assertEquals(vinkki.haeOminaisuus(Attribuutit.KUVAUS), "Surkea Kirja");
+        assertFalse(vinkki.lisaaOminaisuus(Attribuutit.KUVAUS, 1));
         assertEquals(vinkki.haeOminaisuus(Attribuutit.KUVAUS), "Surkea Kirja");
     }  
 
@@ -51,6 +66,8 @@ public class VinkkiTest {
         assertEquals(vinkki.haeOminaisuus(Attribuutit.LUETTU), "true");
         assertTrue(vinkki.lisaaOminaisuus(Attribuutit.LUETTU, false));
         assertEquals(vinkki.haeOminaisuus(Attribuutit.LUETTU), "false");
+        assertFalse(vinkki.lisaaOminaisuus(Attribuutit.LUETTU, 1));
+        assertEquals(vinkki.haeOminaisuus(Attribuutit.LUETTU), "false");
     }  
   
     @Test
@@ -58,7 +75,9 @@ public class VinkkiTest {
         System.out.println("vaihda tekijat");
         Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.KIRJA);
         assertTrue(vinkki.lisaaOminaisuus(Attribuutit.TEKIJAT, "Markku"));
-        assertEquals(vinkki.haeOminaisuus(Attribuutit.TEKIJAT), "Markku");
+        assertEquals("Markku",vinkki.haeOminaisuus(Attribuutit.TEKIJAT));
+        assertFalse(vinkki.lisaaOminaisuus(Attribuutit.TEKIJAT, 1));
+        assertEquals("Markku",vinkki.haeOminaisuus(Attribuutit.TEKIJAT));
     }      
     
     @Test
@@ -86,10 +105,10 @@ public class VinkkiTest {
     public void testEiOminaisuutta() {
         System.out.println("parse tekijat");
         Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.BLOGPOST);
-        assertEquals(vinkki.haeOminaisuus(Attribuutit.TEKIJAT),"");
-        assertEquals(vinkki.haeOminaisuus(Attribuutit.URL),"");
-        assertEquals(vinkki.haeOminaisuus(Attribuutit.KUVAUS),"");
-        assertEquals(vinkki.haeOminaisuus(Attribuutit.ISBN),"");
+        assertEquals("",vinkki.haeOminaisuus(Attribuutit.TEKIJAT));
+        assertEquals(vinkki.virheTeksti,vinkki.haeOminaisuus(Attribuutit.URL));
+        assertEquals(vinkki.virheTeksti,vinkki.haeOminaisuus(Attribuutit.KUVAUS));
+        assertEquals(vinkki.virheTeksti,vinkki.haeOminaisuus(Attribuutit.ISBN));
     }    
     
     @Test
@@ -98,114 +117,76 @@ public class VinkkiTest {
         Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.BLOGPOST);
         assertFalse(vinkki.lisaaOminaisuus(Attribuutit.ISBN, null));
     }    
+    
+    @Test
+    public void testLisaaTekijaHuonoSyote() {
+        System.out.println("lisaaTekijaHuonoSyote tekijat");
+        Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.BLOGPOST);
+        assertFalse(vinkki.lisaaOminaisuus(Attribuutit.ISBN, null));
+        assertFalse(vinkki.lisaaOminaisuus(null, null));
+    }   
+
+    @Test
+    public void testLisaaTekijatValidiEkaHuonoToka() {
+        System.out.println("lisaaTekijat eka hyva sitten duplikaatti");
+        Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.BLOGPOST);
+        assertTrue(vinkki.lisaaTekijat("Markku"));
+        assertEquals(1,vinkki.haeTekijat().size());
+        assertTrue(vinkki.lisaaTekijat("Markku"));
+        assertEquals(1,vinkki.haeTekijat().size());
+    }   
+    
         
-/*
-
     @Test
-    public void testHaeOminaisuus() {
-        System.out.println("haeOminaisuus");
-        Attribuutit attribuutti = null;
-        Vinkki instance = null;
-        String expResult = "";
-        String result = instance.haeOminaisuus(attribuutti);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-
+    public void testLisaaTekijaHuonoSyoteTekijat() {
+        System.out.println("lisaaTekijatHuonoSyote tekijat");
+        Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.BLOGPOST);
+        assertFalse(vinkki.lisaaTekija(null));
+        assertFalse(vinkki.lisaaTekija(""));
+        assertFalse(vinkki.lisaaTekijat(null));
+        assertFalse(vinkki.lisaaTekijat(""));
+        assertEquals(0,vinkki.haeTekijat().size());
+        assertTrue(vinkki.lisaaTekija("Markku"));
+        assertFalse(vinkki.lisaaTekija("Markku"));
+    }   
     
-    
-    @Test
-    public void testLisaaTekija() {
-        System.out.println("lisaaTekija");
-        String tekija = "";
-        Vinkki instance = null;
-        instance.lisaaTekija(tekija);
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testHaeTekijat() {
-        System.out.println("haeTekijat");
-        Vinkki instance = null;
-        List<String> expResult = null;
-        List<String> result = instance.haeTekijat();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testPrinttaaTekijat() {
-        System.out.println("printtaaTekijat");
-        Vinkki instance = null;
-        String expResult = "";
-        String result = instance.printtaaTekijat();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-
     @Test
     public void testPoistaTekijat() {
-        System.out.println("poistaTekijat");
-        Vinkki instance = null;
-        instance.poistaTekijat();
-        fail("The test case is a prototype.");
-    }
-
+        System.out.println("lisaaTekijatHuonoSyote tekijat");
+        Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.BLOGPOST);
+        assertTrue(vinkki.lisaaTekija("Marrkku"));
+        assertEquals(1,vinkki.haeTekijat().size());
+        vinkki.poistaTekijat();
+        assertEquals(0,vinkki.haeTekijat().size());
+    }   
+ 
     @Test
-    public void testFormaatti() {
-        System.out.println("formaatti");
-        Vinkki instance = null;
-        Formaatit expResult = null;
-        Formaatit result = instance.formaatti();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+    public void testGettersSetters() {
+        System.out.println("testaa gettereitä");
+        Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.BLOGPOST);
+        assertEquals(Formaatit.BLOGPOST,vinkki.formaatti());
+        assertEquals("CIA vs FBI",vinkki.Otsikko());
+        assertFalse(vinkki.luettu());
+        vinkki.merkitseLuetuksi();
+        assertTrue(vinkki.luettu());
+        vinkki.merkitseLukemattomaksi();
+        assertFalse(vinkki.luettu());
+    }   
+  
+   @Test
+    public void testaaToStringSimppeli() {
+        System.out.println("testaaToStringSimppeli (testaa vaan ettei kaadu)");
+        apuToString(new Vinkki("CIA vs FBI",Formaatit.BLOGPOST));
+        apuToString(new Vinkki("CIA vs FBI",Formaatit.PODCAST));
+        apuToString(new Vinkki("CIA vs FBI",Formaatit.KIRJA));
+        apuToString(new Vinkki("CIA vs FBI",Formaatit.NULL));
+        apuToString(new Vinkki("CIA vs FBI",Formaatit.VIDEO));     
+    }     
+    
+    private void apuToString(Vinkki vinkki){
+        assertTrue(!vinkki.toString().isEmpty());
+        vinkki.merkitseLuetuksi();
+        assertTrue(!vinkki.toString().isEmpty());
     }
-
-    @Test
-    public void testLuettu() {
-        System.out.println("luettu");
-        Vinkki instance = null;
-        boolean expResult = false;
-        boolean result = instance.luettu();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testMerkitseLuetuksi() {
-        System.out.println("merkitseLuetuksi");
-        Vinkki instance = null;
-        instance.merkitseLuetuksi();
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testMerkitseLukemattomaksi() {
-        System.out.println("merkitseLukemattomaksi");
-        Vinkki instance = null;
-        instance.merkitseLukemattomaksi();
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testOtsikko() {
-        System.out.println("Otsikko");
-        Vinkki instance = null;
-        String expResult = "";
-        String result = instance.Otsikko();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-        Vinkki instance = null;
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-*/
     
 }

@@ -59,14 +59,14 @@ public class VinkkitietokantaTest {
         }
         String url="jdbc:sqlite:"+dbfile.getAbsolutePath()+"/databases/test/testikanta2.db";
         tk0 = new Vinkkitietokanta(url);
-        System.out.println(errContent.toString());
+        if(!errContent.toString().isEmpty()) System.out.println(errContent.toString());
         assertTrue("Tietokanta pitäisi olla liitettynä",tk0.tietokantaliitetty());
     }
 
     
     @After
     public void tearDown() {
-        System.out.println(errContent.toString());
+        if(!errContent.toString().isEmpty()) System.out.println(errContent.toString());
         assertTrue(errContent.toString().isEmpty());
         tk0.sulje();
         File dbfile=new File("");
@@ -525,8 +525,182 @@ public class VinkkitietokantaTest {
     }    
     
     
+    @Test
+    public void testAlustusPitääEpäonnistuaJosTietokantaaEiOleOlemassa() {
+        System.out.println("testAlustusPitääEpäonnistuaJosTietokantaaEiOleOlemassa");
+        File dbfile=new File("");
+        String url="jdbc:sqlite:"+dbfile.getAbsolutePath()+"/databases/test/asd.db";
+        Vinkkitietokanta tk = new Vinkkitietokanta(url);
+        assertFalse(errContent.toString().isEmpty());
+        errContent.reset();
+    }   
 
+    @Test
+    public void testSulje() {
+        System.out.println("testSulje");
+        tk0.sulje();
+        assertTrue(errContent.toString().isEmpty());
+    }   
 
+    @Test
+    public void testEiliitetynKannanSulkeminenEiOleOngelma() {
+        System.out.println("testSulje2");
+        tk0.sulje();
+        tk0.sulje();
+        assertTrue(errContent.toString().isEmpty());
+        File dbfile=new File("");
+        String url="jdbc:sqlite:"+dbfile.getAbsolutePath()+"/databases/test/asd.db";
+        Vinkkitietokanta tk = new Vinkkitietokanta(url);
+        errContent.reset();
+        tk.sulje();
+        assertTrue(errContent.toString().isEmpty());
+    }      
+    @Test
+    public void testTietokantaLiitetty() {
+        System.out.println("testTietokantaLiitetty");
+        assertTrue(tk0.tietokantaliitetty());
+        tk0.sulje();
+        assertFalse(tk0.tietokantaliitetty());
+        File dbfile=new File("");
+        String url="jdbc:sqlite:"+dbfile.getAbsolutePath()+"/databases/test/asd.db";
+        Vinkkitietokanta tk = new Vinkkitietokanta(url);
+        errContent.reset();
+        assertFalse(tk.tietokantaliitetty());
+    }  
+
+    @Test 
+    public void testaaLisaaPodcastKaksiKertaa(){
+        Vinkki vinkki1 = new Vinkki("Marsut pilalla",Formaatit.PODCAST);
+        assertTrue(tk0.lisaaPodcast(vinkki1));
+        assertFalse(tk0.lisaaVinkki(vinkki1));
+        assertEquals(1,tk0.haeKaikki().size());
+        assertEquals(1,tk0.haeKaikkiPodcast(LukuStatus.KAIKKI).size());
+    }
+
+    @Test 
+    public void testaaLisaaBlogpostKaksiKertaa(){
+        Vinkki vinkki1 = new Vinkki("Marsut pilalla",Formaatit.BLOGPOST);
+        assertTrue(tk0.lisaaBlogpost(vinkki1));
+        assertFalse(tk0.lisaaVinkki(vinkki1));
+        assertEquals(1,tk0.haeKaikki().size());
+        assertEquals(1,tk0.haeKaikkiBlogpost(LukuStatus.KAIKKI).size());
+    }
+
+    @Test 
+    public void testaaLisaaVideoKaksiKertaa(){
+        Vinkki vinkki1 = new Vinkki("Marsut pilalla",Formaatit.VIDEO);
+        assertTrue(tk0.lisaaVideo(vinkki1));
+        assertFalse(tk0.lisaaVinkki(vinkki1));
+        assertEquals(1,tk0.haeKaikki().size());
+        assertEquals(1,tk0.haeKaikkiVideot(LukuStatus.KAIKKI).size());
+    }
+    
+    @Test 
+    public void testaaLisaaKirjaKaksiKertaa(){
+        Vinkki vinkki1 = new Vinkki("Marsut pilalla",Formaatit.KIRJA);
+        assertTrue(tk0.lisaaKirja(vinkki1));
+        assertFalse(tk0.lisaaVinkki(vinkki1));
+        assertEquals(1,tk0.haeKaikki().size());
+        assertEquals(1,tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).size());
+    }
+    
+    @Test 
+    public void testaaLisaaKirjaLegacyFunktiot(){
+        assertTrue(tk0.lisaaKirja("Purilainen"));
+        assertFalse(tk0.lisaaKirja("Purilainen"));
+        assertEquals(1,tk0.haeKaikki().size());
+        assertEquals(1,tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).size());
+    }
+    
+    @Test 
+    public void testaaLisaaKirjaLegacyFunktiot2(){
+        assertTrue(tk0.lisaaKirja("Purilainen","Markku"));
+        assertFalse(tk0.lisaaKirja("Purilainen","Markku"));
+        assertEquals(1,tk0.haeKaikki().size());
+        assertEquals(1,tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).size());
+        assertEquals("Purilainen",tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).get(0).haeTekijat().get(0));
+    }
+    
+    @Test 
+    public void testaaLisaaKirjaStringStringHuonoSyote(){
+        assertTrue(tk0.lisaaKirja(null,"Markku"));
+        assertFalse(tk0.lisaaKirja("","Markku"));
+        assertEquals(1,tk0.haeKaikki().size());
+        assertEquals(1,tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).size());
+        assertTrue(tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).get(0).haeTekijat().isEmpty());
+    }
+    
+    @Test 
+    public void testaaLisaaPodcastSuoraan(){
+        assertTrue(tk0.lisaaPodcast("maski","sima","messi"));
+        assertEquals(1,tk0.haeKaikki().size());
+        List<Vinkki> list = tk0.haeKaikkiPodcast(LukuStatus.KAIKKI);
+        assertEquals(1,list.size());
+        Vinkki vinkki = list.get(0);
+        assertEquals("messi",vinkki.haeOminaisuus(Attribuutit.KUVAUS));
+        assertEquals("maski",vinkki.haeOminaisuus(Attribuutit.NIMI));
+        assertEquals("sima",vinkki.Otsikko());
+    }
+    
+    @Test 
+    public void testaaLisaaVideoSuoraan(){
+        assertTrue(tk0.lisaaVideo("maski","sima"));
+        assertEquals(1,tk0.haeKaikki().size());
+        List<Vinkki> list = tk0.haeKaikkiVideot(LukuStatus.KAIKKI);
+        assertEquals(1,list.size());
+        Vinkki vinkki = list.get(0);
+        assertEquals("maski",vinkki.haeOminaisuus(Attribuutit.URL));
+        assertEquals("sima",vinkki.Otsikko());
+    }
+    
+    @Test 
+    public void testaaLisaaBlogPost(){
+        assertTrue(tk0.lisaaBlogpost("maski","sima","messi"));
+        assertEquals(1,tk0.haeKaikki().size());
+        List<Vinkki> list = tk0.haeKaikkiBlogpost(LukuStatus.KAIKKI);
+        assertEquals(1,list.size());
+        Vinkki vinkki = list.get(0);
+        assertEquals("maski",vinkki.haeOminaisuus(Attribuutit.URL));
+        assertEquals("sima",vinkki.haeOminaisuus(Attribuutit.TEKIJAT));
+        assertEquals("messi",vinkki.Otsikko());
+    }
+    
+    @Test 
+    public void testPoistaKirjaLegacyFunktio(){
+        assertTrue(tk0.lisaaKirja("maski","sima"));
+        assertTrue(tk0.poistaKirja("sima"));
+        assertFalse(tk0.poistaKirja("asd"));
+    }
+      
+    
+    @Test 
+    public void testMerkitseLuetuksiLukemattomaksi(){
+        Vinkki vinkki1 = new Vinkki("Marsut pilalla",Formaatit.BLOGPOST);
+        vinkki1.merkitseLuetuksi();
+        tk0.lisaaVinkki(vinkki1);
+        assertEquals(1,tk0.haeKaikki(LukuStatus.LUETTU).size());
+        assertEquals(0,tk0.haeKaikki(LukuStatus.LUKEMATTOMAT).size());
+        assertTrue(tk0.merkitseLukemattomaksi("Marsut pilalla"));
+        assertEquals(0,tk0.haeKaikki(LukuStatus.LUETTU).size());
+        assertEquals(1,tk0.haeKaikki(LukuStatus.LUKEMATTOMAT).size());
+        assertTrue(tk0.merkitseLuetuksi("Marsut pilalla"));
+        assertEquals(1,tk0.haeKaikki(LukuStatus.LUETTU).size());
+        assertEquals(0,tk0.haeKaikki(LukuStatus.LUKEMATTOMAT).size());
+    }
     
     
+    @Test 
+    public void testMerkitseLuetuksiLukemattomaksiEiOlemassa(){
+        Vinkki vinkki1 = new Vinkki("Marsut pilalla",Formaatit.BLOGPOST);
+        vinkki1.merkitseLuetuksi();
+        tk0.lisaaVinkki(vinkki1);
+        assertEquals(1,tk0.haeKaikki(LukuStatus.LUETTU).size());
+        assertEquals(0,tk0.haeKaikki(LukuStatus.LUKEMATTOMAT).size());
+        assertFalse(tk0.merkitseLukemattomaksi("asd"));
+        assertEquals(1,tk0.haeKaikki(LukuStatus.LUETTU).size());
+        assertEquals(0,tk0.haeKaikki(LukuStatus.LUKEMATTOMAT).size());
+        assertFalse(tk0.merkitseLuetuksi("eee"));
+        assertEquals(1,tk0.haeKaikki(LukuStatus.LUETTU).size());
+        assertEquals(0,tk0.haeKaikki(LukuStatus.LUKEMATTOMAT).size());
+    }
 }

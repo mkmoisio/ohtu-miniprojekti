@@ -20,7 +20,9 @@ public class Vinkki {
     private boolean luettu;
     private List<String> tekijat;
     private HashMap<Attribuutit, String> attribuutit;
-
+    protected String virheTeksti = "Ominaisuutta ei liitetty";
+    protected String virheTeksti2 = "hups";
+    
     public Vinkki(String otsikko, Formaatit formaatti) {
         this.otsikko = otsikko;
         this.formaatti = formaatti;
@@ -45,11 +47,11 @@ public class Vinkki {
                     if (attribuutit.containsKey(attribuutti)) {
                         return attribuutit.get(attribuutti);
                     } else {
-                        return "";
+                        return virheTeksti;
                     }
             }
         }
-        return "VIRHE!";
+        return virheTeksti;
     }
 
     //Myös muokkaa
@@ -79,9 +81,7 @@ public class Vinkki {
                     if (!String.class.isInstance(arvo)) {
                         return false;
                     }
-                    if (!tekijat.contains(arvo.toString())) {
-                        tekijat.add(arvo.toString());
-                    }
+                    lisaaTekija(arvo.toString().trim());
                     break;
                 default:
                     if (!String.class.isInstance(arvo)) {
@@ -96,27 +96,18 @@ public class Vinkki {
     }
 
     public boolean lisaaTekijat(String tekijatStr) {
-        if (tekijatStr == null) {
-            return false;
-        }
+        if (tekijatStr == null || tekijatStr.isEmpty()) return false;
         String erotin = "[----]";
         for (String tekija : tekijatStr.split(erotin)) {
-            if (tekija.equals("(null)")) {
-                return false;
-            }
-            String str=tekija.trim();
-            
-            if (!tekijat.contains(str) && !str.isEmpty()) {
-                tekijat.add(str);
-            }
+            lisaaTekija(tekija.trim());
         }
         return true;
     }
 
-    public void lisaaTekija(String tekija) {
-        if (!tekijat.contains(tekija)) {
-            tekijat.add(tekija);
-        }
+    public boolean lisaaTekija(String tekija) {
+        if (tekija==null || tekijat.contains(tekija) || tekija.isEmpty()) return false;
+        tekijat.add(tekija);
+        return true;
     }
 
     public List<String> haeTekijat() {
@@ -204,7 +195,7 @@ public class Vinkki {
                     return Otsikko() + ", luettu, " + luettu;
             }
         }
-        return "hups";
+        return virheTeksti2;
     }
 
 }
