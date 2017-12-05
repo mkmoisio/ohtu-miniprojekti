@@ -10,7 +10,7 @@ Definition of Done: Task on tehty, kun se on koodattu, testattu erikseen ja liit
 
 Tähän tulee linkki sovelluksen toimivaan versioon.
 
-Tähän tulee linkki asennus- ja käyttöohjeisiin.
+[Asennus- ja käyttöohjeet](https://github.com/mkmoisio/ohtu-miniprojekti/blob/master/doc/manual.md)
 
 Tähän tulee linkki lisenssiin.
 
