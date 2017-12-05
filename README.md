@@ -8,7 +8,7 @@ Definition of Done: Task on tehty, kun se on koodattu, testattu erikseen ja liit
 
 [Testikattavuus](https://htmlpreview.github.io/?https://github.com/mkmoisio/ohtu-miniprojekti/blob/master/doc/html/index.html)
 
-Tähän tulee linkki sovelluksen toimivaan versioon.
+[Sprint-3-release](https://github.com/mkmoisio/ohtu-miniprojekti/releases/tag/v0.1)
 
 [Asennus- ja käyttöohjeet](https://github.com/mkmoisio/ohtu-miniprojekti/blob/master/doc/manual.md)
 
