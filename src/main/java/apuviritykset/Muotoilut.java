@@ -39,10 +39,9 @@ public class Muotoilut {
     }
 
     public static String muotoileKirjavinkinTuloste(String otsikko, boolean luettu, List<String> tekijat) {
-        StringBuilder sb = new StringBuilder(); 
+        StringBuilder sb = new StringBuilder();
         sb.append(Muotoilut.muotoileTulosteenAlkuosa(otsikko, luettu));
 
- 
         sb.append(String.join(",", tekijat));
 
         return sb.toString();
@@ -53,4 +52,56 @@ public class Muotoilut {
         list.add(tekija);
         return muotoileKirjavinkinTuloste(otsikko, luettu, list);
     }
+
+    public static String muotoilePodcastvinkinTuloste(Vinkki podcast) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Podcastvinkki \n\tOtsikko: ");
+        sb.append(podcast.Otsikko());
+        if (podcast.lisaaTekijat(null)) {
+            sb.append(" (luettu)");
+        } else {
+            sb.append(" (lukematon)");
+        }
+        sb.append("\n\tNimi: ");
+        sb.append(podcast.haeOminaisuus(Attribuutit.NIMI));
+        sb.append("\n\tKuvaus: ");
+        sb.append(podcast.haeOminaisuus(Attribuutit.KUVAUS));
+        return sb.toString();
+    }
+
+    public static String muotoileVideovinkinTuloste(Vinkki video) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Videovinkki \n\tOtsikko: ");
+        sb.append(video.Otsikko());
+        if (video.luettu()) {
+            sb.append(" (luettu)");
+        } else {
+            sb.append(" (lukematon)");
+        }
+        sb.append("\n\tURL: ");
+        sb.append(video.haeOminaisuus(Attribuutit.URL));
+        sb.append("\n\tKuvaus: ");
+        sb.append(video.haeOminaisuus(Attribuutit.KUVAUS));
+        return sb.toString();
+    }
+
+    public static String muotoileBlogpostvinkinTuloste(Vinkki blogautus) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Blogpost-vinkki \n\tOtsikko: ");
+        sb.append(blogautus.Otsikko());
+        if (blogautus.luettu()) {
+            sb.append(" (luettu)");
+        } else {
+            sb.append(" (lukematon)");
+        }
+        sb.append("\n\tURL: ");
+        sb.append(blogautus.haeOminaisuus(Attribuutit.URL));
+        sb.append("\n\tKuvaus: ");
+        sb.append(blogautus.haeOminaisuus(Attribuutit.KUVAUS));
+        return sb.toString();
+    }
+
 }
