@@ -6,10 +6,11 @@
  * For more details take a look at the Java Quickstart chapter in the Gradle
  * user guide available at https://docs.gradle.org/2.10/userguide/tutorial_java_projects.html
  */
+/*
  plugins {
    id 'com.github.johnrengelman.shadow' version '2.0.1'
  }
-
+*/
 // Apply the java plugin to add support for Java
 // Include capability to run the application
 apply plugin: 'java'
