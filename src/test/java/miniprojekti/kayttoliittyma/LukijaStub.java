@@ -21,9 +21,9 @@ public class LukijaStub implements LukijaRajapinta {
         this.output = new ArrayDeque();
     }
 
-    public void lisaaSyote(String syote) {
-        this.output.add(syote);
-    }
+    //public void lisaaSyote(String syote) {
+    //    this.output.add(syote);
+    //}
     
     public void lisaaSyote(String... syote) {
         this.output.addAll(Arrays.asList(syote));
@@ -31,7 +31,8 @@ public class LukijaStub implements LukijaRajapinta {
 
     @Override
     public String nextLine() {
-        return output.pop();
+        if(!output.isEmpty()) return output.pop();
+        return null;
     }
     
     public void nollaa() {
