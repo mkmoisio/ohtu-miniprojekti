@@ -604,6 +604,8 @@ public class VinkkitietokantaTest {
         assertEquals(1,tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).size());
     }
     
+    
+    /*
     @Test 
     public void testaaLisaaKirjaLegacyFunktiot(){
         assertTrue(tk0.lisaaKirja("Purilainen"));
@@ -687,7 +689,7 @@ public class VinkkitietokantaTest {
         assertEquals(1,tk0.haeKaikki(LukuStatus.LUETTU).size());
         assertEquals(0,tk0.haeKaikki(LukuStatus.LUKEMATTOMAT).size());
     }
-    
+    */
     
     @Test 
     public void testMerkitseLuetuksiLukemattomaksiEiOlemassa(){
