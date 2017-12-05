@@ -6,6 +6,6 @@
 package Vinkkitietokanta;
 
 public enum Attribuutit{
-    OTSIKKO, TEKIJAT, LUETTU, ISBN, URL, KUVAUS, VINKKI, FORMAATTI, NIMI
+    OTSIKKO, TEKIJAT, LUETTU, ISBN, URL, KUVAUS, VINKKI, FORMAATTI, NIMI, TAGIT
 }
 

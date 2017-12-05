@@ -19,6 +19,7 @@ public class Vinkki {
     private String otsikko;
     private boolean luettu;
     private List<String> tekijat;
+    private List<String> tagit;
     private HashMap<Attribuutit, String> attribuutit;
     protected String virheTeksti = "Ominaisuutta ei liitetty";
     protected String virheTeksti2 = "hups";
@@ -28,6 +29,7 @@ public class Vinkki {
         this.formaatti = formaatti;
         this.luettu = false;
         this.tekijat = new ArrayList<>();
+        this.tagit = new ArrayList<>();
         attribuutit = new HashMap<>();
     }
 
@@ -43,6 +45,8 @@ public class Vinkki {
                     return String.valueOf(luettu);
                 case TEKIJAT:
                     return printtaaTekijat();
+                /*case TAGIT:
+                    return printtaaTagit();   */ 
                 default:
                     if (attribuutit.containsKey(attribuutti)) {
                         return attribuutit.get(attribuutti);
@@ -83,6 +87,12 @@ public class Vinkki {
                     }
                     lisaaTekija(arvo.toString().trim());
                     break;
+                case TAGIT:
+                    if (!String.class.isInstance(arvo)) {
+                        return false;
+                    }
+                    lisaaTag(arvo.toString().trim());
+                    break;    
                 default:
                     if (!String.class.isInstance(arvo)) {
                         return false;
@@ -94,8 +104,10 @@ public class Vinkki {
         }
         return false;
     }
-
-    public boolean lisaaTekijat(String tekijatStr) {
+    
+    /* TEKIJÄT  */
+    // mitä tämä on? Voisiko näitä kerätä listalle jo siinä vaiheessa kun käyttäjä syöttää tekijöitä?
+    public boolean lisaaTekijat(String tekijatStr) { 
         if (tekijatStr == null || tekijatStr.isEmpty()) return false;
         String erotin = "[----]";
         for (String tekija : tekijatStr.split(erotin)) {
@@ -121,6 +133,37 @@ public class Vinkki {
     public void poistaTekijat() {
         tekijat.clear();
     }
+    
+    /* MI: ei välttämättä tarvitse, tagit listalle jo käyttöliittymässä
+    
+    public boolean lisaaTagit(String tagitStr) {
+        if (tagitStr == null || tagitStr.isEmpty()) return false;
+        String erotin = "[----]";
+        for (String tag : tagitStr.split(erotin)) {
+            lisaaTag(tag.trim());
+        }
+        return true;
+    }
+
+    public boolean lisaaTag(String tag) {
+        if (tag==null || tag.contains(tag) || tag.isEmpty()) return false;
+        tagit.add(tag);
+        return true;
+    }
+
+    public List<String> haeTagit() {
+        return tagit;
+    }
+
+    public String printtaaTagit() {
+        return String.join(",", tagit);
+    }
+    
+    public void poistaTagit() {
+        tagit.clear();
+    }
+    
+     */
 
     public Formaatit formaatti() {
         return formaatti;

@@ -5,13 +5,12 @@
  */
 package Vinkkitietokanta;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.sqlite.SQLiteConfig;
@@ -113,32 +112,22 @@ import org.sqlite.SQLiteOpenMode;
 public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
 
     Connection conn = null;
+    String tkPath;
 
-    public Vinkkitietokanta(String tkPath) {
-        //Liitä tietokanta        
+    public Vinkkitietokanta(String tkPath) {      
+        this.tkPath= tkPath;
+    }
+    
+    public Connection avaaYhteys(){
         try {
-
-            /*MI/23.11 Tämä osa kommentoitu pois ainakin sprint 2 kohdalla.
-             SQLitessa silleen että vaikka on ON DELETE CASCADE viiteavainten kohdalla niin joku viiteavainsupport ei ole oletuksena päällä
-             eikä CASCADE siis oikeasti toimi suoraan: foreign keys pitää ensin laittaa päälle.
-             Kun laitoin tämän viiteavainsupportin päälle (suoraan tietokannassa, allaolevassa koodissa oli ajatuksena että
-             sama tehdään koodillisesti aina kun tietokantayhteys avataan) niin vinkin poistaminen ei toiminut lainkaan. Siksi vastaava 
-             koodi alla ei käytössä enkä ehdi sprint2 kohdalla tutkia enempää.
-             Tästä johtuen poistaminen on tällä hetkellä niin manuaalista eli pitää käydä joka taulussa poistamassa tietoja.
-	
-             Nämä koodirivit ovat täältä: http://code-know-how.blogspot.fi/2011/10/how-to-enable-foreign-keys-in-sqlite3.html				
-             SQLiteConfig config = new SQLiteConfig();  
-             config.enforceForeignKeys(true);*/
             SQLiteConfig config = new SQLiteConfig();  
             config.enforceForeignKeys(true);
             config.resetOpenMode(SQLiteOpenMode.CREATE);
             conn = DriverManager.getConnection(tkPath,config.toProperties());
-            
-            //System.err.println("tietokanta liitetty");      
-            //System.err.println("statement luotu");
         } catch (SQLException e) {
             System.err.println("Vinkkitietokanta: " +e.getMessage());
-        }
+        } 
+        return conn;
     }
 
     //Sulje yhteydet tietokantaan
@@ -180,13 +169,14 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         return lisaaVinkki(kirja);
     }
 
-    @Override
+    /*@Override
     public boolean lisaaKirja(String otsikko) {
         return lisaaKirja("", otsikko);
-    }
+    } onko käytössä? */
 
+    /* KÄYTTÖLIITTYMÄSTÄ PÄÄDYTÄÄN TÄHÄN! TÄSSÄ LUODAAN VINKKI OIKEALLA FORMAATILLA JA LIITETÄÄN TEKIJÄT&TAGIT*/
     @Override
-    public boolean lisaaKirja(String kirjoittajat, String otsikko) {
+    public boolean lisaaKirja(String kirjoittajat, String otsikko, List<String> tagnimet) {
         Vinkki kirja = new Vinkki(otsikko, Formaatit.KIRJA);
         if(kirjoittajat != null){
             if (!kirjoittajat.isEmpty()) {
@@ -220,6 +210,36 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         }
         return lisaaVinkki(blogpost);
     }
+    /*
+    Ylläolevat kutsuvat kaikki tätä
+    */ 
+    @Override
+    public boolean lisaaVinkki(Vinkki vinkki) {
+        if (null != vinkki.formaatti()) {
+            if(!haeOtsikolla(vinkki.Otsikko()).isEmpty()) return false;
+            luoVinkki(vinkki.Otsikko(), vinkki.luettu());
+            String vinkkiID = haeOtsikolla(vinkki.Otsikko());
+            if(vinkkiID.isEmpty()) return false;
+            List<String> tekijaIDt = haeJaPaivitaTekijat(vinkkiID, vinkki.haeTekijat());
+            liitaTekijat(vinkkiID, tekijaIDt);
+            List<Integer> tagit = haeJaPaivitaTagit(Integer.parseInt(vinkkiID), vinkki.haeTagit());
+            liitaTagit(Integer.parseInt(vinkkiID), tagit);
+            switch (vinkki.formaatti()) {
+                case KIRJA:
+                    return lisaaKirja(vinkkiID, vinkki);
+                case PODCAST:
+                    return lisaaPodcast(vinkkiID, vinkki);
+                case VIDEO:
+                    return lisaaVideo(vinkkiID, vinkki);
+                case BLOGPOST:
+                    return lisaaBlogpost(vinkkiID, vinkki);
+            }
+        }
+        return false;
+    }
+    /* */
+    
+    /* POISTAMISET*/
     
     @Override
     public boolean poistaKirja(String otsikko) {
@@ -238,6 +258,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         String poistaVinkki = "DELETE FROM Vinkki WHERE vinkki_id=?";
         //String poistaVinkkiTekijä = "DELETE FROM VinkkiTekijä WHERE vinkki_id=?";
         try {
+            this.avaaYhteys();
             //PreparedStatement komento1 = conn.prepareStatement(poistaKirja);
             PreparedStatement komento2 = conn.prepareStatement(poistaVinkki);
             //PreparedStatement komento3 = conn.prepareStatement(poistaVinkkiTekijä);
@@ -256,10 +277,14 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
 
         return true;
     }
-
+    
+    /* */
+    
+    /* LIITÄ TEKIJÄT*/
     private boolean tekijaLiitetty(String vinkkiID, String tekijaID) {
         String haeTekija = "SELECT * FROM VinkkiTekija WHERE vinkki=? AND tekija=?";
         try {
+            this.avaaYhteys();
             PreparedStatement komento = conn.prepareStatement(haeTekija);
             komento.setInt(1, Integer.parseInt(vinkkiID));
             komento.setInt(2, Integer.parseInt(tekijaID));
@@ -278,6 +303,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     private void liitaTekija(String vinkkiID, String tekijaID) {
         String lisaaVinkkiin = "INSERT INTO VinkkiTekija (vinkki,tekija) VALUES (?,?)";
         try {
+            this.avaaYhteys();
             PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);
             komento.setInt(1, Integer.parseInt(vinkkiID));
             komento.setInt(2, Integer.parseInt(tekijaID));
@@ -295,10 +321,12 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             }
         }
     }
+    /* */
     
     private String haeTekija(String nimi) {
         String haeTekija = "SELECT tekija_id FROM Tekija WHERE tekija_nimi=?";
         try {
+            this.avaaYhteys();
             PreparedStatement komento = conn.prepareStatement(haeTekija);
             komento.setString(1, nimi);
             ResultSet rs = komento.executeQuery();
@@ -316,6 +344,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     private void luoTekija(String nimi) {
         String lisaaVinkkiin = "INSERT INTO Tekija (tekija_nimi) VALUES (?)";
         try {
+            this.avaaYhteys();
             PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);
             komento.setString(1, nimi);
             komento.executeUpdate();
@@ -328,6 +357,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     public String haeOtsikolla(String otsikko) {
         String haeID = "SELECT vinkki_id FROM Vinkki WHERE otsikko=?";
         try {
+            this.avaaYhteys();
             PreparedStatement komento = conn.prepareStatement(haeID);
             komento.setString(1, otsikko);
             ResultSet rs = komento.executeQuery();
@@ -345,6 +375,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     public void luoVinkki(String otsikko, boolean luettu) {
         String lisaaVinkkiin = "INSERT INTO Vinkki (otsikko,luettu) VALUES (?, ?)";
         try {
+            this.avaaYhteys();
             PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);
             komento.setString(1, otsikko);
             komento.setBoolean(2, luettu);
@@ -367,15 +398,28 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         }
         return tekijaIDt;
     }
+    
+    private List<Integer> haeJaPaivitaTagit(int vinkkiID, List<String> tagit) {
+        List<Integer> tagit = new ArrayList<>();
+        for (int tag_id : tagit) {
+            int tag_id = haeTag(tag);
+            if (tag_id.isEmpty()) {
+                luoTag(tekija);
+                tekijaID = haeTekija(tekija);
+            }
+            tagit.add(tag_id);
+        }
+        return tagit;
+    }
+     
+    /* KANTAAN LISÄYKSET*/ 
 
     public boolean lisaaKirja(String vinkkiID, Vinkki kirja) {
-        //INSERT INTO Kirja (isbn,kuvaus,vinkki) VALUES ();
         String lisaaVinkkiin = "INSERT INTO Kirja (isbn,kuvaus,vinkki) VALUES (?,?,?)";
         try {
+            this.avaaYhteys();
             PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);
             komento.setString(1, kirja.haeOminaisuus(Attribuutit.ISBN));
-            // <__ Onko tässä tarkotuksella parametrinä int 1 eikä 2?
-            //TV: Vain bugi
             komento.setString(2, kirja.haeOminaisuus(Attribuutit.KUVAUS)); 
             komento.setInt(3, Integer.parseInt(vinkkiID));
             komento.executeUpdate();
@@ -387,12 +431,11 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         }
 
     }
-
-    //////////////IMPLEMENTOI NÄMÄ -- testaamatta!!
     private boolean lisaaPodcast(String vinkkiID, Vinkki vinkki) {
 
         String query = "INSERT INTO Podcast (nimi, kuvaus, vinkki) VALUES (?,?,?)";
         try {
+            this.avaaYhteys();
             PreparedStatement komento = conn.prepareStatement(query);
             komento.setString(1, vinkki.haeOminaisuus(Attribuutit.NIMI));
             komento.setString(2, vinkki.haeOminaisuus(Attribuutit.KUVAUS));
@@ -409,6 +452,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     private boolean lisaaVideo(String vinkkiID, Vinkki vinkki) {
         String query = " INSERT INTO Video (url, vinkki) VALUES (?, ?)";
         try {
+            this.avaaYhteys();
             PreparedStatement komento = conn.prepareStatement(query);
             komento.setString(1, vinkki.haeOminaisuus(Attribuutit.URL));
             komento.setInt(2, Integer.parseInt(vinkkiID));
@@ -425,6 +469,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     private boolean lisaaBlogpost(String vinkkiID, Vinkki vinkki) {
         String query = " INSERT INTO Blogpost (url, kuvaus, vinkki) VALUES (?, ?, ?)";
         try {
+            this.avaaYhteys();
             PreparedStatement komento = conn.prepareStatement(query);
             komento.setString(1, vinkki.haeOminaisuus(Attribuutit.URL));
             komento.setString(2, vinkki.haeOminaisuus(Attribuutit.KUVAUS));
@@ -438,45 +483,12 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         }
         return false;
     }
+    
+    /* KANTAAN LISÄYKSET LOPPUU*/
 
-    @Override
-    public boolean lisaaVinkki(Vinkki vinkki) {
-        if (null != vinkki.formaatti()) {
-            if(!haeOtsikolla(vinkki.Otsikko()).isEmpty()) return false;
-            luoVinkki(vinkki.Otsikko(), vinkki.luettu());
-            String vinkkiID = haeOtsikolla(vinkki.Otsikko());
-            if(vinkkiID.isEmpty()) return false;
-            List<String> tekijaIDt = haeJaPaivitaTekijat(vinkkiID, vinkki.haeTekijat());
-            liitaTekijat(vinkkiID, tekijaIDt);
-            switch (vinkki.formaatti()) {
-                case KIRJA:
-                    return lisaaKirja(vinkkiID, vinkki);
-                case PODCAST:
-                    return lisaaPodcast(vinkkiID, vinkki);
-                case VIDEO:
-                    return lisaaVideo(vinkkiID, vinkki);
-                case BLOGPOST:
-                    return lisaaBlogpost(vinkkiID, vinkki);
-            }
-        }
-        return false;
-    }
 
-    private boolean merkitseLukuStatus(String vinkkiID, boolean luettu) {
-        String lisaaVinkkiin = "UPDATE vinkki SET luettu=? WHERE vinkki_id=?";
-        try {
-            PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);
-            komento.setBoolean(1, luettu);
-            komento.setInt(2, Integer.parseInt(vinkkiID));
-            komento.executeUpdate();
-            komento.close();
-            return true;
-        } catch (SQLException e) {
-            System.err.println("merkitseLukuStatus"+e.getMessage());
-        }
-        return false;
-    }
-
+    /* LUKUSTATUKSEN MERKITSEMINEN*/
+    
     @Override
     public boolean merkitseLuetuksi(String otsikko) {
         String vinkkiID = haeOtsikolla(otsikko);
@@ -494,6 +506,23 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         }
         return merkitseLukuStatus(vinkkiID, false);
     }
+    
+    private boolean merkitseLukuStatus(String vinkkiID, boolean luettu) {
+        String lisaaVinkkiin = "UPDATE vinkki SET luettu=? WHERE vinkki_id=?";
+        try {
+            this.avaaYhteys();
+            PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);
+            komento.setBoolean(1, luettu);
+            komento.setInt(2, Integer.parseInt(vinkkiID));
+            komento.executeUpdate();
+            komento.close();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("merkitseLukuStatus"+e.getMessage());
+        }
+        return false;
+    }
+    
 
     ///////////////////////////////////////
     ///////////////////////////////////////
@@ -547,8 +576,11 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
                 + "INNER JOIN kirja ON vinkki_id=kirja.vinkki \n"
                 + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
                 + "LEFT OUTER JOIN Tekija on tekija_id=tekija \n"
+                + "LEFT OUTER JOIN VinkkiTag on vinkki_id=vinkkitag.vinkki \n"
+                + "LEFT OUTER JOIN Tag on tag_id=tag \n"
                 + "GROUP BY vinkki_id";
         try {
+            this.avaaYhteys();
             PreparedStatement komento = conn.prepareStatement(haeKirjatString);
             List<Vinkki> lista = null;
             if (list == null) {
@@ -589,9 +621,12 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
                 + "INNER JOIN Podcast ON vinkki_id=podcast.vinkki \n"
                 + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
                 + "LEFT OUTER JOIN Tekija on tekija_id=tekija \n"
+                + "LEFT OUTER JOIN VinkkiTag on vinkki_id=vinkkitag.vinkki \n"
+                + "LEFT OUTER JOIN Tag on tag_id=tag \n"
                 + "GROUP BY vinkki_id";
 
         try {
+            this.avaaYhteys();
             PreparedStatement komento = conn.prepareStatement(haePodcastitString);
             List<Vinkki> lista = null;
             if (list == null) {
@@ -633,9 +668,12 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
                 + "INNER JOIN Video ON vinkki_id=video.vinkki \n"
                 + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
                 + "LEFT OUTER JOIN Tekija on tekija_id=tekija \n"
+                + "LEFT OUTER JOIN VinkkiTag on vinkki_id=vinkkitag.vinkki \n"
+                + "LEFT OUTER JOIN Tag on tag_id=tag \n"
                 + "GROUP BY vinkki_id";
 
         try {
+            this.avaaYhteys();
             PreparedStatement komento = conn.prepareStatement(haeVideoString);
             List<Vinkki> lista = null;
             if (list == null) {
@@ -678,9 +716,12 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
                 + "INNER JOIN Blogpost ON vinkki_id=blogpost.vinkki \n"
                 + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
                 + "LEFT OUTER JOIN Tekija on tekija_id=tekija \n"
+                + "LEFT OUTER JOIN VinkkiTag on vinkki_id=vinkkitag.vinkki \n"
+                + "LEFT OUTER JOIN Tag on tag_id=tag \n"
                 + "GROUP BY vinkki_id";
 
         try {
+            this.avaaYhteys();
             PreparedStatement komento = conn.prepareStatement(haeBlogpostString);
             List<Vinkki> lista = null;
             if (list == null) {

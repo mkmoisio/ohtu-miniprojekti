@@ -59,6 +59,7 @@ public class VinkkitietokantaTest {
         }
         String url="jdbc:sqlite:"+dbfile.getAbsolutePath()+"/databases/test/testikanta2.db";
         tk0 = new Vinkkitietokanta(url);
+        tk0.avaaYhteys();
         if(!errContent.toString().isEmpty()) System.out.println(errContent.toString());
         assertTrue("Tietokanta pitäisi olla liitettynä",tk0.tietokantaliitetty());
     }
@@ -531,6 +532,7 @@ public class VinkkitietokantaTest {
         File dbfile=new File("");
         String url="jdbc:sqlite:"+dbfile.getAbsolutePath()+"/databases/test/asd.db";
         Vinkkitietokanta tk = new Vinkkitietokanta(url);
+        tk.avaaYhteys();
         assertFalse(errContent.toString().isEmpty());
         errContent.reset();
     }   
@@ -604,6 +606,7 @@ public class VinkkitietokantaTest {
         assertEquals(1,tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).size());
     }
     
+    /* MI 4.12.17 kommentoin pois samalla kun kommentoin pois koodista
     @Test 
     public void testaaLisaaKirjaLegacyFunktiot(){
         assertTrue(tk0.lisaaKirja("Purilainen"));
@@ -619,7 +622,7 @@ public class VinkkitietokantaTest {
         assertEquals(1,tk0.haeKaikki().size());
         assertEquals(1,tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).size());
         assertEquals("Purilainen",tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).get(0).haeTekijat().get(0));
-    }
+    }*/
     
     @Test 
     public void testaaLisaaKirjaStringStringHuonoSyote(){

@@ -5,14 +5,20 @@
  */
 package Kayttoliittyma;
 
+import Vinkkitietokanta.DAO;
 import Vinkkitietokanta.LukuStatus;
+import Vinkkitietokanta.TagDAO;
 import Vinkkitietokanta.Vinkki;
+import Vinkkitietokanta.Vinkkitietokanta;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
 import apuviritykset.Validator;
+import domain.Tag;
 import io.Lukija;
 import io.LukijaRajapinta;
 import io.Tulostaja;
 import io.TulostusRajapinta;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,11 +44,13 @@ public class Kayttoliittyma {
             + "\n";
 
     VinkkitietokantaRajapinta tk;
+    DAO tagDAO;
     LukijaRajapinta lukija;
     TulostusRajapinta tulostus;
 
-    public Kayttoliittyma(VinkkitietokantaRajapinta tk) {
+    public Kayttoliittyma(Vinkkitietokanta tk) {
         this.tk = tk;
+        this.tagDAO = new TagDAO(tk);
         this.lukija = new Lukija(System.in);
         this.tulostus = new Tulostaja(System.out);
 
@@ -130,6 +138,7 @@ public class Kayttoliittyma {
         }
     }
 
+    /* LISÄYKSET */
     private void lisaaPodcast() {
         this.tulostus.println("Anna nimi:");
         String nimi = this.lukija.nextLine();
@@ -148,14 +157,20 @@ public class Kayttoliittyma {
     }
 
     private void lisaaKirjavinkki() {
-        this.tulostus.println("Anna kirjoittaja:");
+        this.tulostus.println("Anna kirjoittaja:"); 
         String kirjoittaja = this.lukija.nextLine();
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
+        
+        List <String> tagnimet = new ArrayList<>();
+        this.tulostus.println("Anna tagi. Tyhjä palaa:");
+        while (!lukija.nextLine().isEmpty()){
+            tagnimet.add(lukija.nextLine());
+        }
 
         if (Validator.kirjavinkinSyoteOk(kirjoittaja, otsikko)) {
-            if (this.tk.lisaaKirja(kirjoittaja, otsikko)) {
-                this.tulostus.println("Kirjavinkki lisätty");
+            if (this.tk.lisaaKirja(kirjoittaja, otsikko, tagnimet)) { 
+                this.tulostus.println("Kirjavinkki lisätty");   
                 return;
             }
         }
@@ -186,6 +201,8 @@ public class Kayttoliittyma {
         String otsikko = this.lukija.nextLine();
         // Syötteen validointi puuttuu vielä
     }
+    
+    /* */
 
     private void merkitseLuetuksi() {
         this.tulostus.println("Anna sen vinkin otsikko, joka merkitään luetuksi");
@@ -195,6 +212,22 @@ public class Kayttoliittyma {
             return;
         }
         this.tulostus.println("Vinkki otsikolla "+otsikko+" merkitty luetuksi ");
+    }
+    
+    /*
+    Kysyy tagien lisäämisestä ja ohjaa vastaukset TagDAO:lle
+    */
+    private void lisaaTag() throws SQLException{
+        System.out.println("Syötä vinkkiin liittyvä tägi. Ohita pelkällä enterillä");
+        while (true){
+            if(lukija.nextLine().isEmpty()){
+                continue;
+            } else {
+            String tag_nimi= lukija.nextLine();
+            Tag tag = new Tag(tag_nimi);
+            this.tagDAO.lisaa(tag);
+            }
+        } 
     }
 
     /* KANNAN METODEITA KUTSUVAT METODIT */
@@ -275,5 +308,7 @@ public class Kayttoliittyma {
         }
     }
     /* TULOSTUS PÄÄTTYY*/
+
+
 
 }

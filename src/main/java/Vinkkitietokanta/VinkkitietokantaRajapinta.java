@@ -18,13 +18,13 @@ public interface VinkkitietokantaRajapinta {
     public boolean merkitseLuetuksi(String otsikko);
     public boolean merkitseLukemattomaksi(String otsikko);
 
-    public boolean lisaaKirja(String otsikko); //onko käytössä?
-    public boolean lisaaKirja(Vinkki vinkki); //onko käytössä?
-    public boolean lisaaPodcast(Vinkki vinkki); //onko käytössä?
-    public boolean lisaaVideo(Vinkki vinkki); //onko käytössä?
-    public boolean lisaaBlogpost(Vinkki vinkki); //onko käytössä?
+    //public boolean lisaaKirja(String otsikko); //onko käytössä?
+    public boolean lisaaKirja(Vinkki vinkki); 
+    public boolean lisaaPodcast(Vinkki vinkki); 
+    public boolean lisaaVideo(Vinkki vinkki); 
+    public boolean lisaaBlogpost(Vinkki vinkki); 
 
-    public boolean lisaaKirja(String kirjoittaja, String otsikko);
+    public boolean lisaaKirja(String kirjoittaja, String otsikko, List<String> tagnimet);
     public boolean lisaaPodcast(String nimi, String otsikko, String kuvaus);
     public boolean lisaaVideo(String url, String otsikko);
     public boolean lisaaBlogpost(String kirjoittaja, String url, String otsikko);
