@@ -104,4 +104,7 @@ public class Muotoilut {
         return sb.toString();
     }
 
+    public static String muotoileNullFormaatinTuloste(Vinkki vinkki) {
+        return vinkki.Otsikko() + ", luettu, " + vinkki.luettu();
+    }
 }
