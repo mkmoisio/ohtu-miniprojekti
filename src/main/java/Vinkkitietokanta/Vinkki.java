@@ -146,54 +146,20 @@ public class Vinkki {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
         if (null != formaatti) {
             switch (formaatti) {
                 case KIRJA:         
                     return Muotoilut.muotoileKirjavinkinTuloste(this);
-                    
                 case PODCAST:
-                    sb.append("Podcastvinkki \n\tOtsikko: ");
-                    sb.append(this.Otsikko());
-                    if (this.luettu) {
-                        sb.append(" (luettu)");
-                    } else {
-                        sb.append(" (lukematon)");
-                    }
-                    sb.append("\n\tNimi: ");
-                    sb.append(haeOminaisuus(Attribuutit.NIMI));
-                    sb.append("\n\tKuvaus: ");
-                    sb.append(haeOminaisuus(Attribuutit.KUVAUS));
-                    return sb.toString();
-                    
+                    return Muotoilut.muotoilePodcastvinkinTuloste(this);
                 case VIDEO:
-                    sb.append("Videovinkki \n\tOtsikko: ");
-                    sb.append(this.Otsikko());
-                    if (this.luettu) {
-                        sb.append(" (luettu)");
-                    } else {
-                        sb.append(" (lukematon)");
-                    }
-                    sb.append("\n\tURL: ");
-                    sb.append(haeOminaisuus(Attribuutit.URL));                
-                    return  sb.toString();
-                    
+                    return Muotoilut.muotoileVideovinkinTuloste(this);
                 case BLOGPOST:
-                    sb.append("Blogpost-vinkki \n\tOtsikko: ");
-                    sb.append(this.Otsikko());
-                    if (this.luettu) {
-                        sb.append(" (luettu)");
-                    } else {
-                        sb.append(" (lukematon)");
-                    }
-                    sb.append("\n\tURL: ");
-                    sb.append(haeOminaisuus(Attribuutit.URL));                
-                    return  sb.toString();
+                    return Muotoilut.muotoileBlogpostvinkinTuloste(this);
                 case NULL:
-                    return Otsikko() + ", luettu, " + luettu;
+                    return Muotoilut.muotoileNullFormaatinTuloste(this);
             }
         }
         return virheTeksti2;
     }
-
 }
