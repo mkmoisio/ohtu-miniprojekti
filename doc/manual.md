@@ -1,5 +1,5 @@
 **Manual**
 
-– ohtu-miniprojekti-sprint-3.jar ja tietokanta_demo.db molemmat samaan hakemistoon
+– ohtu-miniprojekti-all.jar ja tietokanta_demo.db molemmat samaan hakemistoon
 
-– Suoritetaan komennolla 'java -jar ohtu-miniprojekti-sprint-3.jar'
+– Suoritetaan komennolla 'java -jar ohtu-miniprojekti-all.jar'
