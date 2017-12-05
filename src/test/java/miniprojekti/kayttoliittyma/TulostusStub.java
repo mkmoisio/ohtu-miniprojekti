@@ -37,13 +37,13 @@ public class TulostusStub implements TulostusRajapinta {
         List<String> lista = new ArrayList();
 
         for (Iterator<String> s = this.tulosteet.iterator(); s.hasNext();) {
-            lista.add(s.next());
+            lista.add(s.next().trim());
         }
         return lista;
     }
 
     public boolean tulosteSisaltaa(String string) {
-        return this.tulosteetListana().contains(string);
+        return this.tulosteetListana().contains(string.trim());
     }
 
     public void nollaa() {

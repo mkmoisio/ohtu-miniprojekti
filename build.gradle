@@ -57,3 +57,10 @@ dependencies {
     testCompile 'info.cukes:cucumber-junit:' + cucumberVersion   
 }
 
+/*
+test {
+    testLogging.showStandardStreams = true
+    systemProperties System.getProperties()
+}
+*/
+

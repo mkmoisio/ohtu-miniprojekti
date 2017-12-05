@@ -185,6 +185,9 @@ public class Kayttoliittyma {
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
         // Syötteen validointi puuttuu vielä
+        if (this.tk.lisaaBlogpost(kirjoittajat, url, otsikko)) {
+            this.tulostus.println("Blogpost lisätty");
+        }
     }
 
     private void merkitseLuetuksi() {
@@ -194,7 +197,7 @@ public class Kayttoliittyma {
             this.tulostus.println("Virhe: Vinkkiä "+otsikko+" ei löytynyt");
             return;
         }
-        this.tulostus.println("Vinkki otsikolla "+otsikko+" merkitty luetuksi ");
+        this.tulostus.println("Vinkki otsikolla "+otsikko+" merkitty luetuksi");
     }
 
     /* KANNAN METODEITA KUTSUVAT METODIT */
