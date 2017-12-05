@@ -193,14 +193,16 @@ public class Kayttoliittyma {
         String kirjoittajat = this.lukija.nextLine();
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
-        // Syötteen validointi puuttuu vielä
-        Vinkki vinkki = new Vinkki(otsikko, Formaatit.VIDEO);
-        vinkki.lisaaOminaisuus(Attribuutit.URL, url);
-        vinkki.lisaaTekija(kirjoittajat);
-        if (this.tk.lisaaVinkki(vinkki)) {
-
-            this.tulostus.println("Blogpost lisätty");
+        if (Validator.videovinkinSyoteOk(url, otsikko)) {
+            Vinkki vinkki = new Vinkki(otsikko, Formaatit.BLOGPOST);
+            vinkki.lisaaOminaisuus(Attribuutit.URL, url);
+            vinkki.lisaaTekija(kirjoittajat);
+            if (this.tk.lisaaVinkki(vinkki)) {
+                this.tulostus.println("Blogpost lisätty");
+                return;
+            }
         }
+        this.tulostus.println("Blogpost ei lisätty");
     }
 
     private void merkitseLuetuksi() {

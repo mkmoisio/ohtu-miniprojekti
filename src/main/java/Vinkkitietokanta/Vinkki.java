@@ -95,6 +95,8 @@ public class Vinkki {
         return false;
     }
 
+    /*
+    */
     public boolean lisaaTekijat(String tekijatStr) {
         if (tekijatStr == null || tekijatStr.isEmpty()) return false;
         String erotin = "[----]";
@@ -173,9 +175,7 @@ public class Vinkki {
                         sb.append(" (lukematon)");
                     }
                     sb.append("\n\tURL: ");
-                    sb.append(haeOminaisuus(Attribuutit.URL));
-                    sb.append("\n\tKuvaus: ");
-                    sb.append(haeOminaisuus(Attribuutit.KUVAUS));                 
+                    sb.append(haeOminaisuus(Attribuutit.URL));                
                     return  sb.toString();
                     
                 case BLOGPOST:
@@ -187,9 +187,7 @@ public class Vinkki {
                         sb.append(" (lukematon)");
                     }
                     sb.append("\n\tURL: ");
-                    sb.append(haeOminaisuus(Attribuutit.URL));
-                    sb.append("\n\tKuvaus: ");
-                    sb.append(haeOminaisuus(Attribuutit.KUVAUS));                 
+                    sb.append(haeOminaisuus(Attribuutit.URL));                
                     return  sb.toString();
                 case NULL:
                     return Otsikko() + ", luettu, " + luettu;
