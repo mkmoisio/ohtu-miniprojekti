@@ -6,7 +6,9 @@
  * For more details take a look at the Java Quickstart chapter in the Gradle
  * user guide available at https://docs.gradle.org/2.10/userguide/tutorial_java_projects.html
  */
-
+ plugins {
+   id 'com.github.johnrengelman.shadow' version '2.0.1'
+ }
 
 // Apply the java plugin to add support for Java
 // Include capability to run the application
@@ -54,7 +56,7 @@ dependencies {
        testCompile 'junit:junit:4.12'
   //  testCompile 'junit:junit:3.8.2'
     testCompile 'info.cukes:cucumber-java:' + cucumberVersion
-    testCompile 'info.cukes:cucumber-junit:' + cucumberVersion   
+    testCompile 'info.cukes:cucumber-junit:' + cucumberVersion
 }
 
 /*
@@ -63,4 +65,3 @@ test {
     systemProperties System.getProperties()
 }
 */
-
