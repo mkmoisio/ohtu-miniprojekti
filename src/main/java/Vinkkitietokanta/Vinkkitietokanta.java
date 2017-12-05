@@ -169,21 +169,25 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     public boolean lisaaVideo(Vinkki video) {
         return lisaaVinkki(video);
     }
-    
-    @Override
-    public boolean lisaaBlogpost(Vinkki blogpost) {
-        return lisaaVinkki(blogpost);
-    }
 
     @Override
     public boolean lisaaKirja(Vinkki kirja) {
         return lisaaVinkki(kirja);
     }
+    
+    @Override
+    public boolean lisaaBlogpost(Vinkki blogpost) {
+        return lisaaVinkki(blogpost);
+    }   
+    
+    /*
+
 
     @Override
     public boolean lisaaKirja(String otsikko) {
         return lisaaKirja("", otsikko);
     }
+        
 
     @Override
     public boolean lisaaKirja(String kirjoittajat, String otsikko) {
@@ -195,7 +199,8 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         }
         return lisaaVinkki(kirja);
     }
-
+    
+    
     @Override
     public boolean lisaaPodcast(String nimi, String otsikko, String kuvaus) {
         Vinkki podcast = new Vinkki(otsikko, Formaatit.PODCAST);
@@ -220,6 +225,10 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         }
         return lisaaVinkki(blogpost);
     }
+    */
+    
+
+
     
     @Override
     public boolean poistaKirja(String otsikko) {

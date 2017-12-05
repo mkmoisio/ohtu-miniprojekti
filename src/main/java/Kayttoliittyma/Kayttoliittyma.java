@@ -5,6 +5,8 @@
  */
 package Kayttoliittyma;
 
+import Vinkkitietokanta.Attribuutit;
+import Vinkkitietokanta.Formaatit;
 import Vinkkitietokanta.LukuStatus;
 import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
@@ -139,7 +141,10 @@ public class Kayttoliittyma {
         String kuvaus = this.lukija.nextLine();
 
         if (Validator.podcastvinkinSyoteOk(nimi, otsikko, kuvaus)) {
-            if (this.tk.lisaaPodcast(nimi, otsikko, kuvaus)) {
+            Vinkki vinkki = new Vinkki(otsikko, Formaatit.PODCAST);
+            vinkki.lisaaOminaisuus(Attribuutit.NIMI, nimi);
+            vinkki.lisaaOminaisuus(Attribuutit.KUVAUS,kuvaus);
+            if (this.tk.lisaaVinkki(vinkki)) {
                 this.tulostus.println("Podcast lisätty");
                 return;
             }
@@ -154,7 +159,9 @@ public class Kayttoliittyma {
         String otsikko = this.lukija.nextLine();
 
         if (Validator.kirjavinkinSyoteOk(kirjoittaja, otsikko)) {
-            if (this.tk.lisaaKirja(kirjoittaja, otsikko)) {
+            Vinkki vinkki = new Vinkki(otsikko, Formaatit.KIRJA);
+            vinkki.lisaaTekija(kirjoittaja);
+            if (this.tk.lisaaVinkki(vinkki)) {
                 this.tulostus.println("Kirjavinkki lisätty");
                 return;
             }
@@ -169,7 +176,9 @@ public class Kayttoliittyma {
         String otsikko = this.lukija.nextLine();
 
         if (Validator.videovinkinSyoteOk(url, otsikko)) {
-            if (this.tk.lisaaVideo(url, otsikko)) {
+            Vinkki vinkki = new Vinkki(otsikko, Formaatit.VIDEO);
+            vinkki.lisaaOminaisuus(Attribuutit.URL, url);
+            if (this.tk.lisaaVinkki(vinkki)) {
                 this.tulostus.println("Video lisätty");
                 return;
             }
@@ -185,7 +194,11 @@ public class Kayttoliittyma {
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
         // Syötteen validointi puuttuu vielä
-        if (this.tk.lisaaBlogpost(kirjoittajat, url, otsikko)) {
+        Vinkki vinkki = new Vinkki(otsikko, Formaatit.VIDEO);
+        vinkki.lisaaOminaisuus(Attribuutit.URL, url);
+        vinkki.lisaaTekija(kirjoittajat);
+        if (this.tk.lisaaVinkki(vinkki)) {
+
             this.tulostus.println("Blogpost lisätty");
         }
     }
