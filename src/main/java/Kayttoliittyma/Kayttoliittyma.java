@@ -217,7 +217,7 @@ public class Kayttoliittyma {
 
     /* KANNAN METODEITA KUTSUVAT METODIT */
     private List<Vinkki> haeKaikkiVinkit() {
-        return this.tk.haeKaikki();
+        return this.tk.haeKaikki(LukuStatus.KAIKKI);
     }
 
     private List<Vinkki> haeKaikkuLukemattomat() {
@@ -249,7 +249,7 @@ public class Kayttoliittyma {
     }
 
     public boolean poistaKirja(String otsikko) {
-        return this.tk.poistaKirja(otsikko);
+        return this.tk.poistaVinkki(otsikko);
     }
 
     /* KANTAA KUTSUVAT METODIT LOPPUVAT TÄHÄN*/
