@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Kayttoliittyma;
 
 import Vinkkitietokanta.Attribuutit;
@@ -139,11 +134,12 @@ public class Kayttoliittyma {
         String otsikko = this.lukija.nextLine();
         this.tulostus.println("Anna kuvaus:");
         String kuvaus = this.lukija.nextLine();
-
+        
         if (Validator.podcastvinkinSyoteOk(nimi, otsikko, kuvaus)) {
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.PODCAST);
             vinkki.lisaaOminaisuus(Attribuutit.NIMI, nimi);
             vinkki.lisaaOminaisuus(Attribuutit.KUVAUS,kuvaus);
+            this.lisaaTagit(vinkki);
             if (this.tk.lisaaVinkki(vinkki)) {
                 this.tulostus.println("Podcast lisätty");
                 return;
@@ -161,6 +157,7 @@ public class Kayttoliittyma {
         if (Validator.kirjavinkinSyoteOk(kirjoittaja, otsikko)) {
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.KIRJA);
             vinkki.lisaaTekija(kirjoittaja);
+            this.lisaaTagit(vinkki);
             if (this.tk.lisaaVinkki(vinkki)) {
                 this.tulostus.println("Kirjavinkki lisätty");
                 return;
@@ -175,9 +172,10 @@ public class Kayttoliittyma {
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
 
-        if (Validator.videovinkinSyoteOk(url, otsikko)) {
+        if (Validator.videovinkinSyoteOk(url, otsikko)){
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.VIDEO);
             vinkki.lisaaOminaisuus(Attribuutit.URL, url);
+            this.lisaaTagit(vinkki);
             if (this.tk.lisaaVinkki(vinkki)) {
                 this.tulostus.println("Video lisätty");
                 return;
@@ -193,10 +191,12 @@ public class Kayttoliittyma {
         String kirjoittajat = this.lukija.nextLine();
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
+        
         if (Validator.videovinkinSyoteOk(url, otsikko)) {
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.BLOGPOST);
             vinkki.lisaaOminaisuus(Attribuutit.URL, url);
             vinkki.lisaaTekija(kirjoittajat);
+            this.lisaaTagit(vinkki);
             if (this.tk.lisaaVinkki(vinkki)) {
                 this.tulostus.println("Blogpost lisätty");
                 return;
@@ -214,6 +214,28 @@ public class Kayttoliittyma {
         }
         this.tulostus.println("Vinkki otsikolla "+otsikko+" merkitty luetuksi");
     }
+    
+    //Kysyy käyttäjältä tageja
+    private void lisaaTagit(Vinkki vinkki){
+        this.tulostus.println("Anna tageja, tyhjä syöte palauttaa aloitusnäyttöön");
+        System.out.println("");
+
+        while(true){
+            String tagSyote= lukija.nextLine();
+            if (tagSyote.isEmpty()){
+                break;
+            }
+            /*
+            if (vinkki.onkoTagia(tagSyote)){
+                System.out.println("Samanniminen tag on jo olemassa");
+                this.lisaaTagit(vinkki);
+            }*/
+            if (Validator.taginPituusOk(tagSyote)){
+            vinkki.lisaaTag(tagSyote);
+            }
+        }
+    }
+ 
 
     /* KANNAN METODEITA KUTSUVAT METODIT */
     private List<Vinkki> haeKaikkiVinkit() {
@@ -247,14 +269,13 @@ public class Kayttoliittyma {
     private boolean poistaVinkki(String otsikko) {
         return this.tk.poistaVinkki(otsikko);
     }
-
-    public boolean poistaKirja(String otsikko) {
-        return this.tk.poistaVinkki(otsikko);
-    }
-
     /* KANTAA KUTSUVAT METODIT LOPPUVAT TÄHÄN*/
 
  /* TULOSTUS */
+    private void tulostaKomennot() {
+        this.tulostus.println(this.KOMENNOT);
+    }
+    
     private void tulostaKirjavinkit() {
         tulostaLista(this.haeKaikkiKirjavinkit());
     }
@@ -269,11 +290,7 @@ public class Kayttoliittyma {
 
     private void tulostaBlogpostit() {
         tulostaLista(this.haeKaikkiBlogpostvinkit());
-    }
-
-    private void tulostaKomennot() {
-        this.tulostus.println(this.KOMENNOT);
-    }
+    } 
 
     private void tulostaKaikkiVinkit() {
         this.tulostaLista(this.haeKaikkiVinkit());

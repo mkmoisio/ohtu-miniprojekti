@@ -48,6 +48,7 @@ abstract public class ProtoDAO {
         return false;
     }
     
+    // 
     protected List<Vinkki> suoritaKomento2(Formaatit formaatti,LukuStatus status, List<Vinkki> list, HashMap<Attribuutit,String> attribuutit, String sql, String func){
         String query = sql;
         try {
@@ -64,6 +65,7 @@ abstract public class ProtoDAO {
                     }
 
                     vinkki.lisaaTekijat(rs.getString("tekijat"));
+                    vinkki.lisaaTagit(rs.getString("tagit"));
                     Iterator it = attribuutit.entrySet().iterator();
                     while (it.hasNext()) {
                         Map.Entry pair = (Map.Entry)it.next();

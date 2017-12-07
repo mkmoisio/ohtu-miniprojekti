@@ -17,7 +17,8 @@ public class Validator {
     private static final int VIDEO_URL_MAX_PITUUS = 50;
     private static final int BLOGPOST_OTSIKKO_MAX_PITUUS = 50;
     private static final int BLOGPOST_URL_MAX_PITUUS = 50;
-
+    private static final int TAG_MAX_PITUUS = 50;
+    
     public static boolean podcastvinkinSyoteOk(String nimi, String otsikko, String kuvaus) {
         if (!nimi.isEmpty()
                 && !otsikko.isEmpty()
@@ -55,5 +56,10 @@ public class Validator {
                 && (otsikko.length() <= BLOGPOST_OTSIKKO_MAX_PITUUS));
 
     }
+    
+    public static boolean taginPituusOk(String tag){
+        return ((tag.length() <= TAG_MAX_PITUUS));
+    }
+
 
 }

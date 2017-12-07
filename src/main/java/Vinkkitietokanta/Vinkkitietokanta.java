@@ -1,14 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Vinkkitietokanta;
 
 
 import Vinkkitietokanta.DAO.BlogpostDAO;
 import Vinkkitietokanta.DAO.KirjatDAO;
 import Vinkkitietokanta.DAO.PodcastDAO;
+import Vinkkitietokanta.DAO.TagDAO;
 import Vinkkitietokanta.DAO.VinkkiDAO;
 import Vinkkitietokanta.DAO.TekijatDAO;
 import Vinkkitietokanta.DAO.VideotDAO;
@@ -120,23 +117,12 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     BlogpostDAO blogpostDAO = null;
     VideotDAO videotDAO = null;
     VinkkiDAO vinkkiDAO = null;
+    TagDAO tagDAO = null;
     Connection conn = null;
 
     public Vinkkitietokanta(String tkPath) {
         //Liitä tietokanta        
         try {
-
-            /*MI/23.11 Tämä osa kommentoitu pois ainakin sprint 2 kohdalla.
-             SQLitessa silleen että vaikka on ON DELETE CASCADE viiteavainten kohdalla niin joku viiteavainsupport ei ole oletuksena päällä
-             eikä CASCADE siis oikeasti toimi suoraan: foreign keys pitää ensin laittaa päälle.
-             Kun laitoin tämän viiteavainsupportin päälle (suoraan tietokannassa, allaolevassa koodissa oli ajatuksena että
-             sama tehdään koodillisesti aina kun tietokantayhteys avataan) niin vinkin poistaminen ei toiminut lainkaan. Siksi vastaava 
-             koodi alla ei käytössä enkä ehdi sprint2 kohdalla tutkia enempää.
-             Tästä johtuen poistaminen on tällä hetkellä niin manuaalista eli pitää käydä joka taulussa poistamassa tietoja.
-	
-             Nämä koodirivit ovat täältä: http://code-know-how.blogspot.fi/2011/10/how-to-enable-foreign-keys-in-sqlite3.html				
-             SQLiteConfig config = new SQLiteConfig();  
-             config.enforceForeignKeys(true);*/
             SQLiteConfig config = new SQLiteConfig();  
             config.enforceForeignKeys(true);
             config.resetOpenMode(SQLiteOpenMode.CREATE);
@@ -147,6 +133,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             videotDAO = new VideotDAO(conn);
             vinkkiDAO = new VinkkiDAO(conn);
             podcastDAO = new PodcastDAO(conn);
+            tagDAO = new TagDAO(conn);
             
             
         } catch (SQLException e) {
@@ -171,12 +158,8 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         }
         return false;
     }
-    
 
-
-    ///////////////////////////////////////
-    ///////////////////////////////////////
-    ///Lisaa ja poista vinkki
+    ///Logiikkaa, tulee käyttöliittymästä: Lisaa ja poista vinkki
     @Override
     public boolean lisaaVinkki(Vinkki vinkki) {
         if (null != vinkki.formaatti()) {
@@ -184,8 +167,13 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             vinkkiDAO.luoVinkki(vinkki.Otsikko(), vinkki.luettu());
             String vinkkiID = vinkkiDAO.haeOtsikolla(vinkki.Otsikko());
             if(vinkkiID.isEmpty()) return false;
+            
             List<String> tekijaIDt = tekijatDAO.haeJaPaivitaTekijat(vinkkiID, vinkki.haeTekijat());
             tekijatDAO.liitaTekijat(vinkkiID, tekijaIDt);
+            
+            List<Integer> luodutTagID= tagDAO.luoTagit(vinkki.haeTagit());
+            tagDAO.liitaVinkkiTag(vinkkiID, luodutTagID);
+           
             switch (vinkki.formaatti()) {
                 case KIRJA:
                     return kirjatDAO.lisaaVinkki(vinkkiID, vinkki);
@@ -255,7 +243,7 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
  
     @Override
     public List<Vinkki> haeKaikkiKirjat(LukuStatus status) {
-        return kirjatDAO.haeListana(status, new ArrayList<>());
+        return kirjatDAO.haeListana(status, new ArrayList<>()); 
     }
     
     @Override

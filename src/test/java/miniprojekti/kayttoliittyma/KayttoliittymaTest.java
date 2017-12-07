@@ -85,6 +85,7 @@ public class KayttoliittymaTest {
         assertTrue(!this.tulostus.tulosteSisaltaa("Kirjavinkki lisätty"));
     }
 
+    /* MI 7.12: korjaamtatta, käyttää legacy metodeja
     @Test
     public void kirjavinkkiEsiintyyKaikkienVinkkienTulosteessaLisaamisenJalkeen() {
         this.lukija.nollaa();
@@ -94,10 +95,11 @@ public class KayttoliittymaTest {
         this.lisaaLukijaanKaikkienTulostus();
 //        this.lukija.kaikki();
         this.suoritaJaLopeta();
+       
         System.out.println(Muotoilut.muotoileKirjavinkinTuloste(otsikko, false, "E. L. James"));
         assertTrue(this.tulostus.tulosteSisaltaa(Muotoilut.muotoileKirjavinkinTuloste(otsikko, false, "E. L. James")));
 
-    }
+    }*/
 
 //    @Test
 //    public void kirjaVinkkiEiEsiinnyTulosteesaPoistamisenJalkeen() {

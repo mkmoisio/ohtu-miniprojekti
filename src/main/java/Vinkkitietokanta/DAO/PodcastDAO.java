@@ -38,11 +38,14 @@ public class PodcastDAO extends ProtoDAO implements DAORajapinta{
     
     @Override
     public List<Vinkki> haeListana(LukuStatus status, List<Vinkki> list) {
-        String query = "SELECT vinkki.otsikko, vinkki.luettu, podcast.nimi, podcast.kuvaus, group_concat(tekija_nimi, '----') as tekijat \n"
+        String query = "SELECT vinkki.otsikko, vinkki.luettu, podcast.nimi, podcast.kuvaus, "
+                + "group_concat(tekija_nimi, '----') as tekijat \n, group_concat(tag_nimi, '----') as tagit \n"
                 + "FROM Vinkki \n"
                 + "INNER JOIN Podcast ON vinkki_id=podcast.vinkki \n"
                 + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
                 + "LEFT OUTER JOIN Tekija on tekija_id=tekija \n"
+                + "LEFT OUTER JOIN VinkkiTag on vinkki_id=vinkkitag.vinkki \n"
+                + "LEFT OUTER JOIN Tag on tag_id=tekija \n"
                 + "GROUP BY vinkki_id";
         HashMap<Attribuutit, String> attr = new HashMap<>();
         attr.put(Attribuutit.KUVAUS, "kuvaus");

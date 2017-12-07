@@ -1,19 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package apuviritykset;
 
 import Vinkkitietokanta.Attribuutit;
 import Vinkkitietokanta.Vinkki;
-import java.util.ArrayList;
-import java.util.List;
 
-/**
- *
- * @author mikkomo
- */
 public class Muotoilut {
 
     private static String muotoileTulosteenAlkuosa(String otsikko, boolean luettu) {
@@ -25,7 +15,7 @@ public class Muotoilut {
         } else {
             sb.append(" (lukematon)");
         }
-        sb.append("\n\tKirjoitaja: ");
+        sb.append("\n\tKirjoittaja: ");
         return sb.toString();
 
     }
@@ -34,23 +24,8 @@ public class Muotoilut {
         StringBuilder sb = new StringBuilder();
         sb.append(Muotoilut.muotoileTulosteenAlkuosa(kirja.Otsikko(), kirja.luettu()));
         sb.append(kirja.haeOminaisuus(Attribuutit.TEKIJAT));
-
+        sb.append("\n\tTagit: " +muotoileTagit(kirja));
         return sb.toString();
-    }
-
-    public static String muotoileKirjavinkinTuloste(String otsikko, boolean luettu, List<String> tekijat) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(Muotoilut.muotoileTulosteenAlkuosa(otsikko, luettu));
-
-        sb.append(String.join(",", tekijat));
-
-        return sb.toString();
-    }
-
-    public static String muotoileKirjavinkinTuloste(String otsikko, boolean luettu, String tekija) {
-        List<String> list = new ArrayList();
-        list.add(tekija);
-        return muotoileKirjavinkinTuloste(otsikko, luettu, list);
     }
 
     public static String muotoilePodcastvinkinTuloste(Vinkki podcast) {
@@ -67,6 +42,7 @@ public class Muotoilut {
         sb.append(podcast.haeOminaisuus(Attribuutit.NIMI));
         sb.append("\n\tKuvaus: ");
         sb.append(podcast.haeOminaisuus(Attribuutit.KUVAUS));
+        sb.append("\n\tTagit: " +muotoileTagit(podcast));
         return sb.toString();
     }
 
@@ -82,6 +58,7 @@ public class Muotoilut {
         }
         sb.append("\n\tURL: ");
         sb.append(video.haeOminaisuus(Attribuutit.URL));
+        sb.append("\n\tTagit: " +muotoileTagit(video));
         return sb.toString();
     }
 
@@ -97,7 +74,18 @@ public class Muotoilut {
         }
         sb.append("\n\tURL: ");
         sb.append(blogautus.haeOminaisuus(Attribuutit.URL));
+        sb.append("\n\tTagit: " +muotoileTagit(blogautus));
         return sb.toString();
+    }
+    
+    public static StringBuilder muotoileTagit(Vinkki vinkki){
+        StringBuilder tagit = new StringBuilder();
+        if (!vinkki.haeTagit().isEmpty()) {
+            for (String tag : vinkki.haeTagit()){
+                tagit.append(" " +tag);
+            }
+        }
+        return tagit; 
     }
 
     public static String muotoileNullFormaatinTuloste(Vinkki vinkki) {

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Vinkkitietokanta;
 
 import apuviritykset.Muotoilut;
@@ -19,6 +15,7 @@ public class Vinkki {
     private String otsikko;
     private boolean luettu;
     private List<String> tekijat;
+    private List<String> tagit;
     private HashMap<Attribuutit, String> attribuutit;
     protected String virheTeksti = "Ominaisuutta ei liitetty";
     protected String virheTeksti2 = "hups";
@@ -28,6 +25,7 @@ public class Vinkki {
         this.formaatti = formaatti;
         this.luettu = false;
         this.tekijat = new ArrayList<>();
+        this.tagit = new ArrayList<>();
         attribuutit = new HashMap<>();
     }
 
@@ -43,7 +41,7 @@ public class Vinkki {
                     return String.valueOf(luettu);
                 case TEKIJAT:
                     return printtaaTekijat();
-                default:
+                default: //kuvaus, nimi jne,
                     if (attribuutit.containsKey(attribuutti)) {
                         return attribuutit.get(attribuutti);
                     } else {
@@ -95,7 +93,7 @@ public class Vinkki {
         return false;
     }
 
-    /*
+    /*Ottaa argumenttina tietokannasta 
     */
     public boolean lisaaTekijat(String tekijatStr) {
         if (tekijatStr == null || tekijatStr.isEmpty()) return false;
@@ -111,9 +109,34 @@ public class Vinkki {
         tekijat.add(tekija);
         return true;
     }
-
     public List<String> haeTekijat() {
         return tekijat;
+    }
+    
+     public boolean lisaaTagit(String tagitStr) {
+        if (tagitStr == null || tagitStr.isEmpty()) return false;
+        String erotin = "[----]";
+        for (String tag : tagitStr.split(erotin)) {
+            lisaaTag(tag.trim());
+        }
+        return true;
+    }
+    
+    public void lisaaTag(String tag){ //validoitu käyttöliittymässä
+        this.tagit.add(tag);
+    }
+
+    public List<String> haeTagit() {
+        return tagit;
+    }
+    
+    public boolean onkoTagia(String tagEtsittava){
+        for (String tag : tagit){
+            if (tag.equals(tagEtsittava)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public String printtaaTekijat() {
