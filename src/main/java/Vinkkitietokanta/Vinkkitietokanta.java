@@ -5,13 +5,16 @@
  */
 package Vinkkitietokanta;
 
-import java.io.File;
+
+import Vinkkitietokanta.DAO.BlogpostDAO;
+import Vinkkitietokanta.DAO.KirjatDAO;
+import Vinkkitietokanta.DAO.PodcastDAO;
+import Vinkkitietokanta.DAO.VinkkiDAO;
+import Vinkkitietokanta.DAO.TekijatDAO;
+import Vinkkitietokanta.DAO.VideotDAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import org.sqlite.SQLiteConfig;
@@ -111,7 +114,12 @@ import org.sqlite.SQLiteOpenMode;
  
  */
 public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
-
+    TekijatDAO tekijatDAO = null;
+    KirjatDAO kirjatDAO = null;
+    PodcastDAO podcastDAO = null;
+    BlogpostDAO blogpostDAO = null;
+    VideotDAO videotDAO = null;
+    VinkkiDAO vinkkiDAO = null;
     Connection conn = null;
 
     public Vinkkitietokanta(String tkPath) {
@@ -133,15 +141,19 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
             config.enforceForeignKeys(true);
             config.resetOpenMode(SQLiteOpenMode.CREATE);
             conn = DriverManager.getConnection(tkPath,config.toProperties());
+            tekijatDAO = new TekijatDAO(conn);
+            kirjatDAO = new KirjatDAO(conn);
+            blogpostDAO = new BlogpostDAO(conn);
+            videotDAO = new VideotDAO(conn);
+            vinkkiDAO = new VinkkiDAO(conn);
+            podcastDAO = new PodcastDAO(conn);
             
-            //System.err.println("tietokanta liitetty");      
-            //System.err.println("statement luotu");
+            
         } catch (SQLException e) {
             System.err.println("Vinkkitietokanta: " +e.getMessage());
         }
     }
 
-    //Sulje yhteydet tietokantaan
     public void sulje() {
         try {
             if (conn != null) conn.close();
@@ -159,617 +171,111 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
         }
         return false;
     }
-
-    @Override
-    public boolean lisaaPodcast(Vinkki podcast) {
-        return lisaaVinkki(podcast);
-    }
-
-    @Override
-    public boolean lisaaVideo(Vinkki video) {
-        return lisaaVinkki(video);
-    }
-
-    @Override
-    public boolean lisaaKirja(Vinkki kirja) {
-        return lisaaVinkki(kirja);
-    }
-    
-    @Override
-    public boolean lisaaBlogpost(Vinkki blogpost) {
-        return lisaaVinkki(blogpost);
-    }   
-    
-    /*
-
-
-    @Override
-    public boolean lisaaKirja(String otsikko) {
-        return lisaaKirja("", otsikko);
-    }
-        
-
-    @Override
-    public boolean lisaaKirja(String kirjoittajat, String otsikko) {
-        Vinkki kirja = new Vinkki(otsikko, Formaatit.KIRJA);
-        if(kirjoittajat != null){
-            if (!kirjoittajat.isEmpty()) {
-                kirja.lisaaTekijat(kirjoittajat);
-            }
-        }
-        return lisaaVinkki(kirja);
-    }
-    
-    
-    @Override
-    public boolean lisaaPodcast(String nimi, String otsikko, String kuvaus) {
-        Vinkki podcast = new Vinkki(otsikko, Formaatit.PODCAST);
-        podcast.lisaaOminaisuus(Attribuutit.KUVAUS, kuvaus);
-        podcast.lisaaOminaisuus(Attribuutit.NIMI, nimi);
-        return lisaaVinkki(podcast);
-    }
-
-    @Override
-    public boolean lisaaVideo(String url, String otsikko) {
-        Vinkki video = new Vinkki(otsikko, Formaatit.VIDEO);
-        video.lisaaOminaisuus(Attribuutit.URL, url);
-        return lisaaVinkki(video);
-    }
-
-    @Override
-    public boolean lisaaBlogpost(String url, String kirjoittajat, String otsikko) {
-        Vinkki blogpost = new Vinkki(otsikko, Formaatit.BLOGPOST);
-        blogpost.lisaaOminaisuus(Attribuutit.URL, url);
-        if (!kirjoittajat.equals("") || kirjoittajat != null) {
-            blogpost.lisaaTekijat(kirjoittajat);
-        }
-        return lisaaVinkki(blogpost);
-    }
-    */
     
 
 
-    
-    @Override
-    public boolean poistaKirja(String otsikko) {
-        return poistaVinkki(otsikko);
-    }
-
-    //EI me haluta kaikkia tekijöitä poistaa
-    @Override
-    public boolean poistaVinkki(String otsikko) {
-        String vinkkiID = haeOtsikolla(otsikko);
-        //System.err.println("ID"+vinkkiID);
-        if (vinkkiID.isEmpty()) {
-            return false;
-        }
-        //String poistaKirja = "DELETE FROM Kirja WHERE vinkki_id=?";
-        String poistaVinkki = "DELETE FROM Vinkki WHERE vinkki_id=?";
-        //String poistaVinkkiTekijä = "DELETE FROM VinkkiTekijä WHERE vinkki_id=?";
-        try {
-            //PreparedStatement komento1 = conn.prepareStatement(poistaKirja);
-            PreparedStatement komento2 = conn.prepareStatement(poistaVinkki);
-            //PreparedStatement komento3 = conn.prepareStatement(poistaVinkkiTekijä);
-            //komento1.setInt(1,Integer.parseInt(vinkkiID));
-            komento2.setInt(1, Integer.parseInt(vinkkiID));
-            //komento3.setInt(1,Integer.parseInt(vinkkiID));
-            //komento1.executeUpdate();
-            komento2.executeUpdate();
-            komento2.close();
-            //komento3.executeUpdate();
-
-        } catch (SQLException e) {
-            System.err.println("poistaVinkki: "+e.getMessage());
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean tekijaLiitetty(String vinkkiID, String tekijaID) {
-        String haeTekija = "SELECT * FROM VinkkiTekija WHERE vinkki=? AND tekija=?";
-        try {
-            PreparedStatement komento = conn.prepareStatement(haeTekija);
-            komento.setInt(1, Integer.parseInt(vinkkiID));
-            komento.setInt(2, Integer.parseInt(tekijaID));
-            ResultSet rs = komento.executeQuery();
-            boolean loyty = false;
-            while (rs.next()) {
-                loyty = true;
-            }
-            return loyty;
-        } catch (SQLException e) {
-            System.err.println("tekijaLiitetty: "+e.getMessage());
-            return false;
-        }
-    }
-
-    private void liitaTekija(String vinkkiID, String tekijaID) {
-        String lisaaVinkkiin = "INSERT INTO VinkkiTekija (vinkki,tekija) VALUES (?,?)";
-        try {
-            PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);
-            komento.setInt(1, Integer.parseInt(vinkkiID));
-            komento.setInt(2, Integer.parseInt(tekijaID));
-            komento.executeUpdate();
-            komento.close();
-        } catch (SQLException e) {
-            System.err.println("liitaTekija: "+e.getMessage());
-        }
-    }
-
-    private void liitaTekijat(String vinkkiID, List<String> tekijaIDt) {
-        for (String tekijaID : tekijaIDt) {
-            if (!tekijaLiitetty(vinkkiID, tekijaID)) {
-                liitaTekija(vinkkiID, tekijaID);
-            }
-        }
-    }
-    
-    private String haeTekija(String nimi) {
-        String haeTekija = "SELECT tekija_id FROM Tekija WHERE tekija_nimi=?";
-        try {
-            PreparedStatement komento = conn.prepareStatement(haeTekija);
-            komento.setString(1, nimi);
-            ResultSet rs = komento.executeQuery();
-            String kirjaID = "";
-            while (rs.next()) {
-                kirjaID = Integer.toString(rs.getInt("tekija_id"));
-            }
-            return kirjaID;
-        } catch (SQLException e) {
-            System.err.println("haeTekija: "+e.getMessage());
-        }
-        return "";
-    }
-
-    private void luoTekija(String nimi) {
-        String lisaaVinkkiin = "INSERT INTO Tekija (tekija_nimi) VALUES (?)";
-        try {
-            PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);
-            komento.setString(1, nimi);
-            komento.executeUpdate();
-            komento.close();
-        } catch (SQLException e) {
-            System.err.println("luoTekija: "+e.getMessage());
-        }
-    }
-
-    public String haeOtsikolla(String otsikko) {
-        String haeID = "SELECT vinkki_id FROM Vinkki WHERE otsikko=?";
-        try {
-            PreparedStatement komento = conn.prepareStatement(haeID);
-            komento.setString(1, otsikko);
-            ResultSet rs = komento.executeQuery();
-            String kirjaID = "";
-            while (rs.next()) {
-                kirjaID = rs.getString("vinkki_id");
-            }
-            return kirjaID;
-        } catch (SQLException e) {
-            System.err.println("haeOtsikolla: "+e.getMessage());
-        }
-        return "";
-    }
-
-    public void luoVinkki(String otsikko, boolean luettu) {
-        String lisaaVinkkiin = "INSERT INTO Vinkki (otsikko,luettu) VALUES (?, ?)";
-        try {
-            PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);
-            komento.setString(1, otsikko);
-            komento.setBoolean(2, luettu);
-            komento.executeUpdate();
-            komento.close();
-        } catch (SQLException e) {
-            System.err.println("luoVinkki: "+e.getMessage());
-        }
-    }
-
-    private List<String> haeJaPaivitaTekijat(String vinkkiID, List<String> tekijat) {
-        List<String> tekijaIDt = new ArrayList<>();
-        for (String tekija : tekijat) {
-            String tekijaID = haeTekija(tekija);
-            if (tekijaID.isEmpty()) {
-                luoTekija(tekija);
-                tekijaID = haeTekija(tekija);
-            }
-            tekijaIDt.add(tekijaID);
-        }
-        return tekijaIDt;
-    }
-
-    public boolean lisaaKirja(String vinkkiID, Vinkki kirja) {
-        //INSERT INTO Kirja (isbn,kuvaus,vinkki) VALUES ();
-        String lisaaVinkkiin = "INSERT INTO Kirja (isbn,kuvaus,vinkki) VALUES (?,?,?)";
-        try {
-            PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);
-            komento.setString(1, kirja.haeOminaisuus(Attribuutit.ISBN));
-            // <__ Onko tässä tarkotuksella parametrinä int 1 eikä 2?
-            //TV: Vain bugi
-            komento.setString(2, kirja.haeOminaisuus(Attribuutit.KUVAUS)); 
-            komento.setInt(3, Integer.parseInt(vinkkiID));
-            komento.executeUpdate();
-            komento.close();
-            return true;
-        } catch (SQLException e) {
-            System.err.println("lisaaKirja: "+ e.getMessage());
-            return false;
-        }
-
-    }
-
-    //////////////IMPLEMENTOI NÄMÄ -- testaamatta!!
-    private boolean lisaaPodcast(String vinkkiID, Vinkki vinkki) {
-
-        String query = "INSERT INTO Podcast (nimi, kuvaus, vinkki) VALUES (?,?,?)";
-        try {
-            PreparedStatement komento = conn.prepareStatement(query);
-            komento.setString(1, vinkki.haeOminaisuus(Attribuutit.NIMI));
-            komento.setString(2, vinkki.haeOminaisuus(Attribuutit.KUVAUS));
-            komento.setInt(3, Integer.parseInt(vinkkiID));
-            komento.executeUpdate();
-            komento.close();
-            return true;
-        } catch (SQLException e) {
-            System.err.println("lisaaPodcast: "+ e.getMessage());
-        }
-        return false;
-    }
-
-    private boolean lisaaVideo(String vinkkiID, Vinkki vinkki) {
-        String query = " INSERT INTO Video (url, vinkki) VALUES (?, ?)";
-        try {
-            PreparedStatement komento = conn.prepareStatement(query);
-            komento.setString(1, vinkki.haeOminaisuus(Attribuutit.URL));
-            komento.setInt(2, Integer.parseInt(vinkkiID));
-            komento.executeUpdate();
-            komento.close();
-            return true;
-        } catch (SQLException e) {
-            System.err.println("lisaaVideo: "+ e.getMessage());
-
-        }
-        return false;
-    }
-    
-    private boolean lisaaBlogpost(String vinkkiID, Vinkki vinkki) {
-        String query = " INSERT INTO Blogpost (url, kuvaus, vinkki) VALUES (?, ?, ?)";
-        try {
-            PreparedStatement komento = conn.prepareStatement(query);
-            komento.setString(1, vinkki.haeOminaisuus(Attribuutit.URL));
-            komento.setString(2, vinkki.haeOminaisuus(Attribuutit.KUVAUS));
-            komento.setInt(3, Integer.parseInt(vinkkiID));
-            komento.executeUpdate();
-            komento.close();
-            return true;
-        } catch (SQLException e) {
-            System.err.println("lisaaBlogpost: "+ e.getMessage());
-
-        }
-        return false;
-    }
-
+    ///////////////////////////////////////
+    ///////////////////////////////////////
+    ///Lisaa ja poista vinkki
     @Override
     public boolean lisaaVinkki(Vinkki vinkki) {
         if (null != vinkki.formaatti()) {
-            if(!haeOtsikolla(vinkki.Otsikko()).isEmpty()) return false;
-            luoVinkki(vinkki.Otsikko(), vinkki.luettu());
-            String vinkkiID = haeOtsikolla(vinkki.Otsikko());
+            if(!vinkkiDAO.haeOtsikolla(vinkki.Otsikko()).isEmpty()) return false;
+            vinkkiDAO.luoVinkki(vinkki.Otsikko(), vinkki.luettu());
+            String vinkkiID = vinkkiDAO.haeOtsikolla(vinkki.Otsikko());
             if(vinkkiID.isEmpty()) return false;
-            List<String> tekijaIDt = haeJaPaivitaTekijat(vinkkiID, vinkki.haeTekijat());
-            liitaTekijat(vinkkiID, tekijaIDt);
+            List<String> tekijaIDt = tekijatDAO.haeJaPaivitaTekijat(vinkkiID, vinkki.haeTekijat());
+            tekijatDAO.liitaTekijat(vinkkiID, tekijaIDt);
             switch (vinkki.formaatti()) {
                 case KIRJA:
-                    return lisaaKirja(vinkkiID, vinkki);
+                    return kirjatDAO.lisaaVinkki(vinkkiID, vinkki);
                 case PODCAST:
-                    return lisaaPodcast(vinkkiID, vinkki);
+                    return podcastDAO.lisaaVinkki(vinkkiID, vinkki);
                 case VIDEO:
-                    return lisaaVideo(vinkkiID, vinkki);
+                    return videotDAO.lisaaVinkki(vinkkiID, vinkki);
                 case BLOGPOST:
-                    return lisaaBlogpost(vinkkiID, vinkki);
+                    return blogpostDAO.lisaaVinkki(vinkkiID, vinkki);
             }
         }
         return false;
     }
 
-    private boolean merkitseLukuStatus(String vinkkiID, boolean luettu) {
-        String lisaaVinkkiin = "UPDATE vinkki SET luettu=? WHERE vinkki_id=?";
-        try {
-            PreparedStatement komento = conn.prepareStatement(lisaaVinkkiin);
-            komento.setBoolean(1, luettu);
-            komento.setInt(2, Integer.parseInt(vinkkiID));
-            komento.executeUpdate();
-            komento.close();
-            return true;
-        } catch (SQLException e) {
-            System.err.println("merkitseLukuStatus"+e.getMessage());
-        }
-        return false;
+    @Override
+    public boolean poistaVinkki(String otsikko){
+        return vinkkiDAO.poistaVinkki(otsikko);
     }
 
+    
+    ///////////////////////////////////////
+    ///////////////////////////////////////
+    ///Merkitse Luetuksi
     @Override
     public boolean merkitseLuetuksi(String otsikko) {
-        String vinkkiID = haeOtsikolla(otsikko);
+        String vinkkiID = vinkkiDAO.haeOtsikolla(otsikko);
         if (vinkkiID.isEmpty()) {
             return false;
         }
-        return merkitseLukuStatus(vinkkiID, true);
+        return vinkkiDAO.merkitseLukuStatus(vinkkiID, true);
     }
 
     @Override
     public boolean merkitseLukemattomaksi(String otsikko) {
-        String vinkkiID = haeOtsikolla(otsikko);
+        String vinkkiID = vinkkiDAO.haeOtsikolla(otsikko);
         if (vinkkiID.isEmpty()) {
             return false;
         }
-        return merkitseLukuStatus(vinkkiID, false);
+        return vinkkiDAO.merkitseLukuStatus(vinkkiID, false);
     }
+
 
     ///////////////////////////////////////
     ///////////////////////////////////////
-    ///HAE KAIKKI METODIT
+    ///Apufunktioita
     @Override
-    public List<Vinkki> haeKaikkiKirjat(LukuStatus status) {
-        return haeKaikkiKirjatBase(status, null);
-    }
-
-    @Override
-    public List<String> haeKaikkiKirjatString(LukuStatus status) {
-        List<Vinkki> vinkkiLista = haeKaikkiKirjatBase(status, null);
-        return muunnaVinkkiLista(vinkkiLista);
-    }
-
-    private List<String> muunnaVinkkiLista(List<Vinkki> vinkkiLista) {
+    public List<String> muunnaVinkkiLista(List<Vinkki> vinkkiLista) {
         List<String> lista = new ArrayList<>();
         for (Vinkki vinkki : vinkkiLista) {
             lista.add(vinkki.toString());
         }
         return lista;
     }
-
-    @Override
-    public List<String> haeKaikkiString(LukuStatus status) {
-        List<Vinkki> vinkkiLista = haeKaikki(status);
-        return muunnaVinkkiLista(vinkkiLista);
-    }
-
-    //////////////IMPLEMENTOI NÄMÄ
+    
+    
+    ///////////////////////////////////////
+    ///////////////////////////////////////
+    ///HAE KAIKKI METODIT
     @Override
     public List<Vinkki> haeKaikki(LukuStatus status) {
-        List<Vinkki> lista = haeKaikkiKirjatBase(status, null);
-        lista = haeKaikkiVideotBase(status, lista);
-        lista = haeKaikkiPodcastBase(status, lista);
-        lista = haeKaikkiBlogpostBase(status, lista);
+        List<Vinkki> lista = kirjatDAO.haeListana(status, new ArrayList<>());
+        lista = videotDAO.haeListana(status, lista);
+        lista = podcastDAO.haeListana(status, lista);
+        lista = blogpostDAO.haeListana(status, lista);
         return lista;
     }
-
-    private List<Vinkki> haeKaikkiKirjatBase(LukuStatus status, List<Vinkki> list) {
-        /*
-         SELECT vinkki.otsikko, kirja.isbn, kirja.kuvaus, group_concat(tekija_nimi, ' ') as tekijat
-         FROM Vinkki
-         INNER JOIN kirja ON vinkki_id=kirja.vinkki
-         LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki
-         LEFT OUTER JOIN Tekija on tekija_id=tekija
-         GROUP BY vinkki_id
-         */
-        String haeKirjatString = "SELECT vinkki.otsikko, vinkki.luettu, kirja.isbn, kirja.kuvaus, group_concat(tekija_nimi, '----') as tekijat \n"
-                + "FROM Vinkki \n"
-                + "INNER JOIN kirja ON vinkki_id=kirja.vinkki \n"
-                + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
-                + "LEFT OUTER JOIN Tekija on tekija_id=tekija \n"
-                + "GROUP BY vinkki_id";
-        try {
-            PreparedStatement komento = conn.prepareStatement(haeKirjatString);
-            List<Vinkki> lista = null;
-            if (list == null) {
-                lista = new ArrayList<>();
-            } else {
-                lista = list;
-            }
-
-            ResultSet rs = komento.executeQuery();
-            while (rs.next()) {
-                int luettu = Integer.parseInt(rs.getString("luettu"));
-                if (luettu == status.getValue() || status == LukuStatus.KAIKKI) {
-                    Vinkki kirja = new Vinkki(rs.getString("otsikko"), Formaatit.KIRJA);
-                    if (luettu == 0) {
-                        kirja.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.FALSE);
-                    } else {
-                        kirja.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.TRUE);
-                    }
-                    kirja.lisaaOminaisuus(Attribuutit.ISBN, rs.getString("isbn"));
-                    kirja.lisaaTekijat(rs.getString("tekijat"));
-                    kirja.lisaaOminaisuus(Attribuutit.KUVAUS, rs.getString("kuvaus"));
-                    lista.add(kirja);
-                }
-            }
-            komento.close();
-            return lista;
-        } catch (SQLException e) {
-            System.err.println("haeKaikkiKirjatBase:"+e.getMessage());
-        }
-        return null;
-    }
-
-    //////////////IMPLEMENTOI NÄMÄ
-    private List<Vinkki> haeKaikkiPodcastBase(LukuStatus status, List<Vinkki> list) {
-
-        String haePodcastitString = "SELECT vinkki.otsikko, vinkki.luettu, podcast.nimi, podcast.kuvaus, group_concat(tekija_nimi, '----') as tekijat \n"
-                + "FROM Vinkki \n"
-                + "INNER JOIN Podcast ON vinkki_id=podcast.vinkki \n"
-                + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
-                + "LEFT OUTER JOIN Tekija on tekija_id=tekija \n"
-                + "GROUP BY vinkki_id";
-
-        try {
-            PreparedStatement komento = conn.prepareStatement(haePodcastitString);
-            List<Vinkki> lista = null;
-            if (list == null) {
-                lista = new ArrayList<>();
-            } else {
-                lista = list;
-            }
-
-            ResultSet rs = komento.executeQuery();
-            while (rs.next()) {
-                int luettu = Integer.parseInt(rs.getString("luettu"));
-                if (luettu == status.getValue() || status == LukuStatus.KAIKKI) {
-                    Vinkki podcast = new Vinkki(rs.getString("otsikko"), Formaatit.PODCAST);
-                    if (luettu == 0) {
-                        podcast.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.FALSE);
-                    } else {
-                        podcast.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.TRUE);
-                    }
-
-                    podcast.lisaaTekijat(rs.getString("tekijat"));
-                    podcast.lisaaOminaisuus(Attribuutit.KUVAUS, rs.getString("kuvaus"));
-                    podcast.lisaaOminaisuus(Attribuutit.NIMI, rs.getString("nimi"));
-                    lista.add(podcast);
-                }
-            }
-
-            komento.close();
-            return lista;
-        } catch (SQLException e) {
-            System.err.println("haeKaikkiPodcastBase:"+e.getMessage());
-        }
-        return null;
-    }
-
-    private List<Vinkki> haeKaikkiVideotBase(LukuStatus status, List<Vinkki> list) {
-
-        String haeVideoString = "SELECT vinkki.otsikko, vinkki.luettu, video.url, group_concat(tekija_nimi, '----') as tekijat \n"
-                + "FROM Vinkki \n"
-                + "INNER JOIN Video ON vinkki_id=video.vinkki \n"
-                + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
-                + "LEFT OUTER JOIN Tekija on tekija_id=tekija \n"
-                + "GROUP BY vinkki_id";
-
-        try {
-            PreparedStatement komento = conn.prepareStatement(haeVideoString);
-            List<Vinkki> lista = null;
-            if (list == null) {
-                lista = new ArrayList<>();
-            } else {
-                lista = list;
-            }
-
-            ResultSet rs = komento.executeQuery();
-            while (rs.next()) {
-                int luettu = Integer.parseInt(rs.getString("luettu"));
-                if (luettu == status.getValue() || status == LukuStatus.KAIKKI) {
-                    Vinkki video = new Vinkki(rs.getString("otsikko"), Formaatit.VIDEO);
-                    if (luettu == 0) {
-                        video.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.FALSE);
-                    } else {
-                        video.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.TRUE);
-                    }
-
-                    video.lisaaTekijat(rs.getString("tekijat"));
-                    video.lisaaOminaisuus(Attribuutit.URL, rs.getString("url"));
-                    // video.lisaaOminaisuus(Attribuutit.NIMI, rs.getString("nimi"));
-                    lista.add(video);
-                }
-            }
-
-            komento.close();
-            return lista;
-        } catch (SQLException e) {
-            System.err.println("haeKaikkiVideotBase:"+e.getMessage());
-        }
-        return null;
-
+ 
+    @Override
+    public List<Vinkki> haeKaikkiKirjat(LukuStatus status) {
+        return kirjatDAO.haeListana(status, new ArrayList<>());
     }
     
-    private List<Vinkki> haeKaikkiBlogpostBase(LukuStatus status, List<Vinkki> list) {
-
-        String haeBlogpostString = "SELECT vinkki.otsikko, vinkki.luettu, blogpost.url, blogpost.kuvaus, group_concat(tekija_nimi, '----') as tekijat \n"
-                + "FROM Vinkki \n"
-                + "INNER JOIN Blogpost ON vinkki_id=blogpost.vinkki \n"
-                + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
-                + "LEFT OUTER JOIN Tekija on tekija_id=tekija \n"
-                + "GROUP BY vinkki_id";
-
-        try {
-            PreparedStatement komento = conn.prepareStatement(haeBlogpostString);
-            List<Vinkki> lista = null;
-            if (list == null) {
-                lista = new ArrayList<>();
-            } else {
-                lista = list;
-            }
-
-            ResultSet rs = komento.executeQuery();
-            while (rs.next()) {
-                int luettu = Integer.parseInt(rs.getString("luettu"));
-                if (luettu == status.getValue() || status == LukuStatus.KAIKKI) {
-                    Vinkki blogpost = new Vinkki(rs.getString("otsikko"), Formaatit.BLOGPOST);
-                    if (luettu == 0) {
-                        blogpost.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.FALSE);
-                    } else {
-                        blogpost.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.TRUE);
-                    }
-
-                    blogpost.lisaaTekijat(rs.getString("tekijat"));
-                    blogpost.lisaaOminaisuus(Attribuutit.KUVAUS, rs.getString("kuvaus"));
-                    blogpost.lisaaOminaisuus(Attribuutit.URL, rs.getString("url"));
-                    lista.add(blogpost);
-                }
-            }
-
-            komento.close();
-            return lista;
-        } catch (SQLException e) {
-            System.err.println("haeKaikkiBlogpostBase:"+e.getMessage());
-        }
-        return null;
-
-    }
-
     @Override
     public List<Vinkki> haeKaikkiVideot(LukuStatus status) {
-        return haeKaikkiVideotBase(status, null);
+        return videotDAO.haeListana(status, new ArrayList<>());
     }
 
-    @Override
-    public List<String> haeKaikkiVideotString(LukuStatus status) {
-        List<Vinkki> vinkkiLista = haeKaikkiVideotBase(status, null);
-        return muunnaVinkkiLista(vinkkiLista);
-    }
-    
     @Override
     public List<Vinkki> haeKaikkiBlogpost(LukuStatus status) {
-        return haeKaikkiBlogpostBase(status, null);
-    }
-
-    @Override
-    public List<String> haeKaikkiBlogpostString(LukuStatus status) {
-        List<Vinkki> vinkkiLista = haeKaikkiBlogpostBase(status, null);
-        return muunnaVinkkiLista(vinkkiLista);
+        return blogpostDAO.haeListana(status, new ArrayList<>());
     }
 
     @Override
     public List<Vinkki> haeKaikkiPodcast(LukuStatus status) {
-        return haeKaikkiPodcastBase(status, null);
-    }
-
-    @Override
-    public List<String> haeKaikkiPodcastString(LukuStatus status) {
-        List<Vinkki> vinkkiLista = haeKaikkiPodcastBase(status, null);
-        return muunnaVinkkiLista(vinkkiLista);
-    }
-
-    @Override
-    public List<Vinkki> haeKaikki() {
-        return haeKaikki(LukuStatus.KAIKKI);
-    }
-
-    @Override
-    public List<String> haeKaikkiString() {
-        return haeKaikkiString(LukuStatus.KAIKKI);
+        return podcastDAO.haeListana(status, new ArrayList<>());
     }
 
     public Connection getConn() {
         return conn;
     }
-    
+
+
 }

@@ -106,7 +106,7 @@ public class VinkkitietokantaTest {
         System.out.println("Lisää yksi ja löytyy taulusta 1");
         String otsikko = "Fifty shades of terminal";
         Vinkki vinkki = new Vinkki(otsikko,Formaatit.KIRJA);
-        tk0.lisaaKirja(vinkki);
+        tk0.lisaaVinkki(vinkki);
         List<Vinkki> result = tk0.haeKaikki(LukuStatus.KAIKKI);
         assertEquals(1, result.size());
         assertEquals(result.get(0).Otsikko(),otsikko);
@@ -167,8 +167,8 @@ public class VinkkitietokantaTest {
         Vinkki vinkki = new Vinkki(otsikko,Formaatit.KIRJA);
         String otsikko2 = "Tunnettu Sotilas";
         Vinkki vinkki2 = new Vinkki(otsikko2,Formaatit.KIRJA);
-        tk0.lisaaKirja(vinkki);
-        tk0.lisaaKirja(vinkki2);
+        tk0.lisaaVinkki(vinkki);
+        tk0.lisaaVinkki(vinkki2);
         List<Vinkki> result = tk0.haeKaikki(LukuStatus.KAIKKI);
         assertEquals(2, result.size());
         assertEquals(result.get(0).Otsikko(),otsikko);
@@ -183,8 +183,8 @@ public class VinkkitietokantaTest {
         String otsikko = "Fifty shades of terminal";
         Vinkki vinkki = new Vinkki(otsikko,Formaatit.KIRJA);
         Vinkki vinkki2 = new Vinkki(otsikko,Formaatit.KIRJA);
-        tk0.lisaaKirja(vinkki);
-        tk0.lisaaKirja(vinkki2);
+        tk0.lisaaVinkki(vinkki);
+        tk0.lisaaVinkki(vinkki2);
         List<Vinkki> result = tk0.haeKaikki(LukuStatus.KAIKKI);
         assertEquals(1, result.size());
         assertEquals(result.get(0).Otsikko(),otsikko);
@@ -198,8 +198,8 @@ public class VinkkitietokantaTest {
         Vinkki vinkki = new Vinkki(otsikko,Formaatit.KIRJA);
         String otsikko2 = "Tunnettu Sotilas";
         Vinkki vinkki2 = new Vinkki(otsikko2,Formaatit.PODCAST);
-        tk0.lisaaKirja(vinkki);
-        tk0.lisaaKirja(vinkki2);
+        tk0.lisaaVinkki(vinkki);
+        tk0.lisaaVinkki(vinkki2);
         List<Vinkki> result = tk0.haeKaikki(LukuStatus.KAIKKI);
         assertEquals(2, result.size());
         result = tk0.haeKaikkiKirjat(LukuStatus.KAIKKI);
@@ -571,125 +571,40 @@ public class VinkkitietokantaTest {
     @Test 
     public void testaaLisaaPodcastKaksiKertaa(){
         Vinkki vinkki1 = new Vinkki("Marsut pilalla",Formaatit.PODCAST);
-        assertTrue(tk0.lisaaPodcast(vinkki1));
+        assertTrue(tk0.lisaaVinkki(vinkki1));
         assertFalse(tk0.lisaaVinkki(vinkki1));
-        assertEquals(1,tk0.haeKaikki().size());
+        assertEquals(1,tk0.haeKaikki(LukuStatus.KAIKKI).size());
         assertEquals(1,tk0.haeKaikkiPodcast(LukuStatus.KAIKKI).size());
     }
 
     @Test 
     public void testaaLisaaBlogpostKaksiKertaa(){
         Vinkki vinkki1 = new Vinkki("Marsut pilalla",Formaatit.BLOGPOST);
-        assertTrue(tk0.lisaaBlogpost(vinkki1));
+        assertTrue(tk0.lisaaVinkki(vinkki1));
         assertFalse(tk0.lisaaVinkki(vinkki1));
-        assertEquals(1,tk0.haeKaikki().size());
+        assertEquals(1,tk0.haeKaikki(LukuStatus.KAIKKI).size());
         assertEquals(1,tk0.haeKaikkiBlogpost(LukuStatus.KAIKKI).size());
     }
 
     @Test 
     public void testaaLisaaVideoKaksiKertaa(){
         Vinkki vinkki1 = new Vinkki("Marsut pilalla",Formaatit.VIDEO);
-        assertTrue(tk0.lisaaVideo(vinkki1));
+        assertTrue(tk0.lisaaVinkki(vinkki1));
         assertFalse(tk0.lisaaVinkki(vinkki1));
-        assertEquals(1,tk0.haeKaikki().size());
+        assertEquals(1,tk0.haeKaikki(LukuStatus.KAIKKI).size());
         assertEquals(1,tk0.haeKaikkiVideot(LukuStatus.KAIKKI).size());
     }
     
     @Test 
     public void testaaLisaaKirjaKaksiKertaa(){
         Vinkki vinkki1 = new Vinkki("Marsut pilalla",Formaatit.KIRJA);
-        assertTrue(tk0.lisaaKirja(vinkki1));
+        assertTrue(tk0.lisaaVinkki(vinkki1));
         assertFalse(tk0.lisaaVinkki(vinkki1));
-        assertEquals(1,tk0.haeKaikki().size());
+        assertEquals(1,tk0.haeKaikki(LukuStatus.KAIKKI).size());
         assertEquals(1,tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).size());
     }
     
-    
-    /*
-    @Test 
-    public void testaaLisaaKirjaLegacyFunktiot(){
-        assertTrue(tk0.lisaaKirja("Purilainen"));
-        assertFalse(tk0.lisaaKirja("Purilainen"));
-        assertEquals(1,tk0.haeKaikki().size());
-        assertEquals(1,tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).size());
-    }
-    
-    @Test 
-    public void testaaLisaaKirjaLegacyFunktiot2(){
-        assertTrue(tk0.lisaaKirja("Purilainen","Markku"));
-        assertFalse(tk0.lisaaKirja("Purilainen","Markku"));
-        assertEquals(1,tk0.haeKaikki().size());
-        assertEquals(1,tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).size());
-        assertEquals("Purilainen",tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).get(0).haeTekijat().get(0));
-    }
-    
-    @Test 
-    public void testaaLisaaKirjaStringStringHuonoSyote(){
-        assertTrue(tk0.lisaaKirja(null,"Markku"));
-        assertFalse(tk0.lisaaKirja("","Markku"));
-        assertEquals(1,tk0.haeKaikki().size());
-        assertEquals(1,tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).size());
-        assertTrue(tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).get(0).haeTekijat().isEmpty());
-    }
-    
-    @Test 
-    public void testaaLisaaPodcastSuoraan(){
-        assertTrue(tk0.lisaaPodcast("maski","sima","messi"));
-        assertEquals(1,tk0.haeKaikki().size());
-        List<Vinkki> list = tk0.haeKaikkiPodcast(LukuStatus.KAIKKI);
-        assertEquals(1,list.size());
-        Vinkki vinkki = list.get(0);
-        assertEquals("messi",vinkki.haeOminaisuus(Attribuutit.KUVAUS));
-        assertEquals("maski",vinkki.haeOminaisuus(Attribuutit.NIMI));
-        assertEquals("sima",vinkki.Otsikko());
-    }
-    
-    @Test 
-    public void testaaLisaaVideoSuoraan(){
-        assertTrue(tk0.lisaaVideo("maski","sima"));
-        assertEquals(1,tk0.haeKaikki().size());
-        List<Vinkki> list = tk0.haeKaikkiVideot(LukuStatus.KAIKKI);
-        assertEquals(1,list.size());
-        Vinkki vinkki = list.get(0);
-        assertEquals("maski",vinkki.haeOminaisuus(Attribuutit.URL));
-        assertEquals("sima",vinkki.Otsikko());
-    }
-    
-    @Test 
-    public void testaaLisaaBlogPost(){
-        assertTrue(tk0.lisaaBlogpost("maski","sima","messi"));
-        assertEquals(1,tk0.haeKaikki().size());
-        List<Vinkki> list = tk0.haeKaikkiBlogpost(LukuStatus.KAIKKI);
-        assertEquals(1,list.size());
-        Vinkki vinkki = list.get(0);
-        assertEquals("maski",vinkki.haeOminaisuus(Attribuutit.URL));
-        assertEquals("sima",vinkki.haeOminaisuus(Attribuutit.TEKIJAT));
-        assertEquals("messi",vinkki.Otsikko());
-    }
-    
-    @Test 
-    public void testPoistaKirjaLegacyFunktio(){
-        assertTrue(tk0.lisaaKirja("maski","sima"));
-        assertTrue(tk0.poistaKirja("sima"));
-        assertFalse(tk0.poistaKirja("asd"));
-    }
-      
-    
-    @Test 
-    public void testMerkitseLuetuksiLukemattomaksi(){
-        Vinkki vinkki1 = new Vinkki("Marsut pilalla",Formaatit.BLOGPOST);
-        vinkki1.merkitseLuetuksi();
-        tk0.lisaaVinkki(vinkki1);
-        assertEquals(1,tk0.haeKaikki(LukuStatus.LUETTU).size());
-        assertEquals(0,tk0.haeKaikki(LukuStatus.LUKEMATTOMAT).size());
-        assertTrue(tk0.merkitseLukemattomaksi("Marsut pilalla"));
-        assertEquals(0,tk0.haeKaikki(LukuStatus.LUETTU).size());
-        assertEquals(1,tk0.haeKaikki(LukuStatus.LUKEMATTOMAT).size());
-        assertTrue(tk0.merkitseLuetuksi("Marsut pilalla"));
-        assertEquals(1,tk0.haeKaikki(LukuStatus.LUETTU).size());
-        assertEquals(0,tk0.haeKaikki(LukuStatus.LUKEMATTOMAT).size());
-    }
-    */
+
     
     @Test 
     public void testMerkitseLuetuksiLukemattomaksiEiOlemassa(){
