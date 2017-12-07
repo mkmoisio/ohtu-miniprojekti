@@ -45,7 +45,7 @@ public class PodcastDAO extends ProtoDAO implements DAORajapinta{
                 + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
                 + "LEFT OUTER JOIN Tekija on tekija_id=tekija \n"
                 + "LEFT OUTER JOIN VinkkiTag on vinkki_id=vinkkitag.vinkki \n"
-                + "LEFT OUTER JOIN Tag on tag_id=tekija \n"
+                + "LEFT OUTER JOIN Tag on tag_id=tag \n"
                 + "GROUP BY vinkki_id";
         HashMap<Attribuutit, String> attr = new HashMap<>();
         attr.put(Attribuutit.KUVAUS, "kuvaus");
