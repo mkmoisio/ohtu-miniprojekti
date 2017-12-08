@@ -73,13 +73,9 @@ abstract public class ProtoDAO {
 
                     vinkki.lisaaTekijat(rs.getString("tekijat"));
                     vinkki.lisaaTagit(rs.getString("tagit"));
-                    Iterator it = attribuutit.entrySet().iterator();
-                    while (it.hasNext()) {
-                        Map.Entry pair = (Map.Entry)it.next();
-                        vinkki.lisaaOminaisuus((Attribuutit)pair.getKey(), rs.getString(pair.getValue().toString()));
-                        it.remove();
+                    for (Map.Entry<Attribuutit, String> attr : attribuutit.entrySet()){
+                        vinkki.lisaaOminaisuus((Attribuutit)attr.getKey(), rs.getString(attr.getValue()));
                     }
-    
                     list.add(vinkki);
                 }
             }
