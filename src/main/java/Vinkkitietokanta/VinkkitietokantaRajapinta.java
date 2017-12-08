@@ -18,12 +18,9 @@ public interface VinkkitietokantaRajapinta {
     public boolean merkitseLukemattomaksi(String otsikko);
 
     public boolean lisaaVinkki(Vinkki vinkki);
-   
-    public List<Vinkki> haeKaikkiKirjat(LukuStatus status);
-    public List<Vinkki> haeKaikkiVideot(LukuStatus status);
-    public List<Vinkki> haeKaikkiBlogpost(LukuStatus status);
-    public List<Vinkki> haeKaikkiPodcast(LukuStatus status);
-    public List<Vinkki> haeKaikki(LukuStatus status);
+    public Vinkki haeVinkki(String otsikko);
     
-    public List<String> muunnaVinkkiLista(List<Vinkki> list);
+    public List<Vinkki> haeKaikki(LukuStatus status);
+    public List<Vinkki> haeKaikki(Formaatit formaatti, LukuStatus status);
+    
 }

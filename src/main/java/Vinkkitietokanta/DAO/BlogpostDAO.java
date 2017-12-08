@@ -22,8 +22,12 @@ import java.util.List;
  * @author rokka
  */
 public class BlogpostDAO extends ProtoDAO implements DAORajapinta{
+    HashMap<Attribuutit, String> attr = new HashMap<>();
+    
     public BlogpostDAO(Connection conn){
         super(conn);
+        attr.put(Attribuutit.KUVAUS, "kuvaus");
+        attr.put(Attribuutit.URL, "url");
     }
     
     @Override
@@ -33,7 +37,6 @@ public class BlogpostDAO extends ProtoDAO implements DAORajapinta{
         List<Attribuutit> attr = new ArrayList<>();
         attr.add(Attribuutit.URL);
         attr.add(Attribuutit.KUVAUS);
-        Vinkki kirja;
         return suoritaKomento(vinkkiID, vinkki, attr, query, "lisaaBlogpost: ");        
     }
 
@@ -49,11 +52,24 @@ public class BlogpostDAO extends ProtoDAO implements DAORajapinta{
             + "LEFT OUTER JOIN Tekija on tekija_id=tekija \n"
             + "LEFT OUTER JOIN VinkkiTag on vinkki_id=vinkkitag.vinkki \n"
             + "LEFT OUTER JOIN Tag on tag_id=tag \n"
-            + "GROUP BY vinkki_id";
-        HashMap<Attribuutit, String> attr = new HashMap<>();
-        attr.put(Attribuutit.KUVAUS, "kuvaus");
-        attr.put(Attribuutit.URL, "url");
-        
+            + "GROUP BY vinkki_id";     
         return suoritaKomento2(Formaatit.BLOGPOST, status, list, attr, query, "haeKaikkiBlogpostBase: ");
+    }
+
+    @Override
+    public Vinkki haeVinkki(String vinkkiId) {
+        String query = "SELECT vinkki.otsikko, vinkki.luettu, blogpost.url, blogpost.kuvaus,"
+                + " group_concat(tekija_nimi, '----') as tekijat \n, group_concat(tag_nimi, '----') as tagit \n"
+            + "FROM Vinkki \n"
+            + "INNER JOIN Blogpost ON vinkki_id=blogpost.vinkki \n"
+            + "LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n"
+            + "LEFT OUTER JOIN Tekija on tekija_id=tekija \n"
+            + "LEFT OUTER JOIN VinkkiTag on vinkki_id=vinkkitag.vinkki \n"
+            + "LEFT OUTER JOIN Tag on tag_id=tag \n"
+            + "WHERE vinkki_id = ? \n"
+            + "GROUP BY vinkki_id";
+        List<Vinkki> list = suoritaKomento3(Formaatit.BLOGPOST, LukuStatus.KAIKKI, new ArrayList<>(), attr, query, "haeBlogpostD:llä: ",vinkkiId);
+        if(!list.isEmpty()) return list.get(0);
+        return null;
     }
 }

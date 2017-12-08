@@ -48,11 +48,18 @@ abstract public class ProtoDAO {
         return false;
     }
     
-    // 
     protected List<Vinkki> suoritaKomento2(Formaatit formaatti,LukuStatus status, List<Vinkki> list, HashMap<Attribuutit,String> attribuutit, String sql, String func){
+        return suoritaKomento3(formaatti,status, 
+            list, attribuutit, sql, func, "");
+    }
+    
+    protected List<Vinkki> suoritaKomento3(Formaatit formaatti,LukuStatus status, 
+            List<Vinkki> list, HashMap<Attribuutit,String> attribuutit, 
+            String sql, String func, String vinkkiID){
         String query = sql;
         try {
             PreparedStatement komento = conn.prepareStatement(query);
+            if(!vinkkiID.isEmpty()) komento.setInt(1, Integer.parseInt(vinkkiID));
             ResultSet rs = komento.executeQuery();
             while (rs.next()) {
                 int luettu = Integer.parseInt(rs.getString("luettu"));
@@ -83,8 +90,6 @@ abstract public class ProtoDAO {
             System.err.println(func+e.getMessage());
         }
         return null;
-    }
-    
-    
+    }    
     
 }

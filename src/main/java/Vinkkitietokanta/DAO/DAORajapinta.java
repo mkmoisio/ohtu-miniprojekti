@@ -16,4 +16,5 @@ import java.util.List;
 public interface DAORajapinta {
     public boolean lisaaVinkki(String vinkkiID, Vinkki vinkki);
     public List<Vinkki> haeListana(LukuStatus status, List<Vinkki> list);
+    public Vinkki haeVinkki(String vinkkiId);
 }
