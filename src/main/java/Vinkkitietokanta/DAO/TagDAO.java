@@ -16,7 +16,9 @@ public class TagDAO {
         this.conn = conn;
     }
     
-    //
+    /*
+    Lisää tagit kantaan ja palauttaa tagId:t listana. Tätä varten kutsuu apumetodia haeTagIDt
+    */
     public List<Integer> luoTagit (List<String> tag_nimet) {
         tag_nimet.stream().forEach((tag_nimi) -> {
             String tag = "INSERT INTO Tag (tag_nimi) VALUES (?)";
@@ -31,6 +33,7 @@ public class TagDAO {
         });
         return haeTagIDt(tag_nimet);
     }
+    
     
     public List<Integer> haeTagIDt( List<String> tagNimia){
         List<Integer> tagIdList = new ArrayList<>();
@@ -54,6 +57,7 @@ public class TagDAO {
     return tagIdList; 
     }
     
+    
     public void liitaVinkkiTag(String vinkkiID, List<Integer> tagIDt){
         for (int t : tagIDt){
         String lisattavaTag = "INSERT INTO VinkkiTag (vinkki,tag) VALUES (?,?)";
@@ -68,24 +72,6 @@ public class TagDAO {
         }
         }
     }
-    
-    //Tarkistaa onko tagID liitetty vinkkiID:hen
-    public boolean tagLiitetty(String vinkkiID, String tekijaID) {
-        String haeTekija = "SELECT * FROM VinkkiTekija WHERE vinkki=? AND tekija=?";
-        try {
-            PreparedStatement komento = conn.prepareStatement(haeTekija);
-            komento.setInt(1, Integer.parseInt(vinkkiID));
-            komento.setInt(2, Integer.parseInt(tekijaID));
-            ResultSet rs = komento.executeQuery();
-            boolean loyty = false;
-            while (rs.next()) {
-                loyty = true;
-            }
-            return loyty;
-        } catch (SQLException e) {
-            System.err.println("tekijaLiitetty: "+e.getMessage());
-            return false;
-        }
-    }
+
     
 }
