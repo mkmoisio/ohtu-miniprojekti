@@ -68,7 +68,7 @@ public class KayttoliittymaTest {
     @Test
     public void kirjavinkinLisaaminenPalauttaaLisattyTulosteenValidillaSyoteella() {
         this.lukija.nollaa();
-        this.lisaaLukijaanKirjavinkinLisays("Cormen", this.generoiSatunnainenOtsikko());
+        this.lisaaLukijaanKirjavinkinLisays("Cormen", this.generoiSatunnainenOtsikko()); 
         this.suoritaJaLopeta();
         assertTrue(this.tulostus.tulosteSisaltaa("Kirjavinkki lisätty"));
         this.tulostus.nollaa();
@@ -126,7 +126,7 @@ public class KayttoliittymaTest {
         this.lukija.lisaaSyote("poista", otsikko);
     }
     private void lisaaLukijaanKirjavinkinLisays(String kirjoittaja, String otsikko) {
-        this.lukija.lisaaSyote("lisää kirja", kirjoittaja, otsikko);
+        this.lukija.lisaaSyote("lisää kirja", kirjoittaja, otsikko,"");
     }
 
 }
