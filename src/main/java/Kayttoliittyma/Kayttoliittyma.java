@@ -227,11 +227,11 @@ public class Kayttoliittyma {
             if (tagSyote.isEmpty()){
                 break;
             }
-            /*
+            
             if (vinkki.onkoTagia(tagSyote)){
                 System.out.println("Samanniminen tag on jo olemassa");
-                this.lisaaTagit(vinkki);
-            }*/
+                continue;
+            }
             if (Validator.taginPituusOk(tagSyote)){
             vinkki.lisaaTag(tagSyote);
             }
