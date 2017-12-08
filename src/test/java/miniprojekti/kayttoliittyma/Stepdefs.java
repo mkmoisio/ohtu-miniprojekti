@@ -50,13 +50,14 @@ public class Stepdefs {
     public void book_autor_and_title_entered(String author, String title) throws Throwable {
         l.lisaaSyote(author);
         l.lisaaSyote(title);
+        l.lisaaSyote("");
         l.lisaaSyote("lopeta");
         ui.suorita();
     }
 
     @When("^title \"([^\"]*)\" and name \"([^\"]*)\" and description \"([^\"]*)\" are entered$")
     public void podcast_name_title_and_description_entered(String title, String name, String description) {
-        l.lisaaSyote(name, title, description, "Lopeta");
+        l.lisaaSyote(name, title, description,"", "Lopeta");
         ui.suorita();
     }
 
@@ -64,6 +65,7 @@ public class Stepdefs {
     public void video_url_and_title_entered(String url, String title) {
         l.lisaaSyote(url);
         l.lisaaSyote(title);
+        l.lisaaSyote("");
         l.lisaaSyote("lopeta");
         ui.suorita();
     }
@@ -88,7 +90,7 @@ public class Stepdefs {
     public void command_and_author_and_title_entered(String command, String author, String title) {
         ui.setLukija(l);
         ui.setTulostus(t);
-        l.lisaaSyote(command, author, title);
+        l.lisaaSyote(command, author, title,"");
 
     }
     
@@ -96,7 +98,7 @@ public class Stepdefs {
     public void command_and_url_and_title_entered(String command, String url, String title) {
         ui.setLukija(l);
         ui.setTulostus(t);
-        l.lisaaSyote(command, url, title);
+        l.lisaaSyote(command, url, title,"");
 
     }
 
@@ -120,7 +122,7 @@ public class Stepdefs {
         ui.setLukija(l);
         ui.setTulostus(t);
         l.lisaaSyote("lisää kirja");
-        l.lisaaSyote(arg2,arg1);
+        l.lisaaSyote(arg2,arg1,"");
     }
     
     @Given("^System has an existing podcast \"([^\"]*)\" with name \"([^\"]*)\" and description \"([^\"]*)\"$")
@@ -128,7 +130,7 @@ public class Stepdefs {
         ui.setLukija(l);
         ui.setTulostus(t);
         l.lisaaSyote("lisää podcast");
-        l.lisaaSyote(arg2,arg1,arg3);
+        l.lisaaSyote(arg2,arg1,arg3,"");
     }
     
     
@@ -137,7 +139,7 @@ public class Stepdefs {
         ui.setLukija(l);
         ui.setTulostus(t);
         l.lisaaSyote("lisää video");
-        l.lisaaSyote(arg2,arg1);
+        l.lisaaSyote(arg2,arg1,"");
     }
     
     @Given("^System has an existing blogpost \"([^\"]*)\" with url \"([^\"]*)\" and author \"([^\"]*)\"$")
@@ -145,7 +147,7 @@ public class Stepdefs {
         ui.setLukija(l);
         ui.setTulostus(t);
         l.lisaaSyote("lisää blogpost");
-        l.lisaaSyote(arg2,arg3,arg1);
+        l.lisaaSyote(arg2,arg3,arg1,"");
     }
     
     @Given("^System has an existing book \"([^\"]*)\" with author \"([^\"]*)\"$")
@@ -153,7 +155,7 @@ public class Stepdefs {
         ui.setLukija(l);
         ui.setTulostus(t);
         l.lisaaSyote("lisää kirja");
-        l.lisaaSyote(arg2,arg1);
+        l.lisaaSyote(arg2,arg1,"");
     }
 
     
