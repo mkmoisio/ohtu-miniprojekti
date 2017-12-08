@@ -603,9 +603,7 @@ public class VinkkitietokantaTest {
         assertEquals(1,tk0.haeKaikki(LukuStatus.KAIKKI).size());
         assertEquals(1,tk0.haeKaikkiKirjat(LukuStatus.KAIKKI).size());
     }
-    
-
-    
+        
     @Test 
     public void testMerkitseLuetuksiLukemattomaksiEiOlemassa(){
         Vinkki vinkki1 = new Vinkki("Marsut pilalla",Formaatit.BLOGPOST);
@@ -619,5 +617,34 @@ public class VinkkitietokantaTest {
         assertFalse(tk0.merkitseLuetuksi("eee"));
         assertEquals(1,tk0.haeKaikki(LukuStatus.LUETTU).size());
         assertEquals(0,tk0.haeKaikki(LukuStatus.LUKEMATTOMAT).size());
+    }
+    
+    @Test
+    public void testHaeYksi() {
+        System.out.println("Lisää yksi ja löytyy taulusta 1");
+        String otsikko1 = "Fifty shades of terminal, Kirja";
+        String otsikko2 = "Fifty shades of terminal, Podcast";
+        String otsikko3 = "Fifty shades of terminal, Blogpost";
+        String otsikko4 = "Fifty shades of terminal, Video";
+        Vinkki kirja = new Vinkki(otsikko1,Formaatit.KIRJA);
+        Vinkki podcast = new Vinkki(otsikko2,Formaatit.PODCAST);
+        Vinkki blogpost = new Vinkki(otsikko3,Formaatit.BLOGPOST);
+        Vinkki video = new Vinkki(otsikko4,Formaatit.VIDEO);
+        tk0.lisaaVinkki(kirja);
+        tk0.lisaaVinkki(podcast);
+        tk0.lisaaVinkki(blogpost);
+        tk0.lisaaVinkki(video);
+        Vinkki vinkki = tk0.haeVinkki(otsikko1);
+        assertEquals(vinkki.Otsikko(),otsikko1);
+        assertEquals(vinkki.formaatti(),Formaatit.KIRJA);
+        vinkki = tk0.haeVinkki(otsikko2);
+        assertEquals(vinkki.Otsikko(),otsikko2);
+        assertEquals(vinkki.formaatti(),Formaatit.PODCAST);
+        vinkki = tk0.haeVinkki(otsikko3);
+        assertEquals(vinkki.Otsikko(),otsikko3);
+        assertEquals(vinkki.formaatti(),Formaatit.BLOGPOST);
+        vinkki = tk0.haeVinkki(otsikko4);
+        assertEquals(vinkki.Otsikko(),otsikko4);
+        assertEquals(vinkki.formaatti(),Formaatit.VIDEO);
     }
 }
