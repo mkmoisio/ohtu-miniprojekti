@@ -132,10 +132,45 @@ public class Kayttoliittyma {
     private void lisaaPodcast() {
         this.tulostus.println("Anna nimi:");
         String nimi = this.lukija.nextLine();
+        
+        if (Validator.vinkinNimiTyhja(nimi)) {
+            this.tulostus.println("Podcastia ei lisätty, koska annettu nimi oli tyhjä.");
+            return;
+        }
+        
+        if (Validator.podcastvinkinNimiLiianPitka(nimi)) {
+            this.tulostus.println("Podcastia ei lisätty, koska annettu nimi oli pidempi kuin " +Validator.PODCAST_NIMI_MAX_PITUUS+ " merkkiä.");
+            return;
+        
+        }
+        
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
+        
+        if (Validator.vinkinOtsikkoTyhja(otsikko)) {
+            this.tulostus.println("Podcastia ei lisätty, koska annettu otsikko oli tyhjä.");
+            return;
+        }
+        
+        if (Validator.vinkinOtsikkoLiianPitka(otsikko)) {
+            this.tulostus.println("Podcastia ei lisätty, koska annettu otsikko oli pidempi kuin " +Validator.OTSIKKO_MAX_PITUUS+ " merkkiä.");
+            return;
+        }
+        
         this.tulostus.println("Anna kuvaus:");
         String kuvaus = this.lukija.nextLine();
+        
+        if (Validator.vinkinKuvausTyhja(kuvaus)) {
+            this.tulostus.println("Podcastia ei lisätty, koska annettu kuvaus oli tyhjä.");
+            return;
+        }
+        
+        if (Validator.vinkinKuvausLiianPitka(kuvaus)) {
+            this.tulostus.println("Podcastia ei lisätty, koska annettu kuvaus oli pidempi kuin " +Validator.PODCAST_KUVAUS_MAX_PITUUS+ " merkkiä.");
+            return;
+        }
+        
+        
         
         if (Validator.podcastvinkinSyoteOk(nimi, otsikko, kuvaus)) {
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.PODCAST);
