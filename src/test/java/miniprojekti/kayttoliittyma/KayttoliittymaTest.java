@@ -73,6 +73,24 @@ public class KayttoliittymaTest {
         assertTrue(this.tulostus.tulosteSisaltaa("Kirjavinkki lisätty"));
         this.tulostus.nollaa();
     }
+    
+    @Test
+    public void kirjavinkinLisaaminenPalauttaaEiLisattyTulosteenTyhjallaKirjoittajalla() {
+        this.lukija.nollaa();
+        this.lukija.lisaaSyote("lisää kirja", "");
+        this.suoritaJaLopeta();
+        assertTrue(this.tulostus.tulosteSisaltaa("Kirjavinkkiä ei lisätty, koska annettu kirjoittajan nimi oli tyhjä."));
+        assertTrue(!this.tulostus.tulosteSisaltaa("Kirjavinkki lisätty"));
+    }
+    
+    @Test
+    public void kirjavinkinLisaaminenPalauttaaEiLisattyTulosteenTyhjallaOtsikolla() {
+        this.lukija.nollaa();
+        this.lukija.lisaaSyote("lisää kirja", "Stephen King", "");
+        this.suoritaJaLopeta();
+        assertTrue(this.tulostus.tulosteSisaltaa("Kirjavinkkiä ei lisätty, koska annettu otsikko oli tyhjä."));
+        assertTrue(!this.tulostus.tulosteSisaltaa("Kirjavinkki lisätty"));
+    } 
 
     @Test
     public void kirjavinkinLisaaminenPalauttaaEiLisattyTulosteenEiValidillaSyoteella() {
