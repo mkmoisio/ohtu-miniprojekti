@@ -14,12 +14,12 @@ Then the application responds with "Videota ei lisätty"
 Scenario: User is unable to add a new video tip with empty url and valid title
 Given Command "lisää video" is entered
 When url "" and title "Google" are entered
-Then the application responds with "Videota ei lisätty"
+Then the application responds with "Videota ei lisätty, koska annettu url oli tyhjä."
 
 Scenario: User is unable to add a new video tip with empty url and empty title
 Given Command "lisää video" is entered
 When url "" and title "" are entered
-Then the application responds with "Videota ei lisätty"
+Then the application responds with "Videota ei lisätty, koska annettu url oli tyhjä."
 
 Scenario: User is unable to add a new video tip with valid url and too long title
 Given Command "lisää video" is entered

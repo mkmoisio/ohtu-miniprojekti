@@ -173,39 +173,36 @@ public class Kayttoliittyma {
             this.tulostus.println("Podcastia ei lisätty, koska annettu kuvaus oli pidempi kuin " + Validator.PODCAST_KUVAUS_MAX_PITUUS + " merkkiä.");
             return;
         }
-
-        }  
-        
-//        if (Validator.podcastvinkinSyoteOk(nimi, otsikko, kuvaus)) {
-//            Vinkki vinkki = new Vinkki(otsikko, Formaatit.PODCAST);
-//            vinkki.lisaaOminaisuus(Attribuutit.NIMI, nimi);
-//            vinkki.lisaaOminaisuus(Attribuutit.KUVAUS, kuvaus);
-//            this.lisaaTagit(vinkki);
-//            if (this.tk.lisaaVinkki(vinkki)) {
-//                this.tulostus.println("Podcast lisätty");
-//                return;
-//            }
-//        }
-//        this.tulostus.println("Podcastia ei lisätty");
-//    }
+        if (Validator.podcastvinkinSyoteOk(nimi, otsikko, kuvaus)) {
+            Vinkki vinkki = new Vinkki(otsikko, Formaatit.PODCAST);
+            vinkki.lisaaOminaisuus(Attribuutit.NIMI, nimi);
+            vinkki.lisaaOminaisuus(Attribuutit.KUVAUS, kuvaus);
+            this.lisaaTagit(vinkki);
+            if (this.tk.lisaaVinkki(vinkki)) {
+                this.tulostus.println("Podcast lisätty");
+                return;
+            }
+        }
+        this.tulostus.println("Podcastia ei lisätty");
+    }
 
     private void lisaaKirjavinkki() {
         this.tulostus.println("Anna kirjoittaja:");
         String kirjoittaja = this.lukija.nextLine();
-        
+
         if (kirjoittaja.isEmpty()) {
             this.tulostus.println("Kirjavinkkiä ei lisätty, koska annettu kirjoittajan nimi oli tyhjä.");
             return;
         }
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
-        
+
         if (otsikko.isEmpty()) {
             this.tulostus.println("Kirjavinkkiä ei lisätty, koska annettu otsikko oli tyhjä.");
             return;
         }
         if (Validator.vinkinOtsikkoLiianPitka(otsikko)) {
-            this.tulostus.println("Kirjavinkkiä ei lisätty, koska annettu otsikko oli pidempi kuin " +Validator.OTSIKKO_MAX_PITUUS+ " merkkiä.");
+            this.tulostus.println("Kirjavinkkiä ei lisätty, koska annettu otsikko oli pidempi kuin " + Validator.OTSIKKO_MAX_PITUUS + " merkkiä.");
             return;
         }
 
@@ -224,8 +221,7 @@ public class Kayttoliittyma {
     private void lisaaVideo() {
         this.tulostus.println("Anna url:");
         String url = this.lukija.nextLine();
-        
-        
+
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
 
