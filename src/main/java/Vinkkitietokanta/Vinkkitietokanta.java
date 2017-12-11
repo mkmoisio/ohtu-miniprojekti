@@ -1,6 +1,4 @@
-
 package Vinkkitietokanta;
-
 
 import Vinkkitietokanta.DAO.BlogpostDAO;
 import Vinkkitietokanta.DAO.DAORajapinta;
@@ -26,49 +24,54 @@ import org.sqlite.SQLiteOpenMode;
  * tietokannasta.
  */
 public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
+
     TekijatDAO tekijatDAO = null;
     VinkkiDAO vinkkiDAO = null;
     TagDAO tagDAO = null;
     Connection conn = null;
-    Map<Formaatit,DAORajapinta> DAOt = new HashMap<>();
-            
+    Map<Formaatit, DAORajapinta> DAOt = new HashMap<>();
+
     public Vinkkitietokanta(String tkPath) {
         //Liitä tietokanta        
         try {
-            SQLiteConfig config = new SQLiteConfig();  
+            SQLiteConfig config = new SQLiteConfig();
             config.enforceForeignKeys(true);
             config.resetOpenMode(SQLiteOpenMode.CREATE);
-            conn = DriverManager.getConnection(tkPath,config.toProperties());
-            
+            conn = DriverManager.getConnection(tkPath, config.toProperties());
+
             DAOt.put(Formaatit.BLOGPOST, new BlogpostDAO(conn));
             DAOt.put(Formaatit.VIDEO, new VideotDAO(conn));
             DAOt.put(Formaatit.PODCAST, new PodcastDAO(conn));
             DAOt.put(Formaatit.KIRJA, new KirjatDAO(conn));
-            
+
             tekijatDAO = new TekijatDAO(conn);
             vinkkiDAO = new VinkkiDAO(conn);
             tagDAO = new TagDAO(conn);
-            
+
             
         } catch (SQLException e) {
-            System.err.println("Vinkkitietokanta: " +e.getMessage());
+            System.err.println("Vinkkitietokanta: " + e.getMessage());
         }
     }
 
     public void sulje() {
         try {
-            if (conn != null) conn.close();
+            if (conn != null) {
+                conn.close();
+            }
         } catch (SQLException se) {
-            System.err.println("sulje: " +se.getMessage());
+            System.err.println("sulje: " + se.getMessage());
         }
     }
 
     public boolean tietokantaliitetty() {
-        if (conn == null) return false;
+        if (conn == null) {
+            return false;
+        }
         try {
             return !conn.isClosed();
         } catch (SQLException se) {
-            System.err.println("tietokantaliitetty: "+se.getMessage());
+            System.err.println("tietokantaliitetty: " + se.getMessage());
         }
         return false;
     }
@@ -77,15 +80,19 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     @Override
     public boolean lisaaVinkki(Vinkki vinkki) {
         if (null != vinkki.formaatti()) {
-            if(!vinkkiDAO.haeOtsikolla(vinkki.Otsikko()).isEmpty()) return false;
+            if (!vinkkiDAO.haeOtsikolla(vinkki.Otsikko()).isEmpty()) {
+                return false;
+            }
             vinkkiDAO.luoVinkki(vinkki.Otsikko(), vinkki.luettu());
             String vinkkiID = vinkkiDAO.haeOtsikolla(vinkki.Otsikko());
-            if(vinkkiID.isEmpty()) return false;
-            
+            if (vinkkiID.isEmpty()) {
+                return false;
+            }
+
             List<String> tekijaIDt = tekijatDAO.haeJaPaivitaTekijat(vinkkiID, vinkki.haeTekijat());
             tekijatDAO.liitaTekijat(vinkkiID, tekijaIDt);
-            
-            List<Integer> luodutTagID= tagDAO.luoTagit(vinkki.haeTagit());
+
+            List<Integer> luodutTagID = tagDAO.luoTagit(vinkki.haeTagit());
             tagDAO.liitaVinkkiTag(vinkkiID, luodutTagID);
             return DAOt.get(vinkki.formaatti()).lisaaVinkki(vinkkiID, vinkki);
         }
@@ -96,17 +103,21 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     @Override
     public Vinkki haeVinkki(String otsikko) {
         String vinkkiID = vinkkiDAO.haeOtsikolla(otsikko);
-        if(vinkkiID.isEmpty()) return null;
+        if (vinkkiID.isEmpty()) {
+            return null;
+        }
         for (DAORajapinta DAO : DAOt.values()) {
             Vinkki vinkki = DAO.haeVinkki(vinkkiID);
-            if(vinkki!=null) return vinkki;
-        } 
+            if (vinkki != null) {
+                return vinkki;
+            }
+        }
         return null;
     }
 
     
     @Override
-    public boolean poistaVinkki(String otsikko){
+    public boolean poistaVinkki(String otsikko) {
         return vinkkiDAO.poistaVinkki(otsikko);
     }
 
@@ -138,19 +149,36 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     ///////////////////////////////////////
     ///HAE KAIKKI METODIT
     @Override
-    public List<Vinkki> haeKaikki(LukuStatus status) {     
+    public List<Vinkki> haeKaikki(LukuStatus status) {
         List<Vinkki> lista = new ArrayList<>();
         for (DAORajapinta DAO : DAOt.values()) {
-            lista=DAO.haeListana(status, lista);
-        } 
+            lista = DAO.haeListana(status, lista);
+        }
         return lista;
     }
- 
+
+    @Override
+    public List<Vinkki> haeTagilla(String tag) {
+        List<String> vinkkiIDt = vinkkiDAO.haeVinkkienIDtTagilla(tag);
+        
+        List<Vinkki> lista = new ArrayList<>();
+        for (String s : vinkkiIDt) {
+          //  System.out.println(s);
+            for (DAORajapinta dao : this.DAOt.values()) {
+                Vinkki v = dao.haeVinkki(s);
+                if (v != null) {
+                    lista.add(v);
+                }
+            }
+        }
+        return lista;
+    }
+
     @Override
     public List<Vinkki> haeKaikki(Formaatit formaatti, LukuStatus status) {
-        return DAOt.get(formaatti).haeListana(status, new ArrayList<>()); 
+        return DAOt.get(formaatti).haeListana(status, new ArrayList<>());
     }
-    
+
     public Connection getConn() {
         return conn;
     }

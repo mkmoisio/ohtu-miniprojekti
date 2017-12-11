@@ -5,21 +5,26 @@
  */
 package Vinkkitietokanta.DAO;
 
+import Vinkkitietokanta.Vinkki;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author rokka
  */
 public class VinkkiDAO {
+
     Connection conn = null;
-    public VinkkiDAO(Connection conn){
+
+    public VinkkiDAO(Connection conn) {
         this.conn = conn;
-    }    
-    
+    }
+
     public void luoVinkki(String otsikko, boolean luettu) {
         String lisaaVinkkiin = "INSERT INTO Vinkki (otsikko,luettu) VALUES (?, ?)";
         try {
@@ -29,14 +34,10 @@ public class VinkkiDAO {
             komento.executeUpdate();
             komento.close();
         } catch (SQLException e) {
-            System.err.println("luoVinkki: "+e.getMessage());
+            System.err.println("luoVinkki: " + e.getMessage());
         }
     }
 
-    
-    
-    
-    
     public String haeOtsikolla(String otsikko) {
         String haeID = "SELECT vinkki_id FROM Vinkki WHERE otsikko=?";
         try {
@@ -49,12 +50,11 @@ public class VinkkiDAO {
             }
             return kirjaID;
         } catch (SQLException e) {
-            System.err.println("haeOtsikolla: "+e.getMessage());
+            System.err.println("haeOtsikolla: " + e.getMessage());
         }
         return "";
     }
-    
-        
+
     public boolean merkitseLukuStatus(String vinkkiID, boolean luettu) {
         String lisaaVinkkiin = "UPDATE vinkki SET luettu=? WHERE vinkki_id=?";
         try {
@@ -65,7 +65,7 @@ public class VinkkiDAO {
             komento.close();
             return true;
         } catch (SQLException e) {
-            System.err.println("merkitseLukuStatus"+e.getMessage());
+            System.err.println("merkitseLukuStatus" + e.getMessage());
         }
         return false;
     }
@@ -93,13 +93,27 @@ public class VinkkiDAO {
             //komento3.executeUpdate();
 
         } catch (SQLException e) {
-            System.err.println("poistaVinkki: "+e.getMessage());
+            System.err.println("poistaVinkki: " + e.getMessage());
             return false;
         }
         return true;
     }
 
+    public List<String> haeVinkkienIDtTagilla(String tag) {
+        String query = "SELECT * FROM Vinkki INNER JOIN (SELECT vinkki FROM VinkkiTag WHERE VinkkiTag.tag = (SELECT tag_id FROM Tag WHERE Tag_nimi=?)) AS tableB ON Vinkki.vinkki_id = tableB.vinkki";
+        List<String> list = new ArrayList();
+        try {
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, tag);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                String vinkki_id = rs.getString("vinkki_id");
+                list.add(vinkki_id);
+            }
+        } catch (Exception e) {
+            System.err.println("haeVinkkienIDtTagilla: " + e.getMessage());
+        }
+        return list;
+    }
 
-    
-    
 }

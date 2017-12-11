@@ -29,6 +29,7 @@ public class Kayttoliittyma {
             + "\n\t tulosta podcastit - tulosta kaikki podcastit"
             + "\n\t tulosta videot - tulosta kaikki videot"
             + "\n\t tulosta blogpostit - tulosta kaikki blogpostit"
+            + "\n\t hae tagilla - tulosta annetun tagin omaavat vinkit"
             + "\n\t merkitse luetuksi - merkitse luetuksi"
             + "\n\t poista - poista vinkki"
             + "\n\t lopeta - lopeta ohjelma "
@@ -100,6 +101,9 @@ public class Kayttoliittyma {
                 case "tulosta blogpostit":
                     this.tulostaBlogpostit();
                     break;
+                case "hae tagilla":
+                    this.haeTagilla();
+                    break;
                 /* TULOSTUS LOPPUU */
 
                 case "merkitse luetuksi":
@@ -132,50 +136,48 @@ public class Kayttoliittyma {
     private void lisaaPodcast() {
         this.tulostus.println("Anna nimi:");
         String nimi = this.lukija.nextLine();
-        
+
         if (Validator.vinkinNimiTyhja(nimi)) {
             this.tulostus.println("Podcastia ei lisätty, koska annettu nimi oli tyhjä.");
             return;
         }
-        
+
         if (Validator.podcastvinkinNimiLiianPitka(nimi)) {
-            this.tulostus.println("Podcastia ei lisätty, koska annettu nimi oli pidempi kuin " +Validator.PODCAST_NIMI_MAX_PITUUS+ " merkkiä.");
+            this.tulostus.println("Podcastia ei lisätty, koska annettu nimi oli pidempi kuin " + Validator.PODCAST_NIMI_MAX_PITUUS + " merkkiä.");
             return;
-        
+
         }
-        
+
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
-        
+
         if (Validator.vinkinOtsikkoTyhja(otsikko)) {
             this.tulostus.println("Podcastia ei lisätty, koska annettu otsikko oli tyhjä.");
             return;
         }
-        
+
         if (Validator.vinkinOtsikkoLiianPitka(otsikko)) {
-            this.tulostus.println("Podcastia ei lisätty, koska annettu otsikko oli pidempi kuin " +Validator.OTSIKKO_MAX_PITUUS+ " merkkiä.");
+            this.tulostus.println("Podcastia ei lisätty, koska annettu otsikko oli pidempi kuin " + Validator.OTSIKKO_MAX_PITUUS + " merkkiä.");
             return;
         }
-        
+
         this.tulostus.println("Anna kuvaus:");
         String kuvaus = this.lukija.nextLine();
-        
+
         if (Validator.vinkinKuvausTyhja(kuvaus)) {
             this.tulostus.println("Podcastia ei lisätty, koska annettu kuvaus oli tyhjä.");
             return;
         }
-        
+
         if (Validator.vinkinKuvausLiianPitka(kuvaus)) {
-            this.tulostus.println("Podcastia ei lisätty, koska annettu kuvaus oli pidempi kuin " +Validator.PODCAST_KUVAUS_MAX_PITUUS+ " merkkiä.");
+            this.tulostus.println("Podcastia ei lisätty, koska annettu kuvaus oli pidempi kuin " + Validator.PODCAST_KUVAUS_MAX_PITUUS + " merkkiä.");
             return;
         }
-        
-        
-        
+
         if (Validator.podcastvinkinSyoteOk(nimi, otsikko, kuvaus)) {
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.PODCAST);
             vinkki.lisaaOminaisuus(Attribuutit.NIMI, nimi);
-            vinkki.lisaaOminaisuus(Attribuutit.KUVAUS,kuvaus);
+            vinkki.lisaaOminaisuus(Attribuutit.KUVAUS, kuvaus);
             this.lisaaTagit(vinkki);
             if (this.tk.lisaaVinkki(vinkki)) {
                 this.tulostus.println("Podcast lisätty");
@@ -209,7 +211,7 @@ public class Kayttoliittyma {
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
 
-        if (Validator.videovinkinSyoteOk(url, otsikko)){
+        if (Validator.videovinkinSyoteOk(url, otsikko)) {
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.VIDEO);
             vinkki.lisaaOminaisuus(Attribuutit.URL, url);
             this.lisaaTagit(vinkki);
@@ -228,7 +230,7 @@ public class Kayttoliittyma {
         String kirjoittajat = this.lukija.nextLine();
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
-        
+
         if (Validator.videovinkinSyoteOk(url, otsikko)) {
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.BLOGPOST);
             vinkki.lisaaOminaisuus(Attribuutit.URL, url);
@@ -245,38 +247,49 @@ public class Kayttoliittyma {
     private void merkitseLuetuksi() {
         this.tulostus.println("Anna sen vinkin otsikko, joka merkitään luetuksi");
         String otsikko = this.lukija.nextLine();
-        if(!this.tk.merkitseLuetuksi(otsikko)){
-            this.tulostus.println("Virhe: Vinkkiä "+otsikko+" ei löytynyt");
+        if (!this.tk.merkitseLuetuksi(otsikko)) {
+            this.tulostus.println("Virhe: Vinkkiä " + otsikko + " ei löytynyt");
             return;
         }
-        this.tulostus.println("Vinkki otsikolla "+otsikko+" merkitty luetuksi");
+        this.tulostus.println("Vinkki otsikolla " + otsikko + " merkitty luetuksi");
     }
-    
+
     //Kysyy käyttäjältä tageja
-    private void lisaaTagit(Vinkki vinkki){
+    private void lisaaTagit(Vinkki vinkki) {
         this.tulostus.println("Anna tageja, tyhjä syöte palauttaa aloitusnäyttöön");
         System.out.println("");
 
-        while(true){
-            String tagSyote= lukija.nextLine();
-            if (tagSyote.isEmpty()){
+        while (true) {
+            String tagSyote = lukija.nextLine();
+            if (tagSyote.isEmpty()) {
                 break;
             }
-            
-            if (vinkki.onkoTagia(tagSyote)){
+
+            if (vinkki.onkoTagia(tagSyote)) {
                 System.out.println("Samanniminen tag on jo olemassa");
                 continue;
             }
-            if (Validator.taginPituusOk(tagSyote)){
-            vinkki.lisaaTag(tagSyote);
+            if (Validator.taginPituusOk(tagSyote)) {
+                vinkki.lisaaTag(tagSyote);
             }
         }
     }
- 
+
+    private void haeTagilla() {
+        this.tulostus.println("Anna tagi");
+        System.out.println("");
+        String tagSyote = lukija.nextLine();
+        this.tulostaLista(this.haeTagillla(tagSyote));
+    }
+
 
     /* KANNAN METODEITA KUTSUVAT METODIT */
     private List<Vinkki> haeKaikkiVinkit() {
         return this.tk.haeKaikki(LukuStatus.KAIKKI);
+    }
+
+    private List<Vinkki> haeTagillla(String tag) {
+        return this.tk.haeTagilla(tag);
     }
 
     private List<Vinkki> haeKaikkuLukemattomat() {
@@ -288,19 +301,19 @@ public class Kayttoliittyma {
     }
 
     public List<Vinkki> haeKaikkiKirjavinkit() {
-        return this.tk.haeKaikki(Formaatit.KIRJA,LukuStatus.KAIKKI);
+        return this.tk.haeKaikki(Formaatit.KIRJA, LukuStatus.KAIKKI);
     }
 
     public List<Vinkki> haeKaikkiPodcastvinkit() {
-        return this.tk.haeKaikki(Formaatit.PODCAST,LukuStatus.KAIKKI);
+        return this.tk.haeKaikki(Formaatit.PODCAST, LukuStatus.KAIKKI);
     }
 
     public List<Vinkki> haeKaikkiVideovinkit() {
-        return this.tk.haeKaikki(Formaatit.VIDEO,LukuStatus.KAIKKI);
+        return this.tk.haeKaikki(Formaatit.VIDEO, LukuStatus.KAIKKI);
     }
 
     public List<Vinkki> haeKaikkiBlogpostvinkit() {
-        return this.tk.haeKaikki(Formaatit.BLOGPOST,LukuStatus.KAIKKI);
+        return this.tk.haeKaikki(Formaatit.BLOGPOST, LukuStatus.KAIKKI);
     }
 
     private boolean poistaVinkki(String otsikko) {
@@ -308,11 +321,11 @@ public class Kayttoliittyma {
     }
     /* KANTAA KUTSUVAT METODIT LOPPUVAT TÄHÄN*/
 
- /* TULOSTUS */
+    /* TULOSTUS */
     private void tulostaKomennot() {
         this.tulostus.println(this.KOMENNOT);
     }
-    
+
     private void tulostaKirjavinkit() {
         tulostaLista(this.haeKaikkiKirjavinkit());
     }
@@ -327,7 +340,7 @@ public class Kayttoliittyma {
 
     private void tulostaBlogpostit() {
         tulostaLista(this.haeKaikkiBlogpostvinkit());
-    } 
+    }
 
     private void tulostaKaikkiVinkit() {
         this.tulostaLista(this.haeKaikkiVinkit());
@@ -348,16 +361,17 @@ public class Kayttoliittyma {
     }
     /* TULOSTUS PÄÄTTYY*/
     /*
-    private void muunnaVinkkia() {
-        this.tulostus.println("Anna vinkin otsikko, jota muutetaan");
-        System.out.println("");
-        String otsikko = this.lukija.nextLine();
-        Vinkki vinkki = tk.haeVinkki(otsikko);
-        if(vinkki==null) {
-            this.tulostus.println("Vinkkiä otsikolla: "+otsikko+" ei löytynyt");
-        }else{
-            this.tulostus.println("Vinkkiä ei poistettu");
-        }
-    }
-*/
+     private void muunnaVinkkia() {
+     this.tulostus.println("Anna vinkin otsikko, jota muutetaan");
+     System.out.println("");
+     String otsikko = this.lukija.nextLine();
+     Vinkki vinkki = tk.haeVinkki(otsikko);
+     if(vinkki==null) {
+     this.tulostus.println("Vinkkiä otsikolla: "+otsikko+" ei löytynyt");
+     }else{
+     this.tulostus.println("Vinkkiä ei poistettu");
+     }
+     }
+     */
+
 }

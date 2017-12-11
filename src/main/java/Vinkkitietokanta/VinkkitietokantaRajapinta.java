@@ -22,5 +22,7 @@ public interface VinkkitietokantaRajapinta {
     
     public List<Vinkki> haeKaikki(LukuStatus status);
     public List<Vinkki> haeKaikki(Formaatit formaatti, LukuStatus status);
+
+    public List<Vinkki> haeTagilla(String tag);
     
 }
