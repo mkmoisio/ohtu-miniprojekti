@@ -8,10 +8,11 @@ public class Validator {
 
     public static final boolean DEBUG = false;
 
+    // JOS MUOKKAAT NÄITÄ NIIN MUOKKAA MYÖS CUCUMBERIN FEATUREJA VASTAVASTI
     private static final int KIRJA_KIRJOTTAJA_MAX_PITUUS = 50;
     private static final int KIRJA_OTSIKKO_MAX_PITUUS = 100;
     public static final int PODCAST_NIMI_MAX_PITUUS = 50;
-    public static final int PODCAST_KUVAUS_MAX_PITUUS = 100;
+    public static final int PODCAST_KUVAUS_MAX_PITUUS = 100; 
     private static final int PODCAST_OTSIKKO_MAX_PITUUS = 100;
     private static final int VIDEO_OTSIKKO_MAX_PITUUS = 100;
     private static final int VIDEO_URL_MAX_PITUUS = 50;

@@ -23,7 +23,7 @@ Then the application responds with "Videota ei lisätty"
 
 Scenario: User is unable to add a new video tip with valid url and too long title
 Given Command "lisää video" is entered
-When url "Google" and title "1234567890123456789012345678901234567890123456789012345678901234567890" are entered
+When url "Google" and title "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901" are entered
 Then the application responds with "Videota ei lisätty"
 
 Scenario: User is unable to add a new video tip with too long url and valid title

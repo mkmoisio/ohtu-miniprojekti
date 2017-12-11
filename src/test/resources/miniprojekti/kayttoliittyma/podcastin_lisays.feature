@@ -10,19 +10,19 @@ Then the application responds with "Podcast lisätty"
 Scenario: User is unable to add a new podcast tip with empty title, name and description
 Given Command "lisää podcast" is entered
 When title "" and name "The Comedian’s Comedian" and description "Comedian Stuart Goldsmith’s career" are entered
-Then the application responds with "Podcastia ei lisätty"
+Then the application responds with "Podcastia ei lisätty, koska annettu otsikko oli tyhjä."
 
 Scenario: User is unable to add a new podcast tip with valid title, empty name and valid description
 Given Command "lisää podcast" is entered
 When title "The Comedian’s Comedian" and name "" and description "Comedian Stuart Goldsmith’s career" are entered
-Then the application responds with "Podcastia ei lisätty"
+Then the application responds with "Podcastia ei lisätty, koska annettu nimi oli tyhjä."
 
 Scenario: User is unable to add a new podcast tip with valid title, valid name and empty description
 Given Command "lisää podcast" is entered
 When title "The Comedian’s Comedian" and name "The Comedian’s Comedian" and description "" are entered
-Then the application responds with "Podcastia ei lisätty"
+Then the application responds with "Podcastia ei lisätty, koska annettu kuvaus oli tyhjä."
 
 Scenario: User is unable to add a new podcast tip with valid title, valid name and too long description
 Given Command "lisää podcast" is entered
 When title "The Comedian’s Comedian" and name "The Comedian’s Comedian" and description "Comedian Stuart Goldsmith’s career has been given a boost by this nerdy yet inclusive podcast. Exploring the intricacies of standup, from writing methods to internal struggles, what might come across as a specialist series turns out to be an education in creativity that even outsiders will enjoy." are entered
-Then the application responds with "Podcastia ei lisätty"
+Then the application responds with "Podcastia ei lisätty, koska annettu kuvaus oli pidempi kuin 100 merkkiä."
