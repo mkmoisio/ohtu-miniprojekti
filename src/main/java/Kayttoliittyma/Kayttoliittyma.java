@@ -5,6 +5,7 @@ import Vinkkitietokanta.Formaatit;
 import Vinkkitietokanta.LukuStatus;
 import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
+import apuviritykset.KirjaValidator;
 import apuviritykset.Validator;
 import io.Lukija;
 import io.LukijaRajapinta;
@@ -187,26 +188,17 @@ public class Kayttoliittyma {
     }
 
     private void lisaaKirjavinkki() {
+        
         this.tulostus.println("Anna kirjoittaja:");
         String kirjoittaja = this.lukija.nextLine();
 
-        if (kirjoittaja.isEmpty()) {
-            this.tulostus.println("Kirjavinkkiä ei lisätty, koska annettu kirjoittajan nimi oli tyhjä.");
-            return;
-        }
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
 
-        if (otsikko.isEmpty()) {
-            this.tulostus.println("Kirjavinkkiä ei lisätty, koska annettu otsikko oli tyhjä.");
-            return;
-        }
-        if (Validator.vinkinOtsikkoLiianPitka(otsikko)) {
-            this.tulostus.println("Kirjavinkkiä ei lisätty, koska annettu otsikko oli pidempi kuin " + Validator.OTSIKKO_MAX_PITUUS + " merkkiä.");
-            return;
-        }
 
-        if (Validator.kirjavinkinSyoteOk(kirjoittaja, otsikko)) {
+        KirjaValidator validator = new KirjaValidator(kirjoittaja, otsikko);
+
+        if (validator.validoiKirjavinkki()) {
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.KIRJA);
             vinkki.lisaaTekija(kirjoittaja);
             this.lisaaTagit(vinkki);
@@ -214,8 +206,10 @@ public class Kayttoliittyma {
                 this.tulostus.println("Kirjavinkki lisätty");
                 return;
             }
+        } else {
+            this.tulostaVirhelista(validator.getVirheet());
         }
-        this.tulostus.println("Kirjavinkkiä ei lisätty");
+      //  this.tulostus.println("Kirjavinkkiä ei lisätty");
     }
 
     private void lisaaVideo() {
@@ -376,6 +370,12 @@ public class Kayttoliittyma {
     private void tulostaLista(List<Vinkki> lista) {
         for (Vinkki v : lista) {
             this.tulostus.println(v.toString());
+        }
+    }
+    
+    private void tulostaVirhelista(List<String> lista) {
+        for (String s : lista) {
+            this.tulostus.println(s);
         }
     }
     /* TULOSTUS PÄÄTTYY*/

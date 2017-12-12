@@ -19,7 +19,7 @@ Then the application responds with "Kirjavinkkiä ei lisätty, koska annettu kir
 Scenario: User is unable to add a new book tip with too long author and a valid title
 Given Command "lisää kirja" is entered
 When author "1234567890123456789012345678901234567890123456789012345678901234567890" and title "Mattihan se sopan keitti" are entered
-Then the application responds with "Kirjavinkkiä ei lisätty"
+Then the application responds with "Kirjavinkkiä ei lisätty, koska annettu kirjoittaja oli pidempi kuin 50 merkkiä."
 
 Scenario: User is unable to add a new book tip with valid author and a too long title
 Given Command "lisää kirja" is entered
