@@ -5,6 +5,7 @@ import Vinkkitietokanta.Formaatit;
 import Vinkkitietokanta.LukuStatus;
 import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
+import apuviritykset.BlogpostValidator;
 import apuviritykset.KirjaValidator;
 import apuviritykset.PodcastValidator;
 import apuviritykset.Validator;
@@ -67,7 +68,7 @@ public class Kayttoliittyma {
 
                 /* LISÄÄMINEN ALKAA */
                 case "lisää kirja":
-                    this.lisaaKirjavinkki();
+                    this.lisaaKirja();
                     break;
                 case "lisää podcast":
                     this.lisaaPodcast();
@@ -162,7 +163,7 @@ public class Kayttoliittyma {
         }
     }
 
-    private void lisaaKirjavinkki() {
+    private void lisaaKirja() {
 
         this.tulostus.println("Anna kirjoittaja:");
         String kirjoittaja = this.lukija.nextLine();
@@ -187,7 +188,6 @@ public class Kayttoliittyma {
     private void lisaaVideo() {
         this.tulostus.println("Anna url:");
         String url = this.lukija.nextLine();
-
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
 
@@ -199,7 +199,7 @@ public class Kayttoliittyma {
             this.lisaaTagit(vinkki);
             if (this.tk.lisaaVinkki(vinkki)) {
                 this.tulostus.println("Video lisätty");
-            }
+            } 
         } else {
             this.tulostaVirhelista(validator.getVirheet());
         }
@@ -214,17 +214,19 @@ public class Kayttoliittyma {
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
 
-        if (Validator.videovinkinSyoteOk(url, otsikko)) {
+        BlogpostValidator validator = new BlogpostValidator(url, kirjoittajat, otsikko);
+        
+        if (validator.validoi()) {
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.BLOGPOST);
             vinkki.lisaaOminaisuus(Attribuutit.URL, url);
             vinkki.lisaaTekija(kirjoittajat);
             this.lisaaTagit(vinkki);
             if (this.tk.lisaaVinkki(vinkki)) {
                 this.tulostus.println("Blogpost lisätty");
-                return;
             }
+        } else {
+            this.tulostaVirhelista(validator.getVirheet());
         }
-        this.tulostus.println("Blogpost ei lisätty");
     }
 
     private void merkitseLuetuksi() {

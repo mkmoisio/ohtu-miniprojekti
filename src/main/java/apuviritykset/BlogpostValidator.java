@@ -10,10 +10,39 @@ package apuviritykset;
  * @author mikkomo
  */
 public class BlogpostValidator extends Validator{
+    
+    private String url;
+    private  String kirjoittaja;
+    private String otsikko;
+
+    public BlogpostValidator(String url, String kirjoittaja, String otsikko) {
+        this.url = url;
+        this.kirjoittaja = kirjoittaja;
+        this.otsikko = otsikko;
+    }
+    
+    
 
     @Override
     public boolean validoi() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+         if (kirjoittaja.isEmpty()) {
+            super.lisaaVirhe("Blogpostvinkkiä ei lisätty, koska annettu kirjoittajan nimi oli tyhjä.");
+
+        }
+        if (otsikko.isEmpty()) {
+            super.lisaaVirhe("Blogpostvinkkiä ei lisätty, koska annettu otsikko oli tyhjä.");
+        }
+
+        if (otsikko.length() > Validator.getBLOGPOST_OTSIKKO_MAX_PITUUS()) {
+            super.lisaaVirhe("Blogpostvinkkiä ei lisätty, koska annettu otsikko oli pidempi kuin " + Validator.getBLOGPOST_OTSIKKO_MAX_PITUUS() + " merkkiä.");
+        }
+
+        if (url.length() > Validator.getBLOGPOST_URL_MAX_PITUUS()) {
+            super.lisaaVirhe("Blogpostvinkkiä ei lisätty, koska annettu kirjoittaja oli pidempi kuin " + Validator.getBLOGPOST_URL_MAX_PITUUS() + " merkkiä.");
+
+        }
+        return super.getVirheet().isEmpty();
     }
     
 }
