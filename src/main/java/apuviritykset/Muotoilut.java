@@ -23,7 +23,7 @@ public class Muotoilut {
     public static String muotoileKirjavinkinTuloste(Vinkki kirja) {
         StringBuilder sb = new StringBuilder();
         sb.append(Muotoilut.muotoileTulosteenAlkuosa(kirja.otsikko(), kirja.luettu()));
-        sb.append(kirja.haeTagit());
+        sb.append(kirja.printtaaTekijat());
         sb.append("\n\tTagit: " +muotoileTagit(kirja));
         return sb.toString();
     }

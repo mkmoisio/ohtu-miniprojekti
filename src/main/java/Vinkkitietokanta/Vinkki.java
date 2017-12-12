@@ -21,6 +21,8 @@ public class Vinkki {
     protected String virheTeksti = "Ominaisuutta ei liitetty";
     protected String virheTeksti2 = "hups";
     
+
+    
     public Vinkki(String otsikko, Formaatit formaatti) {
         this.otsikko = otsikko;
         this.formaatti = formaatti;
@@ -87,13 +89,16 @@ public class Vinkki {
 
     
     public String getOminaisuudet(){
-        String str = "TEKIJAT";
+        String str = "TEKIJA";
         for (Map.Entry<Attribuutit, String> attr : attribuutit.entrySet()){
             str = str + " " + attr.getKey().toString();
         }
         return str;
     }
     
+    public void tyhjennaTekijat(){
+        tekijat.clear();
+    }
     
     public List<String> haeTagit() {
         return tagit;
@@ -136,6 +141,10 @@ public class Vinkki {
         return otsikko;
     }
 
+    public String virheteksti(){
+        return virheTeksti;
+    }
+    
     @Override
     public String toString() {
         if (null != formaatti) {

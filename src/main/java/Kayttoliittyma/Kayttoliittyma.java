@@ -26,6 +26,7 @@ public class Kayttoliittyma {
             + "\n\t lisää podcast - podcast-vinkin lisääminen"
             + "\n\t lisää video - videovinkin lisääminen"
             + "\n\t lisää blogpost - blogpost-vinkin lisääminen"
+            + "\n\t muunna vinkkiä - muunna vinkin tietoja"
             + "\n\t tulosta kaikki - tulosta kaikki vinkit"
             + "\n\t lukemattomat - tulosta kaikki lukemattomat vinkit"
             + "\n\t luetut - tulosta kaikki luetut vinkit"
@@ -354,7 +355,7 @@ public class Kayttoliittyma {
     
     /* TULOSTUS PÄÄTTYY*/
     
-
+    //Joo en pysty alkaa vielä pelleilemään validaattorien kanssa
     private void muunnaVinkkia() {
         this.tulostus.println("Anna vinkin otsikko, jota muutetaan");
         System.out.println("");
@@ -363,14 +364,48 @@ public class Kayttoliittyma {
         if(vinkki==null) {
             this.tulostus.println("Vinkkiä otsikolla: "+otsikko+" ei löytynyt");
         }else{
-            this.tulostus.println("Mitä muutetaan (tyhjä lopettaa): "+vinkki.getOminaisuudet());
             while (true) {
+                this.tulostus.println("Mitä muutetaan (tyhjä lopettaa): "+vinkki.getOminaisuudet());
                 String syote = lukija.nextLine();
                 if (syote.isEmpty()) {
                     break;
                 }
-                //if(vinkki.haeOminaisuus(Attribuutit.FORMAATTI))
+                String arvo;
+                //Muuta tekijoita
+                if(syote.toLowerCase().equals("tekija")){
+                    this.tulostus.println("Tekija: "+vinkki.printtaaTekijat());
+                    this.tulostus.println("Anna uusi tekija (tyhjä peruu)");
+                    String tekija = lukija.nextLine();
+                    if(!tekija.isEmpty()){
+                        vinkki.tyhjennaTekijat();
+                        while(!tekija.isEmpty()){
+                            vinkki.lisaaTekija(tekija);
+                            this.tulostus.println("Tekijä "+tekija+" lisätty (tyhjä lopettaa)");
+                            tekija = lukija.nextLine();
+                        }
+                    }    
+                }else{
+                    try{
+                        Attribuutit attr = Attribuutit.valueOf(syote);
+                        arvo = vinkki.haeOminaisuus(attr);
+                        if(!arvo.equals(vinkki.virheteksti())){
+                            this.tulostus.println(syote.toUpperCase()+": "+arvo);
+                            this.tulostus.println("Anna uusi "+syote.toLowerCase()+" (tyhja peruu)");
+                            String syote2 = lukija.nextLine();
+                            if(!syote2.isEmpty()){
+                                vinkki.lisaaOminaisuus(attr, syote2);
+                            }
+                        }
+                    }catch(IllegalArgumentException e){
+                         System.out.println("Ei tuettu");
+                    }  
+                }
+                
+                
+                
             }
+            tk.poistaVinkki(otsikko);
+            tk.lisaaVinkki(vinkki);
         }
      }
     
