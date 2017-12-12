@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import toiminnot.muu.MerkitseLuetuksi;
+import toiminnot.muu.MuunnaVinkkia;
 import toiminnot.tulostus.TulostaBlogpostit;
 import toiminnot.tulostus.TulostaKaikki;
 import toiminnot.tulostus.TulostaKirjat;
@@ -89,11 +90,13 @@ public class Kayttoliittyma {
         Operaatio tulostaPodcastit = new TulostaPodcastit(this.lukija, this.tulostus, this.tk);
         Operaatio haeTagilla = new TulostaTaginPerusteella(this.lukija, this.tulostus, this.tk);
         Operaatio merkitseLuetuksi = new MerkitseLuetuksi(this.lukija, this.tulostus, this.tk);
+        Operaatio muunnaVinkkia = new MuunnaVinkkia(this.lukija, this.tulostus, this.tk);
 
         ops.put("lisää kirja", kirjanLisays);
         ops.put("lisää podcast", podcastinLisays);
         ops.put("lisää video", videonlisays);
         ops.put("lisää blogpost", blogpostinLisays);
+        ops.put("muunna vinkkiä", muunnaVinkkia);
         ops.put("poista", poisto);
         ops.put("komennot", komentojenTulostus);
         ops.put("tulosta kaikki", tulostaKaikki);
@@ -153,9 +156,9 @@ public class Kayttoliittyma {
                         this.lisaaBlogpost();
                         break;
                     /* LISÄÄMINEN LOPPUU */
-                    //case "muunna vinkkiä":
-                    //    this.muunnaVinkkia();
-                    //    break;
+                    case "muunna vinkkiä":
+                        this.muunnaVinkkia();
+                        break;
                      /* TULOSTUS ALKAA */
                     case "tulosta kaikki":
                         this.tulostaKaikkiVinkit();
@@ -426,7 +429,7 @@ public class Kayttoliittyma {
     }
     /* TULOSTUS PÄÄTTYY*/
 
-        private void muunnaVinkkia() {
+    private void muunnaVinkkia() {
         this.tulostus.println("Anna vinkin otsikko, jota muutetaan");
         System.out.println("");
         String otsikko = this.lukija.nextLine();
