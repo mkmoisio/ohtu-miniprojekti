@@ -36,12 +36,12 @@ public class KirjaValidator extends Validator{
             super.lisaaVirhe("Kirjavinkkiä ei lisätty, koska annettu otsikko oli tyhjä.");
         }
 
-        if (otsikko.length() > Validator.OTSIKKO_MAX_PITUUS) {
-            super.lisaaVirhe("Kirjavinkkiä ei lisätty, koska annettu otsikko oli pidempi kuin " + Validator.OTSIKKO_MAX_PITUUS + " merkkiä.");
+        if (otsikko.length() > Validator.getOTSIKKO_MAX_PITUUS()) {
+            super.lisaaVirhe("Kirjavinkkiä ei lisätty, koska annettu otsikko oli pidempi kuin " + Validator.getOTSIKKO_MAX_PITUUS() + " merkkiä.");
         }
 
-        if (kirjoittaja.length() > Validator.KIRJA_KIRJOTTAJA_MAX_PITUUS) {
-            super.lisaaVirhe("Kirjavinkkiä ei lisätty, koska annettu kirjoittaja oli pidempi kuin " + Validator.KIRJA_KIRJOTTAJA_MAX_PITUUS + " merkkiä.");
+        if (kirjoittaja.length() > Validator.getKIRJA_KIRJOTTAJA_MAX_PITUUS()) {
+            super.lisaaVirhe("Kirjavinkkiä ei lisätty, koska annettu kirjoittaja oli pidempi kuin " + Validator.getKIRJA_KIRJOTTAJA_MAX_PITUUS() + " merkkiä.");
 
         }
 

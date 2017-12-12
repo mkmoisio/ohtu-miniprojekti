@@ -31,16 +31,16 @@ public class PodcastValidator extends Validator {
         if (nimi.isEmpty()) {
             super.lisaaVirhe("Podcastia ei lisätty, koska annettu nimi oli tyhjä.");
         }
-        if (Validator.PODCAST_NIMI_MAX_PITUUS < nimi.length()) {
-            super.lisaaVirhe("Podcastia ei lisätty, koska annettu nimi oli pidempi kuin " + Validator.PODCAST_NIMI_MAX_PITUUS + " merkkiä.");
+        if (Validator.getPODCAST_NIMI_MAX_PITUUS() < nimi.length()) {
+            super.lisaaVirhe("Podcastia ei lisätty, koska annettu nimi oli pidempi kuin " + Validator.getPODCAST_NIMI_MAX_PITUUS() + " merkkiä.");
         }
 
         if (otsikko.isEmpty()) {
             super.lisaaVirhe("Podcastia ei lisätty, koska annettu otsikko oli tyhjä.");
         }
 
-        if (Validator.OTSIKKO_MAX_PITUUS < otsikko.length()) {
-            super.lisaaVirhe("Podcastia ei lisätty, koska annettu otsikko oli pidempi kuin " + Validator.OTSIKKO_MAX_PITUUS + " merkkiä.");
+        if (Validator.getOTSIKKO_MAX_PITUUS() < otsikko.length()) {
+            super.lisaaVirhe("Podcastia ei lisätty, koska annettu otsikko oli pidempi kuin " + Validator.getOTSIKKO_MAX_PITUUS() + " merkkiä.");
 
         }
         
@@ -48,8 +48,8 @@ public class PodcastValidator extends Validator {
             super.lisaaVirhe("Podcastia ei lisätty, koska annettu kuvaus oli tyhjä.");
         }
         
-        if (Validator.PODCAST_KUVAUS_MAX_PITUUS < kuvaus.length()) {
-            super.lisaaVirhe("Podcastia ei lisätty, koska annettu kuvaus oli pidempi kuin " + Validator.PODCAST_KUVAUS_MAX_PITUUS + " merkkiä.");
+        if (Validator.getPODCAST_KUVAUS_MAX_PITUUS() < kuvaus.length()) {
+            super.lisaaVirhe("Podcastia ei lisätty, koska annettu kuvaus oli pidempi kuin " + Validator.getPODCAST_KUVAUS_MAX_PITUUS() + " merkkiä.");
         }
         
         return super.getVirheet().isEmpty();

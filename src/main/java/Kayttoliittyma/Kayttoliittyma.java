@@ -8,6 +8,7 @@ import Vinkkitietokanta.VinkkitietokantaRajapinta;
 import apuviritykset.KirjaValidator;
 import apuviritykset.PodcastValidator;
 import apuviritykset.Validator;
+import apuviritykset.VideoValidator;
 import io.Lukija;
 import io.LukijaRajapinta;
 import io.Tulostaja;
@@ -139,41 +140,12 @@ public class Kayttoliittyma {
         this.tulostus.println("Anna nimi:");
         String nimi = this.lukija.nextLine();
 
-//        if (Validator.vinkinNimiTyhja(nimi)) {
-//            this.tulostus.println("Podcastia ei lisätty, koska annettu nimi oli tyhjä.");
-//            return;
-//        }
-//
-//        if (Validator.podcastvinkinNimiLiianPitka(nimi)) {
-//            this.tulostus.println("Podcastia ei lisätty, koska annettu nimi oli pidempi kuin " + Validator.PODCAST_NIMI_MAX_PITUUS + " merkkiä.");
-//            return;
-//
-//        }
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
-//
-//        if (Validator.vinkinOtsikkoTyhja(otsikko)) {
-//            this.tulostus.println("Podcastia ei lisätty, koska annettu otsikko oli tyhjä.");
-//            return;
-//        }
-//
-//        if (Validator.vinkinOtsikkoLiianPitka(otsikko)) {
-//            this.tulostus.println("Podcastia ei lisätty, koska annettu otsikko oli pidempi kuin " + Validator.OTSIKKO_MAX_PITUUS + " merkkiä.");
-//            return;
-//        }
 
         this.tulostus.println("Anna kuvaus:");
         String kuvaus = this.lukija.nextLine();
-//
-//        if (Validator.vinkinKuvausTyhja(kuvaus)) {
-//            this.tulostus.println("Podcastia ei lisätty, koska annettu kuvaus oli tyhjä.");
-//            return;
-//        }
-//
-//        if (Validator.vinkinKuvausLiianPitka(kuvaus)) {
-//            this.tulostus.println("Podcastia ei lisätty, koska annettu kuvaus oli pidempi kuin " + Validator.PODCAST_KUVAUS_MAX_PITUUS + " merkkiä.");
-//            return;
-//        }
+
         PodcastValidator validator = new PodcastValidator(nimi, otsikko, kuvaus);
         if (validator.validoi()) {
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.PODCAST);
@@ -204,6 +176,8 @@ public class Kayttoliittyma {
             this.lisaaTagit(vinkki);
             if (this.tk.lisaaVinkki(vinkki)) {
                 this.tulostus.println("Kirjavinkki lisätty");
+            } else {
+                this.tulostus.println("Kirjavinkkiä ei lisätty");
             }
         } else {
             this.tulostaVirhelista(validator.getVirheet());
@@ -217,20 +191,18 @@ public class Kayttoliittyma {
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
 
-        if (Validator.videovinkinSyoteOk(url, otsikko)) {
+        VideoValidator validator = new VideoValidator(url, otsikko);
+
+        if (validator.validoi()) {
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.VIDEO);
             vinkki.lisaaOminaisuus(Attribuutit.URL, url);
             this.lisaaTagit(vinkki);
             if (this.tk.lisaaVinkki(vinkki)) {
                 this.tulostus.println("Video lisätty");
-                return;
             }
+        } else {
+            this.tulostaVirhelista(validator.getVirheet());
         }
-        if (url.isEmpty()) {
-            this.tulostus.println("Videota ei lisätty, koska annettu url oli tyhjä.");
-            return;
-        }
-        this.tulostus.println("Videota ei lisätty");
 
     }
 
