@@ -100,7 +100,7 @@ public class VinkkiDAO {
     }
 
     public List<String> haeVinkkienIDtTagilla(String tag) {
-        String query = "SELECT * FROM Vinkki INNER JOIN (SELECT vinkki FROM VinkkiTag WHERE VinkkiTag.tag = (SELECT tag_id FROM Tag WHERE Tag_nimi=?)) AS tableB ON Vinkki.vinkki_id = tableB.vinkki";
+        String query = "SELECT * FROM Vinkki INNER JOIN (SELECT vinkki FROM VinkkiTag INNER JOIN (SELECT tag_id FROM Tag WHERE Tag_nimi=?) ON VinkkiTag.tag = tag_id) AS tableB ON Vinkki.vinkki_id = tableB.vinkki";
         List<String> list = new ArrayList();
         try {
             PreparedStatement stmt = conn.prepareStatement(query);
@@ -108,6 +108,7 @@ public class VinkkiDAO {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 String vinkki_id = rs.getString("vinkki_id");
+             //   System.out.println(vinkki_id);
                 list.add(vinkki_id);
             }
         } catch (Exception e) {

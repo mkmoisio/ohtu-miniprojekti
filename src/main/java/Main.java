@@ -11,7 +11,7 @@ public class Main {
       
         Vinkkitietokanta tietokanta = new Vinkkitietokanta(url);
         Kayttoliittyma UI = new Kayttoliittyma(tietokanta);
-        
+        UI.alusta();
         UI.suorita();
     }
 }

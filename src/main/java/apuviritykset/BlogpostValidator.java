@@ -16,12 +16,12 @@ public class BlogpostValidator extends Validator{
     private String otsikko;
 
     public BlogpostValidator(String url, String kirjoittaja, String otsikko) {
+        super();
         this.url = url;
         this.kirjoittaja = kirjoittaja;
         this.otsikko = otsikko;
     }
-    
-    
+        
 
     @Override
     public boolean validoi() {
