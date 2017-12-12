@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Kayttoliittyma;
+package toiminnot.muu;
 
 import Vinkkitietokanta.Vinkki;
 import apuviritykset.Validator;
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
+import toiminnot.MuuOperaatio;
 
 /**
  *

@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Kayttoliittyma;
+package toiminnot;
 
 import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
 import java.util.List;
+import toiminnot.muu.TaginLisays;
+import toiminnot.Tietokantaoperaatio;
 
 /**
  *

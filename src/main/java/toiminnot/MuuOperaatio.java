@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Kayttoliittyma;
+package toiminnot;
 
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
@@ -12,7 +12,7 @@ import io.TulostusRajapinta;
  *
  * @author mikkomo
  */
-public abstract class MuuOperaatio extends Operaatio{
+public abstract class MuuOperaatio extends Operaatio {
 
     public MuuOperaatio(LukijaRajapinta lukija, TulostusRajapinta tulostus) {
         super(lukija, tulostus);

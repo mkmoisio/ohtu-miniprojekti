@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Kayttoliittyma;
+package toiminnot;
 
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
@@ -39,6 +39,7 @@ public abstract class Operaatio {
         return tulostus;
     }
     
-    public abstract void suorita() ;
+   
+    public abstract void suorita();
     
 }

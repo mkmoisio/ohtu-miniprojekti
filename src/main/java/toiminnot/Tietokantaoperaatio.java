@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Kayttoliittyma;
+package toiminnot;
 
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
 import io.LukijaRajapinta;
@@ -30,8 +30,5 @@ public abstract class Tietokantaoperaatio extends Operaatio{
     public void setTk(VinkkitietokantaRajapinta tk) {
         this.tk = tk;
     }
-
-
-    
     
 }

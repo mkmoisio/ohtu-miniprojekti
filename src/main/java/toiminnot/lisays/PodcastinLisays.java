@@ -3,15 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Kayttoliittyma;
+package toiminnot.lisays;
 
+import toiminnot.Lisaysoperaatio;
 import Vinkkitietokanta.Attribuutit;
 import Vinkkitietokanta.Formaatit;
 import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
 import apuviritykset.PodcastValidator;
+import apuviritykset.Validator;
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
+import toiminnot.muu.TaginLisays;
 
 /**
  *
@@ -35,7 +38,7 @@ public class PodcastinLisays extends Lisaysoperaatio{
         super.getTulostus().println("Anna kuvaus:");
         String kuvaus = super.getLukija().nextLine();
 
-        PodcastValidator validator = new PodcastValidator(nimi, otsikko, kuvaus);
+        Validator validator = new PodcastValidator(nimi, otsikko, kuvaus);
         if (validator.validoi()) {
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.PODCAST);
             vinkki.lisaaOminaisuus(Attribuutit.NIMI, nimi);
