@@ -1,10 +1,13 @@
 package apuviritykset;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author mikkomo
  */
-public class Validator {
+public abstract class Validator {
 
     public static final boolean DEBUG = false;
 
@@ -20,6 +23,13 @@ public class Validator {
     private static final int BLOGPOST_URL_MAX_PITUUS = 50;
     private static final int TAG_MAX_PITUUS = 50;
     public static final int OTSIKKO_MAX_PITUUS = 100;
+    
+    
+    private List<String> virheet;
+    
+    public Validator() {
+        this.virheet = new ArrayList();
+    }
     
     public static boolean vinkinOtsikkoTyhja(String otsikko) {
         if (otsikko.isEmpty()) {
@@ -106,5 +116,13 @@ public class Validator {
         return ((tag.length() <= TAG_MAX_PITUUS));
     }
 
+    public abstract boolean validoi() ;
+    
+    public  List<String> getVirheet(){
+        return this.virheet;
+    }
 
+    protected void lisaaVirhe(String virhe) {
+        this.virheet.add(virhe);
+    }
 }

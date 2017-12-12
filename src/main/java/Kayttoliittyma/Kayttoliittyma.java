@@ -6,6 +6,7 @@ import Vinkkitietokanta.LukuStatus;
 import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
 import apuviritykset.KirjaValidator;
+import apuviritykset.PodcastValidator;
 import apuviritykset.Validator;
 import io.Lukija;
 import io.LukijaRajapinta;
@@ -138,78 +139,75 @@ public class Kayttoliittyma {
         this.tulostus.println("Anna nimi:");
         String nimi = this.lukija.nextLine();
 
-        if (Validator.vinkinNimiTyhja(nimi)) {
-            this.tulostus.println("Podcastia ei lisätty, koska annettu nimi oli tyhjä.");
-            return;
-        }
-
-        if (Validator.podcastvinkinNimiLiianPitka(nimi)) {
-            this.tulostus.println("Podcastia ei lisätty, koska annettu nimi oli pidempi kuin " + Validator.PODCAST_NIMI_MAX_PITUUS + " merkkiä.");
-            return;
-
-        }
-
+//        if (Validator.vinkinNimiTyhja(nimi)) {
+//            this.tulostus.println("Podcastia ei lisätty, koska annettu nimi oli tyhjä.");
+//            return;
+//        }
+//
+//        if (Validator.podcastvinkinNimiLiianPitka(nimi)) {
+//            this.tulostus.println("Podcastia ei lisätty, koska annettu nimi oli pidempi kuin " + Validator.PODCAST_NIMI_MAX_PITUUS + " merkkiä.");
+//            return;
+//
+//        }
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
-
-        if (Validator.vinkinOtsikkoTyhja(otsikko)) {
-            this.tulostus.println("Podcastia ei lisätty, koska annettu otsikko oli tyhjä.");
-            return;
-        }
-
-        if (Validator.vinkinOtsikkoLiianPitka(otsikko)) {
-            this.tulostus.println("Podcastia ei lisätty, koska annettu otsikko oli pidempi kuin " + Validator.OTSIKKO_MAX_PITUUS + " merkkiä.");
-            return;
-        }
+//
+//        if (Validator.vinkinOtsikkoTyhja(otsikko)) {
+//            this.tulostus.println("Podcastia ei lisätty, koska annettu otsikko oli tyhjä.");
+//            return;
+//        }
+//
+//        if (Validator.vinkinOtsikkoLiianPitka(otsikko)) {
+//            this.tulostus.println("Podcastia ei lisätty, koska annettu otsikko oli pidempi kuin " + Validator.OTSIKKO_MAX_PITUUS + " merkkiä.");
+//            return;
+//        }
 
         this.tulostus.println("Anna kuvaus:");
         String kuvaus = this.lukija.nextLine();
-
-        if (Validator.vinkinKuvausTyhja(kuvaus)) {
-            this.tulostus.println("Podcastia ei lisätty, koska annettu kuvaus oli tyhjä.");
-            return;
-        }
-
-        if (Validator.vinkinKuvausLiianPitka(kuvaus)) {
-            this.tulostus.println("Podcastia ei lisätty, koska annettu kuvaus oli pidempi kuin " + Validator.PODCAST_KUVAUS_MAX_PITUUS + " merkkiä.");
-            return;
-        }
-        if (Validator.podcastvinkinSyoteOk(nimi, otsikko, kuvaus)) {
+//
+//        if (Validator.vinkinKuvausTyhja(kuvaus)) {
+//            this.tulostus.println("Podcastia ei lisätty, koska annettu kuvaus oli tyhjä.");
+//            return;
+//        }
+//
+//        if (Validator.vinkinKuvausLiianPitka(kuvaus)) {
+//            this.tulostus.println("Podcastia ei lisätty, koska annettu kuvaus oli pidempi kuin " + Validator.PODCAST_KUVAUS_MAX_PITUUS + " merkkiä.");
+//            return;
+//        }
+        PodcastValidator validator = new PodcastValidator(nimi, otsikko, kuvaus);
+        if (validator.validoi()) {
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.PODCAST);
             vinkki.lisaaOminaisuus(Attribuutit.NIMI, nimi);
             vinkki.lisaaOminaisuus(Attribuutit.KUVAUS, kuvaus);
             this.lisaaTagit(vinkki);
             if (this.tk.lisaaVinkki(vinkki)) {
                 this.tulostus.println("Podcast lisätty");
-                return;
+            } else {
+                this.tulostus.println("Podcastia ei lisätty");
             }
+        } else {
+            this.tulostaVirhelista(validator.getVirheet());
         }
-        this.tulostus.println("Podcastia ei lisätty");
     }
 
     private void lisaaKirjavinkki() {
-        
+
         this.tulostus.println("Anna kirjoittaja:");
         String kirjoittaja = this.lukija.nextLine();
-
         this.tulostus.println("Anna otsikko:");
         String otsikko = this.lukija.nextLine();
-
-
         KirjaValidator validator = new KirjaValidator(kirjoittaja, otsikko);
 
-        if (validator.validoiKirjavinkki()) {
+        if (validator.validoi()) {
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.KIRJA);
             vinkki.lisaaTekija(kirjoittaja);
             this.lisaaTagit(vinkki);
             if (this.tk.lisaaVinkki(vinkki)) {
                 this.tulostus.println("Kirjavinkki lisätty");
-                return;
             }
         } else {
             this.tulostaVirhelista(validator.getVirheet());
         }
-      //  this.tulostus.println("Kirjavinkkiä ei lisätty");
     }
 
     private void lisaaVideo() {
@@ -372,10 +370,11 @@ public class Kayttoliittyma {
             this.tulostus.println(v.toString());
         }
     }
-    
+
     private void tulostaVirhelista(List<String> lista) {
         for (String s : lista) {
             this.tulostus.println(s);
+
         }
     }
     /* TULOSTUS PÄÄTTYY*/

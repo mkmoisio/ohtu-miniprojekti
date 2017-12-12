@@ -12,41 +12,41 @@ import java.util.List;
  *
  * @author mikkomo
  */
-public class KirjaValidator {
+public class KirjaValidator extends Validator{
 
-    private List virheet;
+   // private List virheet;
     private String kirjoittaja;
     private String otsikko;
 
     public KirjaValidator(String kirjoittaja, String otsikko) {
+        super();
         this.kirjoittaja = kirjoittaja;
         this.otsikko = otsikko;
-        this.virheet = new ArrayList();
+        
     }
 
-    public boolean validoiKirjavinkki() {
+    @Override
+    public boolean validoi() {
 
         if (kirjoittaja.isEmpty()) {
-            this.virheet.add("Kirjavinkkiä ei lisätty, koska annettu kirjoittajan nimi oli tyhjä.");
+            super.lisaaVirhe("Kirjavinkkiä ei lisätty, koska annettu kirjoittajan nimi oli tyhjä.");
 
         }
         if (otsikko.isEmpty()) {
-            this.virheet.add("Kirjavinkkiä ei lisätty, koska annettu otsikko oli tyhjä.");
+            super.lisaaVirhe("Kirjavinkkiä ei lisätty, koska annettu otsikko oli tyhjä.");
         }
 
         if (otsikko.length() > Validator.OTSIKKO_MAX_PITUUS) {
-            this.virheet.add("Kirjavinkkiä ei lisätty, koska annettu otsikko oli pidempi kuin " + Validator.OTSIKKO_MAX_PITUUS + " merkkiä.");
+            super.lisaaVirhe("Kirjavinkkiä ei lisätty, koska annettu otsikko oli pidempi kuin " + Validator.OTSIKKO_MAX_PITUUS + " merkkiä.");
         }
 
         if (kirjoittaja.length() > Validator.KIRJA_KIRJOTTAJA_MAX_PITUUS) {
-            this.virheet.add("Kirjavinkkiä ei lisätty, koska annettu kirjoittaja oli pidempi kuin " + Validator.KIRJA_KIRJOTTAJA_MAX_PITUUS + " merkkiä.");
+            super.lisaaVirhe("Kirjavinkkiä ei lisätty, koska annettu kirjoittaja oli pidempi kuin " + Validator.KIRJA_KIRJOTTAJA_MAX_PITUUS + " merkkiä.");
 
         }
 
-        return this.virheet.isEmpty();
+        return super.getVirheet().isEmpty();
     }
 
-    public List getVirheet() {
-        return virheet;
-    }
+   
 }
