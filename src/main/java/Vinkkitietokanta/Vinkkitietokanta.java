@@ -80,11 +80,11 @@ public class Vinkkitietokanta implements VinkkitietokantaRajapinta {
     @Override
     public boolean lisaaVinkki(Vinkki vinkki) {
         if (null != vinkki.formaatti()) {
-            if (!vinkkiDAO.haeOtsikolla(vinkki.Otsikko()).isEmpty()) {
+            if (!vinkkiDAO.haeOtsikolla(vinkki.otsikko()).isEmpty()) {
                 return false;
             }
-            vinkkiDAO.luoVinkki(vinkki.Otsikko(), vinkki.luettu());
-            String vinkkiID = vinkkiDAO.haeOtsikolla(vinkki.Otsikko());
+            vinkkiDAO.luoVinkki(vinkki.otsikko(), vinkki.luettu());
+            String vinkkiID = vinkkiDAO.haeOtsikolla(vinkki.otsikko());
             if (vinkkiID.isEmpty()) {
                 return false;
             }

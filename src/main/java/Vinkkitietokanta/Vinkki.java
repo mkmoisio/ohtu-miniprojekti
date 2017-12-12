@@ -5,6 +5,7 @@ import apuviritykset.Muotoilut;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -32,62 +33,20 @@ public class Vinkki {
     //ehkä palauttaa geneerisen Object tyypin? Helpompi käyttöliittymälle
     public String haeOminaisuus(Attribuutit attribuutti) {
         if (null != attribuutti) {
-            switch (attribuutti) {
-                case OTSIKKO:
-                    return otsikko;
-                case FORMAATTI:
-                    return formaatti.name();
-                case LUETTU:
-                    return String.valueOf(luettu);
-                case TEKIJAT:
-                    return printtaaTekijat();
-                default: //kuvaus, nimi jne,
-                    if (attribuutit.containsKey(attribuutti)) {
-                        return attribuutit.get(attribuutti);
-                    } else {
-                        return virheTeksti;
-                    }
+            if (attribuutit.containsKey(attribuutti)) {
+                return attribuutit.get(attribuutti);
+            } else {
+                return virheTeksti;
             }
+
         }
         return virheTeksti;
     }
 
     //Myös muokkaa
-    public boolean lisaaOminaisuus(Attribuutit attribuutti, Object arvo) {
-        if (null != attribuutti) {
-            switch (attribuutti) {
-                case OTSIKKO:
-                    if (!String.class.isInstance(arvo)) {
-                        return false;
-                    }
-                    otsikko = arvo.toString();
-                    break;
-                case FORMAATTI:
-                    if (!Formaatit.class.isInstance(arvo)) {
-                        return false;
-                    }
-
-                    formaatti = (Formaatit) arvo;
-                    break;
-                case LUETTU:
-                    if (!Boolean.class.isInstance(arvo)) {
-                        return false;
-                    }
-                    luettu = (Boolean) arvo;
-                    break;
-                case TEKIJAT:
-                    if (!String.class.isInstance(arvo)) {
-                        return false;
-                    }
-                    lisaaTekija(arvo.toString().trim());
-                    break;
-                default:
-                    if (!String.class.isInstance(arvo)) {
-                        return false;
-                    }
-                    attribuutit.put(attribuutti, arvo.toString());
-                    break;
-            }
+    public boolean lisaaOminaisuus(Attribuutit attribuutti, String arvo) {
+        if (null != attribuutti && arvo!=null &&!arvo.isEmpty()) {
+            attribuutit.put(attribuutti, arvo);
             return true;
         }
         return false;
@@ -126,6 +85,16 @@ public class Vinkki {
         this.tagit.add(tag);
     }
 
+    
+    public String getOminaisuudet(){
+        String str = "TEKIJAT";
+        for (Map.Entry<Attribuutit, String> attr : attribuutit.entrySet()){
+            str = str + " " + attr.getKey().toString();
+        }
+        return str;
+    }
+    
+    
     public List<String> haeTagit() {
         return tagit;
     }
@@ -163,7 +132,7 @@ public class Vinkki {
         luettu = false;
     }
 
-    public String Otsikko() {
+    public String otsikko() {
         return otsikko;
     }
 

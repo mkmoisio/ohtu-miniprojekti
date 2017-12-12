@@ -80,9 +80,9 @@ public class Kayttoliittyma {
                     this.lisaaBlogpost();
                     break;
                 /* LISÄÄMINEN LOPPUU */
-                //case "muunna vinkkiä":
-                //    this.muunnaVinkkia();
-                //    break;
+                case "muunna vinkkiä":
+                    this.muunnaVinkkia();
+                    break;
  /* TULOSTUS ALKAA */
                 case "tulosta kaikki":
                     this.tulostaKaikkiVinkit();
@@ -203,7 +203,6 @@ public class Kayttoliittyma {
         } else {
             this.tulostaVirhelista(validator.getVirheet());
         }
-
     }
 
     private void lisaaBlogpost() {
@@ -351,19 +350,29 @@ public class Kayttoliittyma {
 
         }
     }
+    
+    
     /* TULOSTUS PÄÄTTYY*/
-    /*
-     private void muunnaVinkkia() {
-     this.tulostus.println("Anna vinkin otsikko, jota muutetaan");
-     System.out.println("");
-     String otsikko = this.lukija.nextLine();
-     Vinkki vinkki = tk.haeVinkki(otsikko);
-     if(vinkki==null) {
-     this.tulostus.println("Vinkkiä otsikolla: "+otsikko+" ei löytynyt");
-     }else{
-     this.tulostus.println("Vinkkiä ei poistettu");
+    
+
+    private void muunnaVinkkia() {
+        this.tulostus.println("Anna vinkin otsikko, jota muutetaan");
+        System.out.println("");
+        String otsikko = this.lukija.nextLine();
+        Vinkki vinkki = tk.haeVinkki(otsikko);
+        if(vinkki==null) {
+            this.tulostus.println("Vinkkiä otsikolla: "+otsikko+" ei löytynyt");
+        }else{
+            this.tulostus.println("Mitä muutetaan (tyhjä lopettaa): "+vinkki.getOminaisuudet());
+            while (true) {
+                String syote = lukija.nextLine();
+                if (syote.isEmpty()) {
+                    break;
+                }
+                //if(vinkki.haeOminaisuus(Attribuutit.FORMAATTI))
+            }
+        }
      }
-     }
-     */
+    
 
 }

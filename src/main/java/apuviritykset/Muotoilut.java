@@ -22,8 +22,8 @@ public class Muotoilut {
 
     public static String muotoileKirjavinkinTuloste(Vinkki kirja) {
         StringBuilder sb = new StringBuilder();
-        sb.append(Muotoilut.muotoileTulosteenAlkuosa(kirja.Otsikko(), kirja.luettu()));
-        sb.append(kirja.haeOminaisuus(Attribuutit.TEKIJAT));
+        sb.append(Muotoilut.muotoileTulosteenAlkuosa(kirja.otsikko(), kirja.luettu()));
+        sb.append(kirja.haeTagit());
         sb.append("\n\tTagit: " +muotoileTagit(kirja));
         return sb.toString();
     }
@@ -32,7 +32,7 @@ public class Muotoilut {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Podcastvinkki \n\tOtsikko: ");
-        sb.append(podcast.Otsikko());
+        sb.append(podcast.otsikko());
         if (podcast.lisaaTekijat(null)) {
             sb.append(" (luettu)");
         } else {
@@ -50,7 +50,7 @@ public class Muotoilut {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Videovinkki \n\tOtsikko: ");
-        sb.append(video.Otsikko());
+        sb.append(video.otsikko());
         if (video.luettu()) {
             sb.append(" (luettu)");
         } else {
@@ -66,7 +66,7 @@ public class Muotoilut {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Blogpost-vinkki \n\tOtsikko: ");
-        sb.append(blogautus.Otsikko());
+        sb.append(blogautus.otsikko());
         if (blogautus.luettu()) {
             sb.append(" (luettu)");
         } else {
@@ -89,6 +89,6 @@ public class Muotoilut {
     }
 
     public static String muotoileNullFormaatinTuloste(Vinkki vinkki) {
-        return vinkki.Otsikko() + ", luettu, " + vinkki.luettu();
+        return vinkki.otsikko() + ", luettu, " + vinkki.luettu();
     }
 }

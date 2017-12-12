@@ -47,12 +47,11 @@ public class TagDAO {
                 komento.setString(1, tag_nimi);
                 ResultSet rs = komento.executeQuery();
                 while (rs.next()) {
-                tagID = rs.getInt("tag_id");
+                    tagID = rs.getInt("tag_id");
+                }
+            } catch (SQLException e) {
+                System.err.println("haeTagID: "+e.getMessage());
             }
-
-        } catch (SQLException e) {
-            System.err.println("haeTagID: "+e.getMessage());
-        }
         tagIdList.add(tagID);
         }
     return tagIdList; 

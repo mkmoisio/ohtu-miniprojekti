@@ -19,6 +19,9 @@ public class VinkkiTest {
     }
 
 
+    
+    /*
+    Ei tuettu enää
     @Test
     public void testaaVaihdaFormaattia() {
         System.out.println("vaihda formaattia");
@@ -28,7 +31,8 @@ public class VinkkiTest {
         assertFalse(vinkki.lisaaOminaisuus(Attribuutit.FORMAATTI, "asdasd"));
         assertEquals(vinkki.haeOminaisuus(Attribuutit.FORMAATTI), Formaatit.BLOGPOST.toString());
     }
-
+    */
+    
     @Test
     public void testaaHaeOminaisuusEiOlemassa() {
         System.out.println("ominaisuus ei olemassa");
@@ -37,7 +41,8 @@ public class VinkkiTest {
         assertEquals(vinkki.haeOminaisuus(null), vinkki.virheTeksti);
     }
     
-    
+    /*
+    Otsikon vaihtamista ei enää tueta
     @Test
     public void testaaVaihdaOtsikkoa() {
         System.out.println("vaihda otsikkoa");
@@ -47,17 +52,19 @@ public class VinkkiTest {
         assertFalse(vinkki.lisaaOminaisuus(Attribuutit.OTSIKKO, 1));
         assertEquals(vinkki.haeOminaisuus(Attribuutit.OTSIKKO), "APACHE2 intiaanit");
     }   
-
+    */
     @Test
     public void testaaVaihdaKuvausta() {
         System.out.println("vaihda kuvausta");
         Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.PODCAST);
         assertTrue(vinkki.lisaaOminaisuus(Attribuutit.KUVAUS, "Surkea Kirja"));
         assertEquals(vinkki.haeOminaisuus(Attribuutit.KUVAUS), "Surkea Kirja");
-        assertFalse(vinkki.lisaaOminaisuus(Attribuutit.KUVAUS, 1));
+        assertFalse(vinkki.lisaaOminaisuus(Attribuutit.KUVAUS, ""));
         assertEquals(vinkki.haeOminaisuus(Attribuutit.KUVAUS), "Surkea Kirja");
     }  
 
+    /*
+    Ei tuettu enää
     @Test
     public void testaaLuettuStatusta() {
         System.out.println("vaihda Luettu statusta");
@@ -69,7 +76,11 @@ public class VinkkiTest {
         assertFalse(vinkki.lisaaOminaisuus(Attribuutit.LUETTU, 1));
         assertEquals(vinkki.haeOminaisuus(Attribuutit.LUETTU), "false");
     }  
-  
+    */
+    
+    /*
+    Ei tuettu enää
+    
     @Test
     public void testaaTekijat() {
         System.out.println("vaihda tekijat");
@@ -77,9 +88,9 @@ public class VinkkiTest {
         assertTrue(vinkki.lisaaOminaisuus(Attribuutit.TEKIJAT, "Markku"));
         assertEquals("Markku",vinkki.haeOminaisuus(Attribuutit.TEKIJAT));
         assertFalse(vinkki.lisaaOminaisuus(Attribuutit.TEKIJAT, 1));
-        assertEquals("Markku",vinkki.haeOminaisuus(Attribuutit.TEKIJAT));
+        assertEquals("Markku",vinkki.haeTekijat().get(10));
     }      
-    
+    */
     @Test
     public void testaaURL() {
         System.out.println("vaihda url");
@@ -105,7 +116,7 @@ public class VinkkiTest {
     public void testEiOminaisuutta() {
         System.out.println("parse tekijat");
         Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.BLOGPOST);
-        assertEquals("",vinkki.haeOminaisuus(Attribuutit.TEKIJAT));
+        assertTrue(vinkki.haeTekijat().isEmpty());
         assertEquals(vinkki.virheTeksti,vinkki.haeOminaisuus(Attribuutit.URL));
         assertEquals(vinkki.virheTeksti,vinkki.haeOminaisuus(Attribuutit.KUVAUS));
         assertEquals(vinkki.virheTeksti,vinkki.haeOminaisuus(Attribuutit.ISBN));
@@ -165,7 +176,7 @@ public class VinkkiTest {
         System.out.println("testaa gettereitä");
         Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.BLOGPOST);
         assertEquals(Formaatit.BLOGPOST,vinkki.formaatti());
-        assertEquals("CIA vs FBI",vinkki.Otsikko());
+        assertEquals("CIA vs FBI",vinkki.otsikko());
         assertFalse(vinkki.luettu());
         vinkki.merkitseLuetuksi();
         assertTrue(vinkki.luettu());
