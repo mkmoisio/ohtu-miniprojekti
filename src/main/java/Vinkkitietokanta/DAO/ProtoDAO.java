@@ -66,9 +66,9 @@ abstract public class ProtoDAO {
                 if (luettu == status.getValue() || status == LukuStatus.KAIKKI) {
                     Vinkki vinkki = new Vinkki(rs.getString("otsikko"), formaatti);
                     if (luettu == 0) {
-                        vinkki.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.FALSE);
+                        vinkki.merkitseLukemattomaksi();
                     } else {
-                        vinkki.lisaaOminaisuus(Attribuutit.LUETTU, Boolean.TRUE);
+                        vinkki.merkitseLuetuksi();
                     }
 
                     vinkki.lisaaTekijat(rs.getString("tekijat"));

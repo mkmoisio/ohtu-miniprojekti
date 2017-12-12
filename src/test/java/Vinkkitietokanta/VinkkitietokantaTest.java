@@ -109,7 +109,7 @@ public class VinkkitietokantaTest {
         tk0.lisaaVinkki(vinkki);
         List<Vinkki> result = tk0.haeKaikki(LukuStatus.KAIKKI);
         assertEquals(1, result.size());
-        assertEquals(result.get(0).Otsikko(),otsikko);
+        assertEquals(result.get(0).otsikko(),otsikko);
         assertEquals(result.get(0).formaatti(),Formaatit.KIRJA);
     }
     
@@ -121,7 +121,7 @@ public class VinkkitietokantaTest {
         tk0.lisaaVinkki(vinkki);
         List<Vinkki> result = tk0.haeKaikki(LukuStatus.KAIKKI);
         assertEquals(1, result.size());
-        assertEquals(result.get(0).Otsikko(),otsikko);
+        assertEquals(result.get(0).otsikko(),otsikko);
         assertEquals(result.get(0).formaatti(),Formaatit.KIRJA);
     }
 
@@ -171,9 +171,9 @@ public class VinkkitietokantaTest {
         tk0.lisaaVinkki(vinkki2);
         List<Vinkki> result = tk0.haeKaikki(LukuStatus.KAIKKI);
         assertEquals(2, result.size());
-        assertEquals(result.get(0).Otsikko(),otsikko);
+        assertEquals(result.get(0).otsikko(),otsikko);
         assertEquals(result.get(0).formaatti(),Formaatit.KIRJA);
-        assertEquals(result.get(1).Otsikko(),otsikko2);
+        assertEquals(result.get(1).otsikko(),otsikko2);
         assertEquals(result.get(1).formaatti(),Formaatit.KIRJA);
     }
     
@@ -187,7 +187,7 @@ public class VinkkitietokantaTest {
         tk0.lisaaVinkki(vinkki2);
         List<Vinkki> result = tk0.haeKaikki(LukuStatus.KAIKKI);
         assertEquals(1, result.size());
-        assertEquals(result.get(0).Otsikko(),otsikko);
+        assertEquals(result.get(0).otsikko(),otsikko);
         assertEquals(result.get(0).formaatti(),Formaatit.KIRJA);
     }
     
@@ -224,15 +224,15 @@ public class VinkkitietokantaTest {
         assertEquals(3, result.size());
         result = tk0.haeKaikkiKirjat(LukuStatus.KAIKKI);
         assertEquals(1, result.size());
-        assertEquals(result.get(0).Otsikko(),otsikko);
+        assertEquals(result.get(0).otsikko(),otsikko);
         assertEquals(result.get(0).formaatti(),Formaatit.KIRJA);
         result = tk0.haeKaikkiPodcast(LukuStatus.KAIKKI);
         assertEquals(1, result.size());
-        assertEquals(result.get(0).Otsikko(),otsikko2);
+        assertEquals(result.get(0).otsikko(),otsikko2);
         assertEquals(result.get(0).formaatti(),Formaatit.PODCAST);
         result = tk0.haeKaikkiVideot(LukuStatus.KAIKKI);
         assertEquals(1, result.size());
-        assertEquals(result.get(0).Otsikko(),otsikko3);
+        assertEquals(result.get(0).otsikko(),otsikko3);
         assertEquals(result.get(0).formaatti(),Formaatit.VIDEO);
     }    
  
@@ -367,10 +367,10 @@ public class VinkkitietokantaTest {
         tk0.lisaaVinkki(vinkki2);
         result = tk0.haeKaikki(LukuStatus.LUKEMATTOMAT);
         assertEquals(1, result.size());
-        assertEquals(result.get(0).Otsikko(),otsikko);
+        assertEquals(result.get(0).otsikko(),otsikko);
         result = tk0.haeKaikki(LukuStatus.LUETTU);
         assertEquals(1, result.size());
-        assertEquals(result.get(0).Otsikko(),otsikko2);
+        assertEquals(result.get(0).otsikko(),otsikko2);
     }     
 
     @Test
@@ -392,7 +392,7 @@ public class VinkkitietokantaTest {
         tk0.lisaaVinkki(vinkki3);
         result = tk0.haeKaikki(LukuStatus.LUKEMATTOMAT);
         assertEquals(1, result.size());
-        assertEquals(result.get(0).Otsikko(),otsikko);
+        assertEquals(result.get(0).otsikko(),otsikko);
         result = tk0.haeKaikki(LukuStatus.LUETTU);
         assertEquals(2, result.size());
         List<String> otsikot = new ArrayList<>();
@@ -501,8 +501,8 @@ public class VinkkitietokantaTest {
         int laskin = 0;
         List<String> uniikki = new ArrayList<>();
         for(Vinkki vinkki : lista){
-            if(otsikot.contains(vinkki.Otsikko()) && !uniikki.contains(vinkki.Otsikko())){
-                uniikki.add(vinkki.Otsikko());
+            if(otsikot.contains(vinkki.otsikko()) && !uniikki.contains(vinkki.otsikko())){
+                uniikki.add(vinkki.otsikko());
                 laskin++;
             }
         }
@@ -635,16 +635,16 @@ public class VinkkitietokantaTest {
         tk0.lisaaVinkki(blogpost);
         tk0.lisaaVinkki(video);
         Vinkki vinkki = tk0.haeVinkki(otsikko1);
-        assertEquals(vinkki.Otsikko(),otsikko1);
+        assertEquals(vinkki.otsikko(),otsikko1);
         assertEquals(vinkki.formaatti(),Formaatit.KIRJA);
         vinkki = tk0.haeVinkki(otsikko2);
-        assertEquals(vinkki.Otsikko(),otsikko2);
+        assertEquals(vinkki.otsikko(),otsikko2);
         assertEquals(vinkki.formaatti(),Formaatit.PODCAST);
         vinkki = tk0.haeVinkki(otsikko3);
-        assertEquals(vinkki.Otsikko(),otsikko3);
+        assertEquals(vinkki.otsikko(),otsikko3);
         assertEquals(vinkki.formaatti(),Formaatit.BLOGPOST);
         vinkki = tk0.haeVinkki(otsikko4);
-        assertEquals(vinkki.Otsikko(),otsikko4);
+        assertEquals(vinkki.otsikko(),otsikko4);
         assertEquals(vinkki.formaatti(),Formaatit.VIDEO);
     }
 }
