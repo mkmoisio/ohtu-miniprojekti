@@ -74,7 +74,7 @@ public class Muotoilut {
         }
         sb.append("\n\tURL: ");
         sb.append(blogautus.haeOminaisuus(Attribuutit.URL));
-        sb.append("\n\tTagit: " +muotoileTagit(blogautus));
+        sb.append("\n\tTagit:" +muotoileTagit(blogautus));
         return sb.toString();
     }
     
