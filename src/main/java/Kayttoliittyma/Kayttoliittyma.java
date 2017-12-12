@@ -14,7 +14,9 @@ import io.Lukija;
 import io.LukijaRajapinta;
 import io.Tulostaja;
 import io.TulostusRajapinta;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Itse käyttöliittymä.
@@ -42,36 +44,70 @@ public class Kayttoliittyma {
     VinkkitietokantaRajapinta tk;
     LukijaRajapinta lukija;
     TulostusRajapinta tulostus;
+    Map<String, Operaatio> ops;
 
     public Kayttoliittyma(VinkkitietokantaRajapinta tk) {
+        this.ops = new HashMap();
         this.tk = tk;
         this.lukija = new Lukija(System.in);
         this.tulostus = new Tulostaja(System.out);
 
     }
 
+    public void alusta() {
+        KirjanLisays kirjanLisays = new KirjanLisays(this.lukija, this.tulostus, this.tk, new TaginLisays(this.lukija, this.tulostus));
+        PodcastinLisays podcastinLisays = new PodcastinLisays(this.lukija, this.tulostus, this.tk, new TaginLisays(this.lukija, this.tulostus));
+        Poisto poisto = new Poisto(this.lukija, this.tulostus, this.tk);
+        KomentojenTulostus komentojenTulostus = new KomentojenTulostus(this.lukija, this.tulostus);
+    
+        
+        ops.put("lisää kirja", kirjanLisays);
+        ops.put("lisää podcast", podcastinLisays);
+        ops.put("poista", poisto);
+        ops.put("komennot", komentojenTulostus);
+    }
+
     public void setLukija(LukijaRajapinta lukija) {
         this.lukija = lukija;
+        // Alustetaan operaatiot uudestaan, että saadaan sellaiset versiot joissa on testeille sopivat stubit
+        this.alusta();
     }
 
     public void setTulostus(TulostusRajapinta tulostus) {
         this.tulostus = tulostus;
+        this.alusta();
     }
 
     public void suorita() {
+        boolean k = false;
 
         while (true) {
-            this.tulostaKomennot();
+            if (k) {
+                ops.get("komennot").suorita();
+            } else {
+                this.tulostaKomennot();
+
+            }
             String komento = this.lukija.nextLine().toLowerCase();
 
+            if (k) {
+                Operaatio o = this.ops.get(komento);
+                if (o != null) {
+                    o.suorita();
+                }
+            }
             switch (komento) {
 
                 /* LISÄÄMINEN ALKAA */
                 case "lisää kirja":
-                    this.lisaaKirja();
+                    if (!k) {
+                        this.lisaaKirja();
+                    }
                     break;
                 case "lisää podcast":
-                    this.lisaaPodcast();
+                    if (!k) {
+                        this.lisaaPodcast();
+                    }
                     break;
                 case "lisää video":
                     this.lisaaVideo();
@@ -80,7 +116,7 @@ public class Kayttoliittyma {
                     this.lisaaBlogpost();
                     break;
                 /* LISÄÄMINEN LOPPUU */
-                //case "muunna vinkkiä":
+                    //case "muunna vinkkiä":
                 //    this.muunnaVinkkia();
                 //    break;
  /* TULOSTUS ALKAA */
@@ -114,7 +150,9 @@ public class Kayttoliittyma {
                     this.merkitseLuetuksi();
                     break;
                 case "poista":
-                    this.poista();
+                    if (!k) {
+                        this.poista();
+                    }
                     break;
 
                 case "lopeta":
@@ -199,7 +237,7 @@ public class Kayttoliittyma {
             this.lisaaTagit(vinkki);
             if (this.tk.lisaaVinkki(vinkki)) {
                 this.tulostus.println("Video lisätty");
-            } 
+            }
         } else {
             this.tulostaVirhelista(validator.getVirheet());
         }
@@ -215,7 +253,7 @@ public class Kayttoliittyma {
         String otsikko = this.lukija.nextLine();
 
         BlogpostValidator validator = new BlogpostValidator(url, kirjoittajat, otsikko);
-        
+
         if (validator.validoi()) {
             Vinkki vinkki = new Vinkki(otsikko, Formaatit.BLOGPOST);
             vinkki.lisaaOminaisuus(Attribuutit.URL, url);
@@ -352,18 +390,4 @@ public class Kayttoliittyma {
         }
     }
     /* TULOSTUS PÄÄTTYY*/
-    /*
-     private void muunnaVinkkia() {
-     this.tulostus.println("Anna vinkin otsikko, jota muutetaan");
-     System.out.println("");
-     String otsikko = this.lukija.nextLine();
-     Vinkki vinkki = tk.haeVinkki(otsikko);
-     if(vinkki==null) {
-     this.tulostus.println("Vinkkiä otsikolla: "+otsikko+" ei löytynyt");
-     }else{
-     this.tulostus.println("Vinkkiä ei poistettu");
-     }
-     }
-     */
-
 }
