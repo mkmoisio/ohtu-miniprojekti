@@ -12,7 +12,7 @@ Definition of Done: Task on tehty, kun se on koodattu, testattu erikseen ja liit
 
 [Asennus- ja käyttöohjeet](https://github.com/mkmoisio/ohtu-miniprojekti/blob/master/doc/manual.md)
 
-Tähän tulee linkki lisenssiin.
+[Linkki lisenssiin] (https://github.com/mkmoisio/ohtu-miniprojekti/blob/master/LICENSE)
 
 
 
