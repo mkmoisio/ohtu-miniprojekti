@@ -7,8 +7,6 @@ package miniprojekti.kayttoliittyma;
 
 import Kayttoliittyma.Kayttoliittyma;
 import Vinkkitietokanta.Vinkkitietokanta;
-import apuviritykset.Muotoilut;
-import io.LukijaRajapinta;
 import java.io.File;
 import java.util.Random;
 import org.junit.After;

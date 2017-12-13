@@ -22,9 +22,14 @@ import io.Lukija;
 import io.LukijaRajapinta;
 import io.Tulostaja;
 import io.TulostusRajapinta;
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import toiminnot.muu.AvaaNettilinkki;
 import toiminnot.muu.MerkitseLuetuksi;
 import toiminnot.muu.MuunnaVinkkia;
 import toiminnot.tulostus.TulostaBlogpostit;
@@ -54,6 +59,7 @@ public class Kayttoliittyma {
             + "\n\t tulosta podcastit - tulosta kaikki podcastit"
             + "\n\t tulosta videot - tulosta kaikki videot"
             + "\n\t tulosta blogpostit - tulosta kaikki blogpostit"
+            + "\n\t avaa nettivinkki - avaa nettivinkin oletusselaimessa"
             + "\n\t hae tagilla - tulosta annetun tagin omaavat vinkit"
             + "\n\t merkitse luetuksi - merkitse luetuksi"
             + "\n\t poista - poista vinkki"
@@ -88,6 +94,7 @@ public class Kayttoliittyma {
         Operaatio tulostaVideot = new TulostaVideot(this.lukija, this.tulostus, this.tk);
         Operaatio tulostaBlogpostit = new TulostaBlogpostit(this.lukija, this.tulostus, this.tk);
         Operaatio tulostaPodcastit = new TulostaPodcastit(this.lukija, this.tulostus, this.tk);
+        Operaatio avaaNettilinkki = new AvaaNettilinkki(this.lukija, this.tulostus);
         Operaatio haeTagilla = new TulostaTaginPerusteella(this.lukija, this.tulostus, this.tk);
         Operaatio merkitseLuetuksi = new MerkitseLuetuksi(this.lukija, this.tulostus, this.tk);
         Operaatio muunnaVinkkia = new MuunnaVinkkia(this.lukija, this.tulostus, this.tk);
@@ -106,6 +113,7 @@ public class Kayttoliittyma {
         ops.put("tulosta videot", tulostaVideot);
         ops.put("tulosta blogpostit", tulostaBlogpostit);
         ops.put("tulosta podcastit", tulostaPodcastit);
+        ops.put("avaa nettivinkki", avaaNettilinkki);
         ops.put("hae tagilla", haeTagilla);
         ops.put("merkitse luetuksi", merkitseLuetuksi);
 
@@ -122,7 +130,7 @@ public class Kayttoliittyma {
     }
 
     public void suorita() {
-        boolean KAYTETAANKOMAPATTUJAOPERAATIOTAVAIEI = true;
+        boolean KAYTETAANKOMAPATTUJAOPERAATIOTAVAIEI = false;
 
         while (true) {
             if (KAYTETAANKOMAPATTUJAOPERAATIOTAVAIEI) {
@@ -180,6 +188,9 @@ public class Kayttoliittyma {
                         break;
                     case "tulosta blogpostit":
                         this.tulostaBlogpostit();
+                        break;
+                    case "avaa nettivinkki":
+                        this.avaaNettivinkki();
                         break;
                     case "hae tagilla":
                         this.haeTagilla();
@@ -341,6 +352,21 @@ public class Kayttoliittyma {
         this.tulostus.println("");
         String tagSyote = lukija.nextLine();
         this.tulostaLista(this.haeTagillla(tagSyote));
+    }
+    
+    private void avaaNettivinkki() {
+        try {
+            System.out.println("Anna url: ");
+            String osoite= lukija.nextLine();
+            Desktop desktop = Desktop.getDesktop();
+            try {
+                desktop.browse(new URI(osoite));
+            } catch (IOException ex) {
+                ex.getMessage();
+            }
+        } catch (URISyntaxException ex) {
+            ex.getMessage();
+        }
     }
 
 
