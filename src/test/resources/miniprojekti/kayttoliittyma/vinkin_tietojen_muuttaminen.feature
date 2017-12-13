@@ -12,9 +12,12 @@ Scenario: User is able to modify author
   Given database is reset
   And command "lisää kirja" is entered and author "Matti Nykänen" and title "Mattihan se sopan keitti" are entered
   And Command "muunna vinkkiä" is entered
+  And Command "Mattihan se sopan keitti" is entered
   And Command "TEKIJA" is entered
-  And command "" is entered
-  When command "TEKIJA" is entered
-  Then the application responds with "Mitä muutetaan (tyhjä lopettaa): TEKIJA KUVAUS ISBN"
+  And Command "Pete Petturi" is entered
+  And Command "" is entered
+  And Command "" is entered
+  When the user checks the all the books
+  Then the output contains "Kirjoittaja: Pete Petturi"
 
 
