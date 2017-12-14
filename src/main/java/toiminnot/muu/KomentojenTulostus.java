@@ -14,8 +14,8 @@ import toiminnot.MuuOperaatio;
  * @author mikkomo
  */
 public class KomentojenTulostus extends MuuOperaatio {
-    
-      private final String KOMENNOT = "Komennot:"
+
+    private final String KOMENNOT = "Komennot:"
             + "\n\t lisää kirja - kirjavinkin lisääminen"
             + "\n\t lisää podcast - podcast-vinkin lisääminen"
             + "\n\t lisää video - videovinkin lisääminen"
@@ -23,6 +23,7 @@ public class KomentojenTulostus extends MuuOperaatio {
             + "\n\t tulosta kaikki - tulosta kaikki vinkit"
             + "\n\t lukemattomat - tulosta kaikki lukemattomat vinkit"
             + "\n\t luetut - tulosta kaikki luetut vinkit"
+            + "\n\t avaa nettivinkki - avaa nettivinkin oletusselaimessa"
             + "\n\t tulosta kirjat - tulosta kaikki kirjavinkit"
             + "\n\t tulosta podcastit - tulosta kaikki podcastit"
             + "\n\t tulosta videot - tulosta kaikki videot"
@@ -41,5 +42,5 @@ public class KomentojenTulostus extends MuuOperaatio {
     public void suorita() {
         super.getTulostus().println(KOMENNOT);
     }
-    
+
 }
