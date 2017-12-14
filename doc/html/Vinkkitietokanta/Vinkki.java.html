@@ -1,14 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fi"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Vinkki.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ohtu-miniprojekti</a> &gt; <a href="index.source.html" class="el_package">Vinkkitietokanta</a> &gt; <span class="el_source">Vinkki.java</span></div><h1>Vinkki.java</h1><pre class="source lang-java linenums">/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fi"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Vinkki.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ohtu-miniprojekti</a> &gt; <a href="index.source.html" class="el_package">Vinkkitietokanta</a> &gt; <span class="el_source">Vinkki.java</span></div><h1>Vinkki.java</h1><pre class="source lang-java linenums">
 package Vinkkitietokanta;
 
 import apuviritykset.Muotoilut;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -19,184 +16,152 @@ public class Vinkki {
     private String otsikko;
     private boolean luettu;
     private List&lt;String&gt; tekijat;
+    private List&lt;String&gt; tagit;
     private HashMap&lt;Attribuutit, String&gt; attribuutit;
-<span class="fc" id="L23">    protected String virheTeksti = &quot;Ominaisuutta ei liitetty&quot;;</span>
-<span class="fc" id="L24">    protected String virheTeksti2 = &quot;hups&quot;;</span>
+<span class="fc" id="L21">    protected String virheTeksti = &quot;Ominaisuutta ei liitetty&quot;;</span>
+<span class="fc" id="L22">    protected String virheTeksti2 = &quot;hups&quot;;</span>
+    
+
     
 <span class="fc" id="L26">    public Vinkki(String otsikko, Formaatit formaatti) {</span>
 <span class="fc" id="L27">        this.otsikko = otsikko;</span>
 <span class="fc" id="L28">        this.formaatti = formaatti;</span>
 <span class="fc" id="L29">        this.luettu = false;</span>
 <span class="fc" id="L30">        this.tekijat = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L31">        attribuutit = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L32">    }</span>
+<span class="fc" id="L31">        this.tagit = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L32">        attribuutit = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L33">    }</span>
 
     //ehkä palauttaa geneerisen Object tyypin? Helpompi käyttöliittymälle
     public String haeOminaisuus(Attribuutit attribuutti) {
-<span class="fc bfc" id="L36" title="All 2 branches covered.">        if (null != attribuutti) {</span>
-<span class="pc bfc" id="L37" title="All 5 branches covered.">            switch (attribuutti) {</span>
-                case OTSIKKO:
-<span class="fc" id="L39">                    return otsikko;</span>
-                case FORMAATTI:
-<span class="fc" id="L41">                    return formaatti.name();</span>
-                case LUETTU:
-<span class="fc" id="L43">                    return String.valueOf(luettu);</span>
-                case TEKIJAT:
-<span class="fc" id="L45">                    return printtaaTekijat();</span>
-                default:
-<span class="fc bfc" id="L47" title="All 2 branches covered.">                    if (attribuutit.containsKey(attribuutti)) {</span>
-<span class="fc" id="L48">                        return attribuutit.get(attribuutti);</span>
-                    } else {
-<span class="fc" id="L50">                        return virheTeksti;</span>
-                    }
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (null != attribuutti) {</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">            if (attribuutit.containsKey(attribuutti)) {</span>
+<span class="fc" id="L39">                return attribuutit.get(attribuutti);</span>
+            } else {
+<span class="fc" id="L41">                return virheTeksti;</span>
             }
+
         }
-<span class="fc" id="L54">        return virheTeksti;</span>
+<span class="fc" id="L45">        return virheTeksti;</span>
     }
 
     //Myös muokkaa
-    public boolean lisaaOminaisuus(Attribuutit attribuutti, Object arvo) {
-<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (null != attribuutti) {</span>
-<span class="fc bfc" id="L60" title="All 5 branches covered.">            switch (attribuutti) {</span>
-                case OTSIKKO:
-<span class="fc bfc" id="L62" title="All 2 branches covered.">                    if (!String.class.isInstance(arvo)) {</span>
-<span class="fc" id="L63">                        return false;</span>
-                    }
-<span class="fc" id="L65">                    otsikko = arvo.toString();</span>
-<span class="fc" id="L66">                    break;</span>
-                case FORMAATTI:
-<span class="fc bfc" id="L68" title="All 2 branches covered.">                    if (!Formaatit.class.isInstance(arvo)) {</span>
-<span class="fc" id="L69">                        return false;</span>
-                    }
-
-<span class="fc" id="L72">                    formaatti = (Formaatit) arvo;</span>
-<span class="fc" id="L73">                    break;</span>
-                case LUETTU:
-<span class="fc bfc" id="L75" title="All 2 branches covered.">                    if (!Boolean.class.isInstance(arvo)) {</span>
-<span class="fc" id="L76">                        return false;</span>
-                    }
-<span class="fc" id="L78">                    luettu = (Boolean) arvo;</span>
-<span class="fc" id="L79">                    break;</span>
-                case TEKIJAT:
-<span class="fc bfc" id="L81" title="All 2 branches covered.">                    if (!String.class.isInstance(arvo)) {</span>
-<span class="fc" id="L82">                        return false;</span>
-                    }
-<span class="fc" id="L84">                    lisaaTekija(arvo.toString().trim());</span>
-<span class="fc" id="L85">                    break;</span>
-                default:
-<span class="fc bfc" id="L87" title="All 2 branches covered.">                    if (!String.class.isInstance(arvo)) {</span>
-<span class="fc" id="L88">                        return false;</span>
-                    }
-<span class="fc" id="L90">                    attribuutit.put(attribuutti, arvo.toString());</span>
-                    break;
-            }
-<span class="fc" id="L93">            return true;</span>
+    public boolean lisaaOminaisuus(Attribuutit attribuutti, String arvo) {
+<span class="fc bfc" id="L50" title="All 6 branches covered.">        if (null != attribuutti &amp;&amp; arvo!=null &amp;&amp;!arvo.isEmpty()) {</span>
+<span class="fc" id="L51">            attribuutit.put(attribuutti, arvo);</span>
+<span class="fc" id="L52">            return true;</span>
         }
-<span class="fc" id="L95">        return false;</span>
+<span class="fc" id="L54">        return false;</span>
     }
 
+    /*Ottaa argumenttina tietokannasta 
+    */
     public boolean lisaaTekijat(String tekijatStr) {
-<span class="fc bfc" id="L99" title="All 4 branches covered.">        if (tekijatStr == null || tekijatStr.isEmpty()) return false;</span>
-<span class="fc" id="L100">        String erotin = &quot;[----]&quot;;</span>
-<span class="fc bfc" id="L101" title="All 2 branches covered.">        for (String tekija : tekijatStr.split(erotin)) {</span>
-<span class="fc" id="L102">            lisaaTekija(tekija.trim());</span>
+<span class="fc bfc" id="L60" title="All 4 branches covered.">        if (tekijatStr == null || tekijatStr.isEmpty()) return false;</span>
+<span class="fc" id="L61">        String erotin = &quot;[----]&quot;;</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        for (String tekija : tekijatStr.split(erotin)) {</span>
+<span class="fc" id="L63">            lisaaTekija(tekija.trim());</span>
         }
-<span class="fc" id="L104">        return true;</span>
+<span class="fc" id="L65">        return true;</span>
     }
 
     public boolean lisaaTekija(String tekija) {
-<span class="fc bfc" id="L108" title="All 6 branches covered.">        if (tekija==null || tekijat.contains(tekija) || tekija.isEmpty()) return false;</span>
-<span class="fc" id="L109">        tekijat.add(tekija);</span>
-<span class="fc" id="L110">        return true;</span>
+<span class="fc bfc" id="L69" title="All 6 branches covered.">        if (tekija==null || tekijat.contains(tekija) || tekija.isEmpty()) return false;</span>
+<span class="fc" id="L70">        tekijat.add(tekija);</span>
+<span class="fc" id="L71">        return true;</span>
     }
-
     public List&lt;String&gt; haeTekijat() {
-<span class="fc" id="L114">        return tekijat;</span>
+<span class="fc" id="L74">        return tekijat;</span>
+    }
+    
+     public boolean lisaaTagit(String tagitStr) {
+<span class="pc bpc" id="L78" title="1 of 4 branches missed.">        if (tagitStr == null || tagitStr.isEmpty()) return false;</span>
+<span class="fc" id="L79">        String erotin = &quot;[----]&quot;;</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        for (String tag : tagitStr.split(erotin)) {</span>
+<span class="fc" id="L81">            lisaaTag(tag.trim());</span>
+        }
+<span class="fc" id="L83">        return true;</span>
+    }
+    
+    public void lisaaTag(String tag){ //validoitu käyttöliittymässä
+<span class="fc" id="L87">        this.tagit.add(tag);</span>
+<span class="fc" id="L88">    }</span>
+
+    
+    public String getOminaisuudet(){
+<span class="fc" id="L92">        String str = &quot;TEKIJA&quot;;</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        for (Map.Entry&lt;Attribuutit, String&gt; attr : attribuutit.entrySet()){</span>
+<span class="fc" id="L94">            str = str + &quot; &quot; + attr.getKey().toString();</span>
+<span class="fc" id="L95">        }</span>
+<span class="fc" id="L96">        return str;</span>
+    }
+    
+    public void tyhjennaTekijat(){
+<span class="fc" id="L100">        tekijat.clear();</span>
+<span class="fc" id="L101">    }</span>
+    
+    public List&lt;String&gt; haeTagit() {
+<span class="fc" id="L104">        return tagit;</span>
+    }
+    
+    public boolean onkoTagia(String tagEtsittava){
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        for (String tag : tagit){</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">            if (tag.equals(tagEtsittava)){</span>
+<span class="fc" id="L110">                return true;</span>
+            }
+<span class="fc" id="L112">        }</span>
+<span class="fc" id="L113">        return false;</span>
     }
 
     public String printtaaTekijat() {
-<span class="fc" id="L118">        return String.join(&quot;,&quot;, tekijat);</span>
+<span class="fc" id="L117">        return String.join(&quot;,&quot;, tekijat);</span>
     }
 
     public void poistaTekijat() {
-<span class="fc" id="L122">        tekijat.clear();</span>
-<span class="fc" id="L123">    }</span>
+<span class="fc" id="L121">        tekijat.clear();</span>
+<span class="fc" id="L122">    }</span>
 
     public Formaatit formaatti() {
-<span class="fc" id="L126">        return formaatti;</span>
+<span class="fc" id="L125">        return formaatti;</span>
     }
 
     public boolean luettu() {
-<span class="fc" id="L130">        return luettu;</span>
+<span class="fc" id="L129">        return luettu;</span>
     }
 
     public void merkitseLuetuksi() {
-<span class="fc" id="L134">        luettu = true;</span>
-<span class="fc" id="L135">    }</span>
+<span class="fc" id="L133">        luettu = true;</span>
+<span class="fc" id="L134">    }</span>
 
     public void merkitseLukemattomaksi() {
-<span class="fc" id="L138">        luettu = false;</span>
-<span class="fc" id="L139">    }</span>
+<span class="fc" id="L137">        luettu = false;</span>
+<span class="fc" id="L138">    }</span>
 
-    public String Otsikko() {
-<span class="fc" id="L142">        return otsikko;</span>
+    public String otsikko() {
+<span class="fc" id="L141">        return otsikko;</span>
     }
 
+    public String virheteksti(){
+<span class="fc" id="L145">        return virheTeksti;</span>
+    }
+    
     @Override
     public String toString() {
-<span class="fc" id="L147">        StringBuilder sb = new StringBuilder();</span>
-<span class="pc bpc" id="L148" title="1 of 2 branches missed.">        if (null != formaatti) {</span>
-<span class="pc bpc" id="L149" title="1 of 6 branches missed.">            switch (formaatti) {</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">        if (null != formaatti) {</span>
+<span class="pc bpc" id="L151" title="1 of 6 branches missed.">            switch (formaatti) {</span>
                 case KIRJA:         
-<span class="fc" id="L151">                    return Muotoilut.muotoileKirjavinkinTuloste(this);</span>
-                    
+<span class="fc" id="L153">                    return Muotoilut.muotoileKirjavinkinTuloste(this);</span>
                 case PODCAST:
-<span class="fc" id="L154">                    sb.append(&quot;Podcastvinkki \n\tOtsikko: &quot;);</span>
-<span class="fc" id="L155">                    sb.append(this.Otsikko());</span>
-<span class="fc bfc" id="L156" title="All 2 branches covered.">                    if (this.luettu) {</span>
-<span class="fc" id="L157">                        sb.append(&quot; (luettu)&quot;);</span>
-                    } else {
-<span class="fc" id="L159">                        sb.append(&quot; (lukematon)&quot;);</span>
-                    }
-<span class="fc" id="L161">                    sb.append(&quot;\n\tNimi: &quot;);</span>
-<span class="fc" id="L162">                    sb.append(haeOminaisuus(Attribuutit.NIMI));</span>
-<span class="fc" id="L163">                    sb.append(&quot;\n\tKuvaus: &quot;);</span>
-<span class="fc" id="L164">                    sb.append(haeOminaisuus(Attribuutit.KUVAUS));</span>
-<span class="fc" id="L165">                    return sb.toString();</span>
-                    
+<span class="fc" id="L155">                    return Muotoilut.muotoilePodcastvinkinTuloste(this);</span>
                 case VIDEO:
-<span class="fc" id="L168">                    sb.append(&quot;Videovinkki \n\tOtsikko: &quot;);</span>
-<span class="fc" id="L169">                    sb.append(this.Otsikko());</span>
-<span class="fc bfc" id="L170" title="All 2 branches covered.">                    if (this.luettu) {</span>
-<span class="fc" id="L171">                        sb.append(&quot; (luettu)&quot;);</span>
-                    } else {
-<span class="fc" id="L173">                        sb.append(&quot; (lukematon)&quot;);</span>
-                    }
-<span class="fc" id="L175">                    sb.append(&quot;\n\tURL: &quot;);</span>
-<span class="fc" id="L176">                    sb.append(haeOminaisuus(Attribuutit.URL));</span>
-<span class="fc" id="L177">                    sb.append(&quot;\n\tKuvaus: &quot;);</span>
-<span class="fc" id="L178">                    sb.append(haeOminaisuus(Attribuutit.KUVAUS));                 </span>
-<span class="fc" id="L179">                    return  sb.toString();</span>
-                    
+<span class="fc" id="L157">                    return Muotoilut.muotoileVideovinkinTuloste(this);</span>
                 case BLOGPOST:
-<span class="fc" id="L182">                    sb.append(&quot;Blogpost-vinkki \n\tOtsikko: &quot;);</span>
-<span class="fc" id="L183">                    sb.append(this.Otsikko());</span>
-<span class="fc bfc" id="L184" title="All 2 branches covered.">                    if (this.luettu) {</span>
-<span class="fc" id="L185">                        sb.append(&quot; (luettu)&quot;);</span>
-                    } else {
-<span class="fc" id="L187">                        sb.append(&quot; (lukematon)&quot;);</span>
-                    }
-<span class="fc" id="L189">                    sb.append(&quot;\n\tURL: &quot;);</span>
-<span class="fc" id="L190">                    sb.append(haeOminaisuus(Attribuutit.URL));</span>
-<span class="fc" id="L191">                    sb.append(&quot;\n\tKuvaus: &quot;);</span>
-<span class="fc" id="L192">                    sb.append(haeOminaisuus(Attribuutit.KUVAUS));                 </span>
-<span class="fc" id="L193">                    return  sb.toString();</span>
+<span class="fc" id="L159">                    return Muotoilut.muotoileBlogpostvinkinTuloste(this);</span>
                 case NULL:
-<span class="fc" id="L195">                    return Otsikko() + &quot;, luettu, &quot; + luettu;</span>
+<span class="fc" id="L161">                    return Muotoilut.muotoileNullFormaatinTuloste(this);</span>
             }
         }
-<span class="nc" id="L198">        return virheTeksti2;</span>
+<span class="nc" id="L164">        return virheTeksti2;</span>
     }
-
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

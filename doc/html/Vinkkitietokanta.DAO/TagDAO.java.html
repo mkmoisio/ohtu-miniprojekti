@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fi"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TagDAO.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ohtu-miniprojekti</a> &gt; <a href="index.source.html" class="el_package">Vinkkitietokanta.DAO</a> &gt; <span class="el_source">TagDAO.java</span></div><h1>TagDAO.java</h1><pre class="source lang-java linenums">
+package Vinkkitietokanta.DAO;
+
+import Vinkkitietokanta.Vinkki;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TagDAO {
+    
+<span class="fc" id="L14">    Connection conn = null;</span>
+    
+<span class="fc" id="L16">    public TagDAO(Connection conn){</span>
+<span class="fc" id="L17">        this.conn = conn;</span>
+<span class="fc" id="L18">    }</span>
+    
+    /*
+    Lisää tagit kantaan ja palauttaa tagId:t listana. Tätä varten kutsuu apumetodia haeTagIDt
+    */
+    public List&lt;Integer&gt; luoTagit (List&lt;String&gt; tag_nimet) {
+<span class="fc" id="L24">        tag_nimet.stream().forEach((tag_nimi) -&gt; {</span>
+            String tag = &quot;INSERT INTO Tag (tag_nimi) VALUES (?)&quot;;
+            try {
+                PreparedStatement komento = conn.prepareStatement(tag);
+                komento.setString(1, tag_nimi);
+                komento.executeUpdate();
+                komento.close();
+            } catch (SQLException e) {
+                System.err.println(&quot;luoTagit: &quot;+e.getMessage());
+            } 
+        });
+<span class="fc" id="L35">        return haeTagIDt(tag_nimet);</span>
+    }
+    
+    
+    public List&lt;Integer&gt; haeTagIDt( List&lt;String&gt; tagNimia){
+<span class="fc" id="L40">        List&lt;Integer&gt; tagIdList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L41">        int tagID= 0;</span>
+        
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        for (String tag_nimi : tagNimia){</span>
+<span class="fc" id="L44">            String haeTag = &quot;SELECT tag_id FROM Tag WHERE tag_nimi=?&quot;;</span>
+            try {
+<span class="fc" id="L46">                PreparedStatement komento = conn.prepareStatement(haeTag);</span>
+<span class="fc" id="L47">                komento.setString(1, tag_nimi);</span>
+<span class="fc" id="L48">                ResultSet rs = komento.executeQuery();</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">                while (rs.next()) {</span>
+<span class="fc" id="L50">                    tagID = rs.getInt(&quot;tag_id&quot;);</span>
+                }
+<span class="nc" id="L52">            } catch (SQLException e) {</span>
+<span class="nc" id="L53">                System.err.println(&quot;haeTagID: &quot;+e.getMessage());</span>
+<span class="fc" id="L54">            }</span>
+<span class="fc" id="L55">        tagIdList.add(tagID);</span>
+<span class="fc" id="L56">        }</span>
+<span class="fc" id="L57">    return tagIdList; </span>
+    }
+    
+    
+    public void liitaVinkkiTag(String vinkkiID, List&lt;Integer&gt; tagIDt){
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        for (int t : tagIDt){</span>
+<span class="fc" id="L63">        String lisattavaTag = &quot;INSERT INTO VinkkiTag (vinkki,tag) VALUES (?,?)&quot;;</span>
+        try {
+<span class="fc" id="L65">            PreparedStatement komento = conn.prepareStatement(lisattavaTag);</span>
+<span class="fc" id="L66">            komento.setInt(1, Integer.parseInt(vinkkiID));</span>
+<span class="fc" id="L67">            komento.setInt(2, t);</span>
+<span class="fc" id="L68">            komento.executeUpdate();</span>
+<span class="fc" id="L69">            komento.close();</span>
+<span class="nc" id="L70">        } catch (SQLException e) {</span>
+<span class="nc" id="L71">            System.err.println(&quot;liitaTag: &quot;+e.getMessage());</span>
+<span class="fc" id="L72">        }</span>
+<span class="fc" id="L73">        }</span>
+<span class="fc" id="L74">    }</span>
+
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

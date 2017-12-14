@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fi"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PodcastValidator.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ohtu-miniprojekti</a> &gt; <a href="index.source.html" class="el_package">apuviritykset</a> &gt; <span class="el_source">PodcastValidator.java</span></div><h1>PodcastValidator.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package apuviritykset;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ * @author mikkomo
+ */
+public class PodcastValidator extends Validator {
+
+    private String nimi;
+    private String otsikko;
+    private String kuvaus;
+
+    public PodcastValidator(String nimi, String otsikko, String kuvaus) {
+<span class="fc" id="L22">        super();</span>
+<span class="fc" id="L23">        this.nimi = nimi;</span>
+<span class="fc" id="L24">        this.otsikko = otsikko;</span>
+<span class="fc" id="L25">        this.kuvaus = kuvaus;</span>
+<span class="fc" id="L26">    }</span>
+
+    @Override
+    public boolean validoi() {
+
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if (nimi.isEmpty()) {</span>
+<span class="fc" id="L32">            super.lisaaVirhe(&quot;Podcastia ei lisätty, koska annettu nimi oli tyhjä.&quot;);</span>
+        }
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">        if (Validator.getPODCAST_NIMI_MAX_PITUUS() &lt; nimi.length()) {</span>
+<span class="nc" id="L35">            super.lisaaVirhe(&quot;Podcastia ei lisätty, koska annettu nimi oli pidempi kuin &quot; + Validator.getPODCAST_NIMI_MAX_PITUUS() + &quot; merkkiä.&quot;);</span>
+        }
+
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (otsikko.isEmpty()) {</span>
+<span class="fc" id="L39">            super.lisaaVirhe(&quot;Podcastia ei lisätty, koska annettu otsikko oli tyhjä.&quot;);</span>
+        }
+
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">        if (Validator.getOTSIKKO_MAX_PITUUS() &lt; otsikko.length()) {</span>
+<span class="nc" id="L43">            super.lisaaVirhe(&quot;Podcastia ei lisätty, koska annettu otsikko oli pidempi kuin &quot; + Validator.getOTSIKKO_MAX_PITUUS() + &quot; merkkiä.&quot;);</span>
+
+        }
+        
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (kuvaus.isEmpty()) {</span>
+<span class="fc" id="L48">            super.lisaaVirhe(&quot;Podcastia ei lisätty, koska annettu kuvaus oli tyhjä.&quot;);</span>
+        }
+        
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (Validator.getPODCAST_KUVAUS_MAX_PITUUS() &lt; kuvaus.length()) {</span>
+<span class="fc" id="L52">            super.lisaaVirhe(&quot;Podcastia ei lisätty, koska annettu kuvaus oli pidempi kuin &quot; + Validator.getPODCAST_KUVAUS_MAX_PITUUS() + &quot; merkkiä.&quot;);</span>
+        }
+        
+<span class="fc" id="L55">        return super.getVirheet().isEmpty();</span>
+
+    }
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fi"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>KirjatDAO.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ohtu-miniprojekti</a> &gt; <a href="index.source.html" class="el_package">Vinkkitietokanta.DAO</a> &gt; <span class="el_source">KirjatDAO.java</span></div><h1>KirjatDAO.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Vinkkitietokanta.DAO;
+
+import Vinkkitietokanta.Attribuutit;
+import Vinkkitietokanta.Formaatit;
+import Vinkkitietokanta.LukuStatus;
+import Vinkkitietokanta.Vinkki;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+/**
+ *
+ * @author rokka
+ */
+public class KirjatDAO extends ProtoDAO implements DAORajapinta{
+<span class="fc" id="L22">    HashMap&lt;Attribuutit, String&gt; attr = new HashMap&lt;&gt;();</span>
+    
+    public KirjatDAO(Connection conn){
+<span class="fc" id="L25">        super(conn);</span>
+<span class="fc" id="L26">        attr.put(Attribuutit.KUVAUS, &quot;kuvaus&quot;);</span>
+<span class="fc" id="L27">        attr.put(Attribuutit.ISBN, &quot;isbn&quot;);   </span>
+<span class="fc" id="L28">    }</span>
+   
+    
+    @Override
+    public boolean lisaaVinkki(String vinkkiID, Vinkki vinkki) {
+        //INSERT INTO Kirja (isbn,kuvaus,vinkki) VALUES ();
+<span class="fc" id="L34">        String query = &quot;INSERT INTO Kirja (isbn,kuvaus,vinkki) VALUES (?,?,?)&quot;;</span>
+<span class="fc" id="L35">        List&lt;Attribuutit&gt; attr = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L36">        attr.add(Attribuutit.ISBN);</span>
+<span class="fc" id="L37">        attr.add(Attribuutit.KUVAUS);</span>
+<span class="fc" id="L38">        return suoritaKomento(vinkkiID, vinkki, attr, query, &quot;lisaaKirja: &quot;);</span>
+    }
+
+    @Override
+    public Vinkki haeVinkki(String vinkkiID) {
+<span class="fc" id="L43">         String query = &quot;SELECT vinkki.otsikko, vinkki.luettu, kirja.isbn, kirja.kuvaus,&quot;</span>
+                 + &quot;group_concat(tekija_nimi, '----') as tekijat \n, group_concat(tag_nimi, '----') as tagit \n&quot;
+                + &quot;FROM Vinkki \n&quot;
+                + &quot;INNER JOIN kirja ON vinkki_id=kirja.vinkki \n&quot;
+                + &quot;LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n&quot;
+                + &quot;LEFT OUTER JOIN Tekija on tekija_id=tekija \n&quot;
+                + &quot;LEFT OUTER JOIN VinkkiTag on vinkki_id=vinkkitag.vinkki \n&quot;
+                + &quot;LEFT OUTER JOIN Tag on tag_id=tag \n&quot;
+                + &quot;WHERE vinkki_id = ? \n&quot;
+                + &quot;GROUP BY vinkki_id&quot;;
+<span class="fc" id="L53">        List&lt;Vinkki&gt; list = suoritaKomento3(Formaatit.KIRJA, LukuStatus.KAIKKI, new ArrayList&lt;&gt;(), attr, query, &quot;haeKirjaID:llä: &quot;,vinkkiID);</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if(!list.isEmpty()) return list.get(0);</span>
+<span class="fc" id="L55">        return null;</span>
+    }
+
+    
+    @Override
+    public List&lt;Vinkki&gt; haeListana(LukuStatus status, List&lt;Vinkki&gt; list) {
+<span class="fc" id="L61">         String query = &quot;SELECT vinkki.otsikko, vinkki.luettu, kirja.isbn, kirja.kuvaus,&quot;</span>
+                 + &quot;group_concat(tekija_nimi, '----') as tekijat \n, group_concat(tag_nimi, '----') as tagit \n&quot;
+                + &quot;FROM Vinkki \n&quot;
+                + &quot;INNER JOIN kirja ON vinkki_id=kirja.vinkki \n&quot;
+                + &quot;LEFT OUTER JOIN VinkkiTekija on vinkki_id=vinkkitekija.vinkki \n&quot;
+                + &quot;LEFT OUTER JOIN Tekija on tekija_id=tekija \n&quot;
+                + &quot;LEFT OUTER JOIN VinkkiTag on vinkki_id=vinkkitag.vinkki \n&quot;
+                + &quot;LEFT OUTER JOIN Tag on tag_id=tag \n&quot;
+                + &quot;GROUP BY vinkki_id&quot;;
+<span class="fc" id="L70">        return suoritaKomento2(Formaatit.KIRJA, status, list, attr, query, &quot;haeKaikkiKirjatBase: &quot;);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

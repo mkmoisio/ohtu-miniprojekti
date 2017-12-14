@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fi"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ProtoDAO.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ohtu-miniprojekti</a> &gt; <a href="index.source.html" class="el_package">Vinkkitietokanta.DAO</a> &gt; <span class="el_source">ProtoDAO.java</span></div><h1>ProtoDAO.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Vinkkitietokanta.DAO;
+
+import Vinkkitietokanta.Attribuutit;
+import Vinkkitietokanta.Attribuutit;
+import Vinkkitietokanta.Formaatit;
+import Vinkkitietokanta.LukuStatus;
+import Vinkkitietokanta.Vinkki;
+import Vinkkitietokanta.Vinkki;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+/**
+ *
+ * @author rokka
+ */
+abstract public class ProtoDAO {
+<span class="fc" id="L28">    protected Connection conn = null;</span>
+<span class="fc" id="L29">    public ProtoDAO(Connection conn){</span>
+<span class="fc" id="L30">        this.conn = conn;</span>
+<span class="fc" id="L31">    }</span>
+    
+    protected boolean suoritaKomento(String vinkkiID, Vinkki vinkki, List&lt;Attribuutit&gt; attribuutit, String sql, String func){
+<span class="fc" id="L34">        String query = sql;</span>
+        try {
+<span class="fc" id="L36">            PreparedStatement komento = conn.prepareStatement(query);</span>
+<span class="fc" id="L37">            int indx = 0;</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">            for(Attribuutit attr : attribuutit){</span>
+<span class="fc" id="L39">                komento.setString(++indx, vinkki.haeOminaisuus(attr));</span>
+<span class="fc" id="L40">            }</span>
+<span class="fc" id="L41">            komento.setInt(++indx, Integer.parseInt(vinkkiID));</span>
+<span class="fc" id="L42">            komento.executeUpdate();</span>
+<span class="fc" id="L43">            komento.close();</span>
+<span class="fc" id="L44">            return true;</span>
+<span class="nc" id="L45">        } catch (SQLException e) {</span>
+<span class="nc" id="L46">            System.err.println(func+e.getMessage());</span>
+        }
+<span class="nc" id="L48">        return false;</span>
+    }
+    
+    protected List&lt;Vinkki&gt; suoritaKomento2(Formaatit formaatti,LukuStatus status, List&lt;Vinkki&gt; list, HashMap&lt;Attribuutit,String&gt; attribuutit, String sql, String func){
+<span class="fc" id="L52">        return suoritaKomento3(formaatti,status, </span>
+            list, attribuutit, sql, func, &quot;&quot;);
+    }
+    
+    protected List&lt;Vinkki&gt; suoritaKomento3(Formaatit formaatti,LukuStatus status, 
+            List&lt;Vinkki&gt; list, HashMap&lt;Attribuutit,String&gt; attribuutit, 
+            String sql, String func, String vinkkiID){
+<span class="fc" id="L59">        String query = sql;</span>
+        try {
+<span class="fc" id="L61">            PreparedStatement komento = conn.prepareStatement(query);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">            if(!vinkkiID.isEmpty()) komento.setInt(1, Integer.parseInt(vinkkiID));</span>
+<span class="fc" id="L63">            ResultSet rs = komento.executeQuery();</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L65">                int luettu = Integer.parseInt(rs.getString(&quot;luettu&quot;));</span>
+<span class="fc bfc" id="L66" title="All 4 branches covered.">                if (luettu == status.getValue() || status == LukuStatus.KAIKKI) {</span>
+<span class="fc" id="L67">                    Vinkki vinkki = new Vinkki(rs.getString(&quot;otsikko&quot;), formaatti);</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">                    if (luettu == 0) {</span>
+<span class="fc" id="L69">                        vinkki.merkitseLukemattomaksi();</span>
+                    } else {
+<span class="fc" id="L71">                        vinkki.merkitseLuetuksi();</span>
+                    }
+
+<span class="fc" id="L74">                    vinkki.lisaaTekijat(rs.getString(&quot;tekijat&quot;));</span>
+<span class="fc" id="L75">                    vinkki.lisaaTagit(rs.getString(&quot;tagit&quot;));</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">                    for (Map.Entry&lt;Attribuutit, String&gt; attr : attribuutit.entrySet()){</span>
+<span class="fc" id="L77">                        vinkki.lisaaOminaisuus((Attribuutit)attr.getKey(), rs.getString(attr.getValue()));</span>
+<span class="fc" id="L78">                    }</span>
+<span class="fc" id="L79">                    list.add(vinkki);</span>
+                }
+<span class="fc" id="L81">            }</span>
+
+<span class="fc" id="L83">            komento.close();</span>
+<span class="fc" id="L84">            return list;</span>
+<span class="nc" id="L85">        } catch (SQLException e) {</span>
+<span class="nc" id="L86">            System.err.println(func+e.getMessage());</span>
+        }
+<span class="nc" id="L88">        return null;</span>
+    }    
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

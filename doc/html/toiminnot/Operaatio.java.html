@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fi"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Operaatio.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ohtu-miniprojekti</a> &gt; <a href="index.source.html" class="el_package">toiminnot</a> &gt; <span class="el_source">Operaatio.java</span></div><h1>Operaatio.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package toiminnot;
+
+import io.LukijaRajapinta;
+import io.TulostusRajapinta;
+
+/**
+ *
+ * @author mikkomo
+ */
+public abstract class Operaatio {
+    
+    private LukijaRajapinta lukija;
+    private TulostusRajapinta tulostus;
+
+<span class="fc" id="L20">    public Operaatio(LukijaRajapinta lukija, TulostusRajapinta tulostus) {</span>
+<span class="fc" id="L21">        this.lukija = lukija;</span>
+<span class="fc" id="L22">        this.tulostus = tulostus;</span>
+<span class="fc" id="L23">    }</span>
+   
+
+    public void setLukija(LukijaRajapinta lukija) {
+<span class="nc" id="L27">        this.lukija = lukija;</span>
+<span class="nc" id="L28">    }</span>
+
+    public void setTulostus(TulostusRajapinta tulostus) {
+<span class="nc" id="L31">        this.tulostus = tulostus;</span>
+<span class="nc" id="L32">    }</span>
+
+    public LukijaRajapinta getLukija() {
+<span class="fc" id="L35">        return lukija;</span>
+    }
+
+    public TulostusRajapinta getTulostus() {
+<span class="fc" id="L39">        return tulostus;</span>
+    }
+    
+   
+    public abstract void suorita();
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
