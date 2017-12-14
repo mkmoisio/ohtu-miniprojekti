@@ -8,14 +8,6 @@ Scenario: User is able to exit from modify option
   When command "" is entered
   Then the application responds with "Vinkkiä otsikolla:  ei löytynyt"
 
-Scenario: User is able to exit from modify option
-  Given database is reset
-  And System has an existing tip "ABC-kiria" with author "Agricola"
-  And Command "muunna vinkkiä" is entered
-  And Command "ABC-kiria" is entered
-  When command "" is entered
-  When command "" is entered
-  Then the output contains "Mitä muutetaan (tyhjä lopettaa): TEKIJA KUVAUS ISBN"
 
 Scenario: User is able to modify author
   Given database is reset
