@@ -199,4 +199,16 @@ public class VinkkiTest {
         assertTrue(!vinkki.toString().isEmpty());
     }
     
+    @Test
+    public void testLiitettyTagi() {
+        System.out.println("testaa tageja");
+        Vinkki vinkki = new Vinkki("CIA vs FBI",Formaatit.BLOGPOST);
+        assertFalse(vinkki.onkoTagia("mersu"));
+        vinkki.lisaaTag("mersu");
+        assertTrue(vinkki.onkoTagia("mersu"));
+        vinkki.lisaaTagit("kasino----bitcoin");
+        assertTrue(vinkki.onkoTagia("kasino"));
+        assertTrue(vinkki.onkoTagia("bitcoin"));
+         
+    }     
 }

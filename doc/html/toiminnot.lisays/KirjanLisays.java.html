@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fi"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>KirjanLisays.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ohtu-miniprojekti</a> &gt; <a href="index.source.html" class="el_package">toiminnot.lisays</a> &gt; <span class="el_source">KirjanLisays.java</span></div><h1>KirjanLisays.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package toiminnot.lisays;
+
+import toiminnot.Lisaysoperaatio;
+import Vinkkitietokanta.Formaatit;
+import Vinkkitietokanta.Vinkki;
+import Vinkkitietokanta.VinkkitietokantaRajapinta;
+import apuviritykset.KirjaValidator;
+import apuviritykset.Validator;
+import io.LukijaRajapinta;
+import io.TulostusRajapinta;
+import java.util.List;
+import toiminnot.muu.TaginLisays;
+
+/**
+ *
+ * @author mikkomo
+ */
+public class KirjanLisays extends Lisaysoperaatio {
+
+
+    public KirjanLisays(LukijaRajapinta lukija, TulostusRajapinta tulostus, VinkkitietokantaRajapinta tk, TaginLisays taginLisays) {
+<span class="fc" id="L27">        super(lukija, tulostus, tk, taginLisays);</span>
+<span class="fc" id="L28">    }</span>
+
+    @Override
+    public void suorita() {
+<span class="fc" id="L32">        super.getTulostus().println(&quot;Anna kirjoittaja:&quot;);</span>
+<span class="fc" id="L33">        String kirjoittaja = super.getLukija().nextLine();</span>
+<span class="fc" id="L34">        super.getTulostus().println(&quot;Anna otsikko:&quot;);</span>
+<span class="fc" id="L35">        String otsikko = super.getLukija().nextLine();</span>
+<span class="fc" id="L36">        Validator validator = new KirjaValidator(kirjoittaja, otsikko);</span>
+
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (validator.validoi()) {</span>
+<span class="fc" id="L39">            Vinkki vinkki = new Vinkki(otsikko, Formaatit.KIRJA);</span>
+<span class="fc" id="L40">            vinkki.lisaaTekija(kirjoittaja);</span>
+<span class="fc" id="L41">            vinkki = super.lisaaTagit(vinkki);</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">            if (super.getTk().lisaaVinkki(vinkki)) {</span>
+<span class="fc" id="L43">                super.getTulostus().println(&quot;Kirjavinkki lisätty&quot;);</span>
+            } else {
+<span class="fc" id="L45">                super.getTulostus().println(&quot;Kirjavinkkiä ei lisätty&quot;);</span>
+            }
+<span class="fc" id="L47">        } else {</span>
+<span class="fc" id="L48">            super.tulostaVirhelista(validator.getVirheet());</span>
+        }
+<span class="fc" id="L50">    }</span>
+
+ 
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

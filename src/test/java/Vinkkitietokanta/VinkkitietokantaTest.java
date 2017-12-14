@@ -647,4 +647,36 @@ public class VinkkitietokantaTest {
         assertEquals(vinkki.otsikko(),otsikko4);
         assertEquals(vinkki.formaatti(),Formaatit.VIDEO);
     }
+
+    @Test
+    public void testTagit() {
+        System.out.println("testaa tageja");
+        String otsikko1 = "Fifty shades of terminal, Kirja";
+        String otsikko2 = "Fifty shades of terminal, Podcast";
+        String otsikko3 = "Fifty shades of terminal, Blogpost";
+        String otsikko4 = "Fifty shades of terminal, Video";
+        Vinkki kirja = new Vinkki(otsikko1,Formaatit.KIRJA);
+        Vinkki podcast = new Vinkki(otsikko2,Formaatit.PODCAST);
+        Vinkki blogpost = new Vinkki(otsikko3,Formaatit.BLOGPOST);
+        Vinkki video = new Vinkki(otsikko4,Formaatit.VIDEO);
+        kirja.lisaaTag("puupuristin");
+        video.lisaaTag("massa");
+        blogpost.lisaaTag("puupuristin");
+        blogpost.lisaaTag("rändöm");
+        tk0.lisaaVinkki(kirja);
+        tk0.lisaaVinkki(podcast);
+        tk0.lisaaVinkki(blogpost);
+        tk0.lisaaVinkki(video);
+        List<Vinkki> vinkit = tk0.haeTagilla("Torrentit");
+        assertEquals(0,vinkit.size());
+        vinkit = tk0.haeTagilla("massa");
+        assertEquals(1,vinkit.size());
+        assertEquals(video.formaatti(),vinkit.get(0).formaatti());
+        assertEquals(otsikko4,vinkit.get(0).otsikko());
+        vinkit = tk0.haeTagilla("puupuristin");
+        assertEquals(2,vinkit.size());
+
+    }
+
+
 }

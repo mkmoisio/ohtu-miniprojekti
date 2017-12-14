@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fi"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PodcastinLisays.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ohtu-miniprojekti</a> &gt; <a href="index.source.html" class="el_package">toiminnot.lisays</a> &gt; <span class="el_source">PodcastinLisays.java</span></div><h1>PodcastinLisays.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package toiminnot.lisays;
+
+import toiminnot.Lisaysoperaatio;
+import Vinkkitietokanta.Attribuutit;
+import Vinkkitietokanta.Formaatit;
+import Vinkkitietokanta.Vinkki;
+import Vinkkitietokanta.VinkkitietokantaRajapinta;
+import apuviritykset.PodcastValidator;
+import apuviritykset.Validator;
+import io.LukijaRajapinta;
+import io.TulostusRajapinta;
+import toiminnot.muu.TaginLisays;
+
+/**
+ *
+ * @author mikkomo
+ */
+public class PodcastinLisays extends Lisaysoperaatio{
+
+    public PodcastinLisays(LukijaRajapinta lukija, TulostusRajapinta tulostus, VinkkitietokantaRajapinta tk, TaginLisays taginLisays) {
+<span class="fc" id="L26">        super(lukija, tulostus, tk, taginLisays);</span>
+<span class="fc" id="L27">    }</span>
+
+
+    @Override
+    public void suorita() {
+<span class="fc" id="L32">        super.getTulostus().println(&quot;Anna nimi:&quot;);</span>
+<span class="fc" id="L33">        String nimi = super.getLukija().nextLine();</span>
+
+<span class="fc" id="L35">        super.getTulostus().println(&quot;Anna otsikko:&quot;);</span>
+<span class="fc" id="L36">        String otsikko = super.getLukija().nextLine();</span>
+
+<span class="fc" id="L38">        super.getTulostus().println(&quot;Anna kuvaus:&quot;);</span>
+<span class="fc" id="L39">        String kuvaus = super.getLukija().nextLine();</span>
+
+<span class="fc" id="L41">        Validator validator = new PodcastValidator(nimi, otsikko, kuvaus);</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        if (validator.validoi()) {</span>
+<span class="fc" id="L43">            Vinkki vinkki = new Vinkki(otsikko, Formaatit.PODCAST);</span>
+<span class="fc" id="L44">            vinkki.lisaaOminaisuus(Attribuutit.NIMI, nimi);</span>
+<span class="fc" id="L45">            vinkki.lisaaOminaisuus(Attribuutit.KUVAUS, kuvaus);</span>
+<span class="fc" id="L46">             vinkki = super.lisaaTagit(vinkki);</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">            if (super.getTk().lisaaVinkki(vinkki)) {</span>
+<span class="fc" id="L48">                super.getTulostus().println(&quot;Podcast lisätty&quot;);</span>
+            } else {
+<span class="nc" id="L50">                super.getTulostus().println(&quot;Podcastia ei lisätty&quot;);</span>
+            }
+<span class="fc" id="L52">        } else {</span>
+<span class="fc" id="L53">            super.tulostaVirhelista(validator.getVirheet());</span>
+        }    
+<span class="fc" id="L55">    }</span>
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
