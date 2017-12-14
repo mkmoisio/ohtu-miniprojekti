@@ -8,28 +8,15 @@ import toiminnot.muu.KomentojenTulostus;
 import toiminnot.lisays.KirjanLisays;
 import toiminnot.Operaatio;
 import toiminnot.muu.TaginLisays;
-import Vinkkitietokanta.Attribuutit;
-import Vinkkitietokanta.Formaatit;
-import Vinkkitietokanta.LukuStatus;
-import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
-import apuviritykset.BlogpostValidator;
-import apuviritykset.KirjaValidator;
-import apuviritykset.PodcastValidator;
-import apuviritykset.Validator;
-import apuviritykset.VideoValidator;
 import io.Lukija;
 import io.LukijaRajapinta;
 import io.Tulostaja;
 import io.TulostusRajapinta;
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import toiminnot.muu.AvaaNettilinkki;
+import toiminnot.muu.Lopetus;
 import toiminnot.muu.MerkitseLuetuksi;
 import toiminnot.muu.MuunnaVinkkia;
 import toiminnot.tulostus.TulostaBlogpostit;
@@ -78,6 +65,7 @@ public class Kayttoliittyma {
         Operaatio haeTagilla = new TulostaTaginPerusteella(this.lukija, this.tulostus, this.tk);
         Operaatio merkitseLuetuksi = new MerkitseLuetuksi(this.lukija, this.tulostus, this.tk);
         Operaatio muunnaVinkkia = new MuunnaVinkkia(this.lukija, this.tulostus, this.tk);
+        Operaatio lopetus = new Lopetus(this.lukija, this.tulostus);
 
         ops.put("lisää kirja", kirjanLisays);
         ops.put("lisää podcast", podcastinLisays);
@@ -96,7 +84,7 @@ public class Kayttoliittyma {
         ops.put("avaa nettivinkki", avaaNettilinkki);
         ops.put("hae tagilla", haeTagilla);
         ops.put("merkitse luetuksi", merkitseLuetuksi);
-
+        ops.put("lopeta", lopetus);
     }
 
     public void setLukija(LukijaRajapinta lukija) {
@@ -117,13 +105,7 @@ public class Kayttoliittyma {
             Operaatio o = this.ops.get(komento);
             if (o != null) {
                 o.suorita();
-            } else {
-                if (komento.equals("lopeta")) {
-                    return;
-                }
             }
         }
     }
-
-    
 }

@@ -10,6 +10,6 @@ package apuviritykset;
  * @author mikkomo
  */
 public class Vakiot {
-    public static final int EXIT_STATUS_OK = 1;
+    public static final int EXIT_STATUS_OK = 0;
     
 }

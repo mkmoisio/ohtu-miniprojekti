@@ -23,7 +23,6 @@ public class Lopetus extends Operaatio {
 
     @Override
     public void suorita() {
-        
        System.exit(Vakiot.EXIT_STATUS_OK);
     }
     
