@@ -223,26 +223,64 @@ public class Stepdefs {
     }
 
   
-    
-    /*
     @When("^url \"([^\"]*)\" and author \"([^\"]*)\" and title \"([^\"]*)\" are entered$")
     public void url_and_author_and_title_are_entered(String arg1, String arg2, String arg3) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+        l.lisaaSyote("lisää blogpost");
+        l.lisaaSyote(arg1);
+        l.lisaaSyote(arg2);
+        l.lisaaSyote(arg3);
+        l.lisaaSyote("");
+        l.lisaaSyote("");
+        l.lisaaSyote("lopeta");
+        ui.suorita();
     }
 
-    @Given("^command \"([^\"]*)\" is entered and title \"([^\"]*)\"Mattihan se sopan keitti\"([^\"]*)\" is entered$")
-    public void command_is_entered_and_title_Mattihan_se_sopan_keitti_is_entered(String arg1, String arg2, String arg3) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
 
     @When("^command \"([^\"]*)\" is entered$")
     public void command_is_entered(String arg1) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+        l.lisaaSyote(arg1);
+        l.lisaaSyote("lopeta");
+        ui.suorita();
     }
-    */
+
+    @Given("^command \"([^\"]*)\" is entered and \"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\" are entered$")
+    public void command_is_entered_and_are_entered(String arg1, String arg2, String arg3, String arg4) throws Throwable {
+        l.lisaaSyote(arg1);
+        l.lisaaSyote("lopeta");
+        ui.suorita();
+    }
+
+    @Given("^command \"([^\"]*)\" is enterered with args \"([^\"]*)\", \"([^\"]*)\" and \"([^\"]*)\"$")
+    public void command_is_enterered_with_args_and(String arg1, String arg2, String arg3, String arg4) throws Throwable {
+        l.lisaaSyote(arg1);
+        l.lisaaSyote(arg2);
+        l.lisaaSyote(arg3);
+        l.lisaaSyote(arg4);
+        l.lisaaSyote("");   
+    }
+    
+    @Given("^command \"([^\"]*)\" is entered with author \"([^\"]*)\" and title \"([^\"]*)\"$")
+    public void command_is_entered_with_author_and_title(String arg1, String arg2, String arg3) throws Throwable {
+        l.lisaaSyote(arg1);
+        l.lisaaSyote(arg2);
+        l.lisaaSyote("");   
+    }
+    
+    @When("^the user checks the all the podcasts$")
+    public void the_user_checks_the_all_the_podcasts() throws Throwable {
+        l.lisaaSyote("tulosta podcastit");
+        l.lisaaSyote("lopeta");
+        ui.suorita();
+    }
+
+    @Given("^command \"([^\"]*)\" is entered and title \"([^\"]*)\" is entered$")
+    public void command_is_entered_and_title_is_entered(String arg1, String arg2) throws Throwable {
+        l.lisaaSyote("lisää kirja");
+        l.lisaaSyote(arg1);
+        l.lisaaSyote(arg2);
+        l.lisaaSyote("");
+    }
+
 
 
 
