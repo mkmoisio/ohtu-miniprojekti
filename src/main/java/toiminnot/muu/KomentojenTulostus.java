@@ -20,6 +20,7 @@ public class KomentojenTulostus extends MuuOperaatio {
             + "\n\t lisää podcast - podcast-vinkin lisääminen"
             + "\n\t lisää video - videovinkin lisääminen"
             + "\n\t lisää blogpost - blogpost-vinkin lisääminen"
+            + "\n\t muunna vinkkiä - vinkin muuttaminen"
             + "\n\t tulosta kaikki - tulosta kaikki vinkit"
             + "\n\t lukemattomat - tulosta kaikki lukemattomat vinkit"
             + "\n\t luetut - tulosta kaikki luetut vinkit"
