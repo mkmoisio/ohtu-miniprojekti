@@ -94,7 +94,7 @@ public class Kayttoliittyma {
         Operaatio tulostaVideot = new TulostaVideot(this.lukija, this.tulostus, this.tk);
         Operaatio tulostaBlogpostit = new TulostaBlogpostit(this.lukija, this.tulostus, this.tk);
         Operaatio tulostaPodcastit = new TulostaPodcastit(this.lukija, this.tulostus, this.tk);
-        Operaatio avaaNettilinkki = new AvaaNettilinkki(this.lukija, this.tulostus);
+        Operaatio avaaNettilinkki = new AvaaNettilinkki(this.lukija, this.tulostus,this.tk);
         Operaatio haeTagilla = new TulostaTaginPerusteella(this.lukija, this.tulostus, this.tk);
         Operaatio merkitseLuetuksi = new MerkitseLuetuksi(this.lukija, this.tulostus, this.tk);
         Operaatio muunnaVinkkia = new MuunnaVinkkia(this.lukija, this.tulostus, this.tk);
@@ -130,7 +130,7 @@ public class Kayttoliittyma {
     }
 
     public void suorita() {
-        boolean KAYTETAANKOMAPATTUJAOPERAATIOTAVAIEI = false;
+        boolean KAYTETAANKOMAPATTUJAOPERAATIOTAVAIEI = true;
 
         while (true) {
             if (KAYTETAANKOMAPATTUJAOPERAATIOTAVAIEI) {
@@ -356,14 +356,21 @@ public class Kayttoliittyma {
     
     private void avaaNettivinkki() {
         try {
-            System.out.println("Anna url: ");
-            String osoite= lukija.nextLine();
-            Desktop desktop = Desktop.getDesktop();
-            try {
-                desktop.browse(new URI(osoite));
-            } catch (IOException ex) {
-                ex.getMessage();
+            tulostus.println("Anna otsikko: ");
+            String osoite = lukija.nextLine();
+            Vinkki vinkki = tk.haeVinkki(osoite);
+            String url = vinkki.haeOminaisuus(Attribuutit.URL);
+            if(!url.equals(vinkki.virheteksti())){
+                Desktop desktop = Desktop.getDesktop();
+                try {
+                    desktop.browse(new URI(url));
+                } catch (IOException ex) {
+                    ex.getMessage();
+                }    
+            }else{
+                tulostus.println("Vinkki ei sisällä url:ia");
             }
+            
         } catch (URISyntaxException ex) {
             ex.getMessage();
         }

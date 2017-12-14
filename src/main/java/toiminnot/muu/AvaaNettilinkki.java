@@ -5,6 +5,9 @@
  */
 package toiminnot.muu;
 
+import Vinkkitietokanta.Attribuutit;
+import Vinkkitietokanta.Vinkki;
+import Vinkkitietokanta.VinkkitietokantaRajapinta;
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
 import java.awt.Desktop;
@@ -12,28 +15,36 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import toiminnot.MuuOperaatio;
+import toiminnot.Tietokantaoperaatio;
 
 /**
  *
  * @author mariailvonen
  */
-public class AvaaNettilinkki extends MuuOperaatio{
+public class AvaaNettilinkki extends Tietokantaoperaatio{
 
-    public AvaaNettilinkki(LukijaRajapinta lukija, TulostusRajapinta tulostus) {
-        super(lukija, tulostus);
+    public AvaaNettilinkki(LukijaRajapinta lukija, TulostusRajapinta tulostus, VinkkitietokantaRajapinta tk) {
+        super(lukija, tulostus,tk);
     }
 
     @Override
     public void suorita() {
         try {
-            super.getTulostus().println("Anna url: ");
-            String osoite= super.getLukija().nextLine();
-            Desktop desktop = Desktop.getDesktop();
-            try {
-                desktop.browse(new URI(osoite));
-            } catch (IOException ex) {
-                ex.getMessage();
+            super.getTulostus().println("Anna otsikko: ");
+            String osoite = super.getLukija().nextLine();
+            Vinkki vinkki = super.getTk().haeVinkki(osoite);
+            String url = vinkki.haeOminaisuus(Attribuutit.URL);
+            if(!url.equals(vinkki.virheteksti())){
+                Desktop desktop = Desktop.getDesktop();
+                try {
+                    desktop.browse(new URI(url));
+                } catch (IOException ex) {
+                    ex.getMessage();
+                }    
+            }else{
+                super.getTulostus().println("Vinkki ei sisällä url:ia");
             }
+            
         } catch (URISyntaxException ex) {
             ex.getMessage();
         }
