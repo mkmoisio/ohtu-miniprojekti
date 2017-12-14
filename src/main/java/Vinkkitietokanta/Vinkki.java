@@ -83,8 +83,10 @@ public class Vinkki {
         return true;
     }
     
-    public void lisaaTag(String tag){ //validoitu käyttöliittymässä
+    public boolean lisaaTag(String tag){ //validoitu käyttöliittymässä
+        if (tag==null || tagit.contains(tag) || tag.isEmpty()) return false;
         this.tagit.add(tag);
+        return true;
     }
 
     
