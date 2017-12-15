@@ -1,4 +1,3 @@
-
 package Vinkkitietokanta;
 
 import apuviritykset.Muotoilut;

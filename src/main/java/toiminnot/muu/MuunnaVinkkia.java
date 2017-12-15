@@ -8,6 +8,7 @@ package toiminnot.muu;
 import Vinkkitietokanta.Attribuutit;
 import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
+import apuviritykset.vakiot.Virhetulosteet;
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
 import toiminnot.Tietokantaoperaatio;
@@ -63,7 +64,7 @@ public class MuunnaVinkkia extends Tietokantaoperaatio {
                             }
                         }
                     }catch(IllegalArgumentException e){
-                         System.out.println("Ei tuettu");
+                         System.out.println(Virhetulosteet.EI_TUETTU);
                     }  
                 }
                 

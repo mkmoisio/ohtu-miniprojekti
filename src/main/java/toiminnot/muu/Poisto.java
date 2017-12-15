@@ -6,6 +6,8 @@
 package toiminnot.muu;
 
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
+import apuviritykset.vakiot.Ohjetulosteet;
+import apuviritykset.vakiot.Vastaustulosteet;
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
 import toiminnot.Tietokantaoperaatio;
@@ -22,12 +24,12 @@ public class Poisto extends Tietokantaoperaatio {
 
     @Override
     public void suorita() {
-        super.getTulostus().println("Anna otsikko:");
+        super.getTulostus().println(Ohjetulosteet.ANNA_OTSIKKO);
         String otsikko = super.getLukija().nextLine();
         if (super.getTk().poistaVinkki(otsikko)) {
-            super.getTulostus().println("Vinkki poistettu");
+            super.getTulostus().println(Vastaustulosteet.VINKKI_POISTETTU);
         } else {
-            super.getTulostus().println("Vinkkiä ei poistettu");
+            super.getTulostus().println(Vastaustulosteet.VINKKIA_EI_POISTETTU);
         }
     }
 

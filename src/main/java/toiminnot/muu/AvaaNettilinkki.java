@@ -8,6 +8,8 @@ package toiminnot.muu;
 import Vinkkitietokanta.Attribuutit;
 import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
+import apuviritykset.vakiot.Ohjetulosteet;
+import apuviritykset.vakiot.Vastaustulosteet;
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
 import java.awt.Desktop;
@@ -30,7 +32,7 @@ public class AvaaNettilinkki extends Tietokantaoperaatio{
     @Override
     public void suorita() {
         try {
-            super.getTulostus().println("Anna otsikko: ");
+            super.getTulostus().println(Ohjetulosteet.ANNA_OTSIKKO);
             String osoite = super.getLukija().nextLine();
             Vinkki vinkki = super.getTk().haeVinkki(osoite);
             String url = vinkki.haeOminaisuus(Attribuutit.URL);
@@ -42,7 +44,7 @@ public class AvaaNettilinkki extends Tietokantaoperaatio{
                     ex.getMessage();
                 }    
             }else{
-                super.getTulostus().println("Vinkki ei sisällä url:ia");
+                super.getTulostus().println(Vastaustulosteet.EI_SISALLA_URLIA);
             }
             
         } catch (URISyntaxException ex) {

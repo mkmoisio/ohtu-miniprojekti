@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package apuviritykset.vakiot;
 
 /**
@@ -11,23 +6,24 @@ package apuviritykset.vakiot;
  */
 public class Vastaustulosteet {
 
-    public static String KOMENNOT_TULOSTE = "Komennot:"
-            + "\n\t " + Komennot.LISAA_KIRJA + " - kirjavinkin lisääminen"
-            + "\n\t " + Komennot.LISAA_PODCAST + " - podcast-vinkin lisääminen"
-            + "\n\t " + Komennot.LISAA_VIDEO + " - videovinkin lisääminen"
-            + "\n\t " + Komennot.LISAA_BLOGPOST + " - blogpost-vinkin lisääminen"
-            + "\n\t " + Komennot.TULOSTA_KAIKKI + " - tulosta kaikki vinkit"
-            + "\n\t " + Komennot.TULOSTA_LUKEMATTOMAT + " - tulosta kaikki lukemattomat vinkit"
-            + "\n\t " + Komennot.TULOSTA_LUETUT + " - tulosta kaikki luetut vinkit"
-            + "\n\t " + Komennot.AVAA_NETTIVINKKI + " - avaa nettivinkin oletusselaimessa"
-            + "\n\t " + Komennot.TULOSTA_KIRJAT + " - tulosta kaikki kirjavinkit"
-            + "\n\t " + Komennot.TULOSTA_PODCASTIT + "- tulosta kaikki podcastit"
-            + "\n\t " + Komennot.TULOSTA_VIDEOT + " - tulosta kaikki videot"
-            + "\n\t " + Komennot.TULOSTA_BLOGPOSTIT + " - tulosta kaikki blogpostit"
-            + "\n\t " + Komennot.HAE_TAGILLA + "- tulosta annetun tagin omaavat vinkit"
-            + "\n\t" + Komennot.MERKITSE_LUETUKSI + " - merkitse luetuksi"
-            + "\n\t " + Komennot.POISTA_VINKKI + " - poista vinkki"
-            + "\n\t " + Komennot.LOPETA + " - lopeta ohjelma "
-            + "\n";
+    public static String KIRJAVINKKI_LISATTY = "Kirjavinkki lisätty";
+    public static String KIRJAVINKKIA_EI_LISATTY = "Kirjavinkkiä ei lisätty";
 
+    public static String VIDEOVINKKI_LISATTY = "Videovinkki lisätty";
+    public static String VIDEOVINKKIA_EI_LISATTY = "Videovinkkiä ei lisätty";
+
+    public static String BLOGPOSTVINKI_LISATTY = "Blogpost lisätty";
+    public static String BLOGPOSTVINKKIA_EI_LISATTY = "Blogpost-vinkkiä ei lisätty";
+
+    public static String PODCASTVINKKI_LISATTY = "Podcast lisätty";
+    public static String PODCASTVINKKIA_EI_LISATTY = "Podcast-vinkkiä ei lisätty";
+
+    public static String VINKKI_POISTETTU = "Vinkki poistettu";
+    public static String VINKKIA_EI_POISTETTU = "Vinkkiä ei poistettu";
+
+    public static String EI_SISALLA_URLIA = "Vinkki ei sisällä url:ia";
+
+    public static String EI_LOYTYNYT = " ei löytynyt.";
+    public static String MERKITTY_LUETUKSI = " merkitty luetuksi";
+    public static String SAMANNIMINEN_JO_OLEMASSA = "Samanniminen tag on jo olemassa";
 }

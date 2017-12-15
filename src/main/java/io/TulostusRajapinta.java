@@ -1,9 +1,6 @@
 
 package io;
 
-import Vinkkitietokanta.Vinkki;
-import java.util.List;
-
 
 public interface TulostusRajapinta {
     

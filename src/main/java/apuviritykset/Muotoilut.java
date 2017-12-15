@@ -3,6 +3,7 @@ package apuviritykset;
 
 import Vinkkitietokanta.Attribuutit;
 import Vinkkitietokanta.Vinkki;
+import apuviritykset.vakiot.Vastaustulosteet;
 
 public class Muotoilut {
 
@@ -91,4 +92,12 @@ public class Muotoilut {
     public static String muotoileNullFormaatinTuloste(Vinkki vinkki) {
         return vinkki.otsikko() + ", luettu, " + vinkki.luettu();
     }
-}
+    
+    public static String muotoileMerkittyLuetuksiViesti(String otsikko) {
+        return "Vinkki otsikolla " + otsikko + Vastaustulosteet.MERKITTY_LUETUKSI;
+    }
+    
+    public static String muotoileVinkkiaEiLoytynytViesti(String otsikko) {
+        return "Virhe: Vinkkiä " + otsikko + Vastaustulosteet.EI_LOYTYNYT;
+    }
+ }

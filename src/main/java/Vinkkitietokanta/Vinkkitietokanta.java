@@ -4,7 +4,6 @@ import Vinkkitietokanta.DAO.BlogpostDAO;
 import Vinkkitietokanta.DAO.DAORajapinta;
 import Vinkkitietokanta.DAO.KirjatDAO;
 import Vinkkitietokanta.DAO.PodcastDAO;
-import Vinkkitietokanta.DAO.ProtoDAO;
 import Vinkkitietokanta.DAO.TagDAO;
 import Vinkkitietokanta.DAO.VinkkiDAO;
 import Vinkkitietokanta.DAO.TekijatDAO;

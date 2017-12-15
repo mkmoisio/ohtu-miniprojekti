@@ -12,6 +12,8 @@ import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
 import apuviritykset.PodcastValidator;
 import apuviritykset.Validator;
+import apuviritykset.vakiot.Ohjetulosteet;
+import apuviritykset.vakiot.Vastaustulosteet;
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
 import toiminnot.muu.TaginLisays;
@@ -29,13 +31,13 @@ public class PodcastinLisays extends Lisaysoperaatio{
 
     @Override
     public void suorita() {
-        super.getTulostus().println("Anna nimi:");
+        super.getTulostus().println(Ohjetulosteet.ANNA_NIMI);
         String nimi = super.getLukija().nextLine();
 
-        super.getTulostus().println("Anna otsikko:");
+        super.getTulostus().println(Ohjetulosteet.ANNA_OTSIKKO);
         String otsikko = super.getLukija().nextLine();
 
-        super.getTulostus().println("Anna kuvaus:");
+        super.getTulostus().println(Ohjetulosteet.ANNA_KUVAUS);
         String kuvaus = super.getLukija().nextLine();
 
         Validator validator = new PodcastValidator(nimi, otsikko, kuvaus);
@@ -45,9 +47,9 @@ public class PodcastinLisays extends Lisaysoperaatio{
             vinkki.lisaaOminaisuus(Attribuutit.KUVAUS, kuvaus);
              vinkki = super.lisaaTagit(vinkki);
             if (super.getTk().lisaaVinkki(vinkki)) {
-                super.getTulostus().println("Podcast lisätty");
+                super.getTulostus().println(Vastaustulosteet.PODCASTVINKKI_LISATTY);
             } else {
-                super.getTulostus().println("Podcastia ei lisätty");
+                super.getTulostus().println(Vastaustulosteet.PODCASTVINKKIA_EI_LISATTY);
             }
         } else {
             super.tulostaVirhelista(validator.getVirheet());

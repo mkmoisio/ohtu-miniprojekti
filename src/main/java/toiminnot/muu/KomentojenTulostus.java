@@ -5,7 +5,7 @@
  */
 package toiminnot.muu;
 
-import apuviritykset.vakiot.Vastaustulosteet;
+import apuviritykset.vakiot.Ohjetulosteet;
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
 import toiminnot.MuuOperaatio;
@@ -23,7 +23,7 @@ public class KomentojenTulostus extends MuuOperaatio {
 
     @Override
     public void suorita() {
-        super.getTulostus().println(Vastaustulosteet.KOMENNOT_TULOSTE);
+        super.getTulostus().println(Ohjetulosteet.KOMENNOT_TULOSTE);
     }
 
 }

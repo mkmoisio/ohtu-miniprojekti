@@ -1,7 +1,5 @@
-
 package Vinkkitietokanta.DAO;
 
-import Vinkkitietokanta.Vinkki;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

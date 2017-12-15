@@ -11,6 +11,8 @@ import Vinkkitietokanta.Formaatit;
 import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
 import apuviritykset.VideoValidator;
+import apuviritykset.vakiot.Ohjetulosteet;
+import apuviritykset.vakiot.Vastaustulosteet;
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
 import toiminnot.muu.TaginLisays;
@@ -29,9 +31,9 @@ public class VideonLisays extends Lisaysoperaatio{
     public void suorita() {
         
         
-        super.getTulostus().println("Anna url:");
+        super.getTulostus().println(Ohjetulosteet.ANNA_URL);
         String url = super.getLukija().nextLine();
-        super.getTulostus().println("Anna otsikko:");
+        super.getTulostus().println(Ohjetulosteet.ANNA_OTSIKKO);
         String otsikko = super.getLukija().nextLine();
 
         VideoValidator validator = new VideoValidator(url, otsikko);
@@ -41,7 +43,7 @@ public class VideonLisays extends Lisaysoperaatio{
             vinkki.lisaaOminaisuus(Attribuutit.URL, url);
             vinkki = super.lisaaTagit(vinkki);
             if (super.getTk().lisaaVinkki(vinkki)) {
-                super.getTulostus().println("Video lisätty");
+                super.getTulostus().println(Vastaustulosteet.VIDEOVINKKI_LISATTY);
             }
         } else {
            super.tulostaVirhelista(validator.getVirheet());

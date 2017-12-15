@@ -12,6 +12,8 @@ import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
 import apuviritykset.BlogpostValidator;
 import apuviritykset.Validator;
+import apuviritykset.vakiot.Ohjetulosteet;
+import apuviritykset.vakiot.Vastaustulosteet;
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
 import toiminnot.muu.TaginLisays;
@@ -28,11 +30,11 @@ public class BlogpostinLisays extends Lisaysoperaatio {
 
     @Override
     public void suorita() {
-        super.getTulostus().println("Anna url:");
+        super.getTulostus().println(Ohjetulosteet.ANNA_URL);
         String url = super.getLukija().nextLine();
-        super.getTulostus().println("Anna kirjoittaja:");
+        super.getTulostus().println(Ohjetulosteet.ANNA_KIRJOITTAJA);
         String kirjoittajat = super.getLukija().nextLine();
-        super.getTulostus().println("Anna otsikko:");
+        super.getTulostus().println(Ohjetulosteet.ANNA_OTSIKKO);
         String otsikko = super.getLukija().nextLine();
 
         Validator validator = new BlogpostValidator(url, kirjoittajat, otsikko);
@@ -43,7 +45,7 @@ public class BlogpostinLisays extends Lisaysoperaatio {
             vinkki.lisaaTekija(kirjoittajat);
             vinkki = super.lisaaTagit(vinkki);
             if (super.getTk().lisaaVinkki(vinkki)) {
-                super.getTulostus().println("Blogpost lisätty");
+                super.getTulostus().println(Vastaustulosteet.BLOGPOSTVINKI_LISATTY);
             }
         } else {
             super.tulostaVirhelista(validator.getVirheet());

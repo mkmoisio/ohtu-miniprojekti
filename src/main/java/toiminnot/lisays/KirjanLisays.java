@@ -11,6 +11,8 @@ import Vinkkitietokanta.Vinkki;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
 import apuviritykset.KirjaValidator;
 import apuviritykset.Validator;
+import apuviritykset.vakiot.Ohjetulosteet;
+import apuviritykset.vakiot.Vastaustulosteet;
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
 import java.util.List;
@@ -29,9 +31,9 @@ public class KirjanLisays extends Lisaysoperaatio {
 
     @Override
     public void suorita() {
-        super.getTulostus().println("Anna kirjoittaja:");
+        super.getTulostus().println(Ohjetulosteet.ANNA_KIRJOITTAJA);
         String kirjoittaja = super.getLukija().nextLine();
-        super.getTulostus().println("Anna otsikko:");
+        super.getTulostus().println(Ohjetulosteet.ANNA_OTSIKKO);
         String otsikko = super.getLukija().nextLine();
         Validator validator = new KirjaValidator(kirjoittaja, otsikko);
 
@@ -40,9 +42,9 @@ public class KirjanLisays extends Lisaysoperaatio {
             vinkki.lisaaTekija(kirjoittaja);
             vinkki = super.lisaaTagit(vinkki);
             if (super.getTk().lisaaVinkki(vinkki)) {
-                super.getTulostus().println("Kirjavinkki lisätty");
+                super.getTulostus().println(Vastaustulosteet.KIRJAVINKKI_LISATTY);
             } else {
-                super.getTulostus().println("Kirjavinkkiä ei lisätty");
+                super.getTulostus().println(Vastaustulosteet.KIRJAVINKKIA_EI_LISATTY);
             }
         } else {
             super.tulostaVirhelista(validator.getVirheet());

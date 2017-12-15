@@ -7,6 +7,8 @@ package toiminnot.muu;
 
 import Vinkkitietokanta.Vinkki;
 import apuviritykset.Validator;
+import apuviritykset.vakiot.Ohjetulosteet;
+import apuviritykset.vakiot.Vastaustulosteet;
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
 import toiminnot.MuuOperaatio;
@@ -34,8 +36,8 @@ public class TaginLisays extends MuuOperaatio {
        
     @Override
     public void suorita() {
-        super.getTulostus().println("Anna tageja, tyhjä syöte palauttaa aloitusnäyttöön");
-        System.out.println("");
+        super.getTulostus().println(Ohjetulosteet.TAGINLISAYSOHJE);
+        System.out.println();
 
         while (true) {
             String tagSyote = super.getLukija().nextLine();
@@ -44,7 +46,7 @@ public class TaginLisays extends MuuOperaatio {
             }
 
             if (vinkki.onkoTagia(tagSyote)) {
-                System.out.println("Samanniminen tag on jo olemassa");
+                super.getTulostus().println(Vastaustulosteet.SAMANNIMINEN_JO_OLEMASSA);
                 continue;
             }
             if (Validator.taginPituusOk(tagSyote)) {

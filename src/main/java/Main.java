@@ -1,4 +1,3 @@
-
 import Kayttoliittyma.Kayttoliittyma;
 import Vinkkitietokanta.Vinkkitietokanta;
 import java.io.File;

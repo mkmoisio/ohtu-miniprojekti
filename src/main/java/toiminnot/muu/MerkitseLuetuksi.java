@@ -1,11 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package toiminnot.muu;
 
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
+import apuviritykset.Muotoilut;
+import apuviritykset.vakiot.Ohjetulosteet;
 import io.LukijaRajapinta;
 import io.TulostusRajapinta;
 import toiminnot.Tietokantaoperaatio;
@@ -22,13 +19,13 @@ public class MerkitseLuetuksi extends Tietokantaoperaatio {
 
     @Override
     public void suorita() {
-        super.getTulostus().println("Anna sen vinkin otsikko, joka merkitään luetuksi");
+        super.getTulostus().println(Ohjetulosteet.ANNA_NIMI_JOKA_MERKITAAN_LUETUKSI);
         String otsikko = super.getLukija().nextLine();
-        
+
         if (!super.getTk().merkitseLuetuksi(otsikko)) {
-            super.getTulostus().println("Virhe: Vinkkiä " + otsikko + " ei löytynyt");
+            super.getTulostus().println(Muotoilut.muotoileVinkkiaEiLoytynytViesti(otsikko));
         } else {
-            super.getTulostus().println("Vinkki otsikolla " + otsikko + " merkitty luetuksi");
+            super.getTulostus().println(Muotoilut.muotoileMerkittyLuetuksiViesti(otsikko));
 
         }
     }
