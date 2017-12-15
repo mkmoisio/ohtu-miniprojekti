@@ -2,6 +2,7 @@
 package Vinkkitietokanta;
 
 import apuviritykset.Muotoilut;
+import apuviritykset.vakiot.Virhetulosteet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,8 +19,8 @@ public class Vinkki {
     private List<String> tekijat;
     private List<String> tagit;
     private HashMap<Attribuutit, String> attribuutit;
-    protected String virheTeksti = "Ominaisuutta ei liitetty";
-    protected String virheTeksti2 = "hups";
+    protected String virheTeksti = Virhetulosteet.OMINAISUUTTA_EI_LIITETTY_VIRHE;
+
     
 
     
@@ -163,6 +164,6 @@ public class Vinkki {
                     return Muotoilut.muotoileNullFormaatinTuloste(this);
             }
         }
-        return virheTeksti2;
+        return Virhetulosteet.TUNTEMATON_VIRHE;
     }
 }

@@ -9,6 +9,7 @@ import toiminnot.lisays.KirjanLisays;
 import toiminnot.Operaatio;
 import toiminnot.muu.TaginLisays;
 import Vinkkitietokanta.VinkkitietokantaRajapinta;
+import apuviritykset.vakiot.Komennot;
 import io.Lukija;
 import io.LukijaRajapinta;
 import io.Tulostaja;
@@ -65,26 +66,26 @@ public class Kayttoliittyma {
         Operaatio haeTagilla = new TulostaTaginPerusteella(this.lukija, this.tulostus, this.tk);
         Operaatio merkitseLuetuksi = new MerkitseLuetuksi(this.lukija, this.tulostus, this.tk);
         Operaatio muunnaVinkkia = new MuunnaVinkkia(this.lukija, this.tulostus, this.tk);
-        Operaatio lopetus = new Lopetus(this.lukija, this.tulostus);
+        Operaatio lopetus = new Lopetus();
 
-        ops.put("lisää kirja", kirjanLisays);
-        ops.put("lisää podcast", podcastinLisays);
-        ops.put("lisää video", videonlisays);
-        ops.put("lisää blogpost", blogpostinLisays);
-        ops.put("muunna vinkkiä", muunnaVinkkia);
-        ops.put("poista", poisto);
-        ops.put("komennot", komentojenTulostus);
-        ops.put("tulosta kaikki", tulostaKaikki);
-        ops.put("lukemattomat", tulostaLukemattomat);
-        ops.put("luetut", tulostaLuetut);
-        ops.put("tulosta kirjat", tulostaKirjat);
-        ops.put("tulosta videot", tulostaVideot);
-        ops.put("tulosta blogpostit", tulostaBlogpostit);
-        ops.put("tulosta podcastit", tulostaPodcastit);
-        ops.put("avaa nettivinkki", avaaNettilinkki);
-        ops.put("hae tagilla", haeTagilla);
-        ops.put("merkitse luetuksi", merkitseLuetuksi);
-        ops.put("lopeta", lopetus);
+        ops.put(Komennot.LISAA_KIRJA, kirjanLisays);
+        ops.put(Komennot.LISAA_PODCAST, podcastinLisays);
+        ops.put(Komennot.LISAA_VIDEO, videonlisays);
+        ops.put(Komennot.LISAA_BLOGPOST, blogpostinLisays);
+        ops.put(Komennot.MUUNNA_VINKKIA, muunnaVinkkia);
+        ops.put(Komennot.POISTA_VINKKI, poisto);
+        ops.put(Komennot.TULOSTA_KOMENNOT, komentojenTulostus);
+        ops.put(Komennot.TULOSTA_KAIKKI, tulostaKaikki);
+        ops.put(Komennot.TULOSTA_LUKEMATTOMAT, tulostaLukemattomat);
+        ops.put(Komennot.TULOSTA_LUETUT, tulostaLuetut);
+        ops.put(Komennot.TULOSTA_KIRJAT, tulostaKirjat);
+        ops.put(Komennot.TULOSTA_VIDEOT, tulostaVideot);
+        ops.put(Komennot.TULOSTA_BLOGPOSTIT, tulostaBlogpostit);
+        ops.put(Komennot.TULOSTA_PODCASTIT, tulostaPodcastit);
+        ops.put(Komennot.AVAA_NETTIVINKKI, avaaNettilinkki);
+        ops.put(Komennot.HAE_TAGILLA, haeTagilla);
+        ops.put(Komennot.MERKITSE_LUETUKSI, merkitseLuetuksi);
+        ops.put(Komennot.LOPETA, lopetus);
     }
 
     public void setLukija(LukijaRajapinta lukija) {
@@ -100,7 +101,7 @@ public class Kayttoliittyma {
     public void suorita() {
 
         while (true) {
-            ops.get("komennot").suorita();
+            ops.get(Komennot.TULOSTA_KOMENNOT).suorita();
             String komento = this.lukija.nextLine().toLowerCase();
             Operaatio o = this.ops.get(komento);
             if (o != null) {

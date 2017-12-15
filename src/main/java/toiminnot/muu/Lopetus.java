@@ -5,10 +5,7 @@
  */
 package toiminnot.muu;
 
-import apuviritykset.Vakiot;
-import io.LukijaRajapinta;
-import io.TulostusRajapinta;
-import toiminnot.MuuOperaatio;
+import apuviritykset.vakiot.Vakiot;
 import toiminnot.Operaatio;
 
 /**
@@ -17,8 +14,8 @@ import toiminnot.Operaatio;
  */
 public class Lopetus extends Operaatio {
 
-    public Lopetus(LukijaRajapinta lukija, TulostusRajapinta tulostus) {
-        super(lukija, tulostus);
+    public Lopetus() {
+        super();
     }
 
     @Override

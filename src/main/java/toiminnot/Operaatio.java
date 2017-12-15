@@ -13,7 +13,7 @@ import io.TulostusRajapinta;
  * @author mikkomo
  */
 public abstract class Operaatio {
-    
+
     private LukijaRajapinta lukija;
     private TulostusRajapinta tulostus;
 
@@ -21,7 +21,18 @@ public abstract class Operaatio {
         this.lukija = lukija;
         this.tulostus = tulostus;
     }
-   
+
+    public Operaatio(TulostusRajapinta tulostus) {
+        this.tulostus = tulostus;
+    }
+
+    public Operaatio(LukijaRajapinta lukija) {
+        this.lukija = lukija;
+    }
+
+    public Operaatio() {
+
+    }
 
     public void setLukija(LukijaRajapinta lukija) {
         this.lukija = lukija;
@@ -38,8 +49,7 @@ public abstract class Operaatio {
     public TulostusRajapinta getTulostus() {
         return tulostus;
     }
-    
-   
+
     public abstract void suorita();
-    
+
 }

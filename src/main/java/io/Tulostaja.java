@@ -5,9 +5,7 @@
  */
 package io;
 
-import Vinkkitietokanta.Vinkki;
 import java.io.PrintStream;
-import java.util.List;
 
 /**
  *
