@@ -5,6 +5,8 @@
  */
 package apuviritykset;
 
+import apuviritykset.vakiot.Vastaustulosteet;
+
 /**
  *
  * @author mikkomo
@@ -25,22 +27,20 @@ public class VideoValidator extends Validator {
     public boolean validoi() {
 
         if (otsikko.length() > Validator.getVIDEO_OTSIKKO_MAX_PITUUS()) {
-            super.lisaaVirhe("Videovinkkiä ei lisätty, koska annettu otsikko oli pidempi kuin " + Validator.getVIDEO_OTSIKKO_MAX_PITUUS() + " merkkiä.");
+            super.lisaaVirhe(Vastaustulosteet.VIDEOVINKKIA_EI_LISATTY + ", koska annettu otsikko oli pidempi kuin " + Validator.getVIDEO_OTSIKKO_MAX_PITUUS() + " merkkiä.");
         }
 
         if (otsikko.isEmpty()) {
-            super.lisaaVirhe("Videovinkkiä ei lisätty, koska annettu otsikko oli tyhjä.");
+            super.lisaaVirhe(Vastaustulosteet.VIDEOVINKKIA_EI_LISATTY + ", koska annettu otsikko oli tyhjä.");
         }
 
         if (url.isEmpty()) {
-            super.lisaaVirhe("Videovinkkiä ei lisätty, koska annettu url oli tyhjä.");
+            super.lisaaVirhe(Vastaustulosteet.VIDEOVINKKIA_EI_LISATTY + ", koska annettu url oli tyhjä.");
         }
 
-        if (url.length() > Validator.getVIDEO_URL_MAX_PITUUS() ) {
-            super.lisaaVirhe("Videovinkkiä ei lisätty, koska annettu url oli pidempi kuin " + Validator.getVIDEO_URL_MAX_PITUUS() + " merkkiä.");
+        if (url.length() > Validator.getVIDEO_URL_MAX_PITUUS()) {
+            super.lisaaVirhe(Vastaustulosteet.VIDEOVINKKIA_EI_LISATTY + ", koska annettu url oli pidempi kuin " + Validator.getVIDEO_URL_MAX_PITUUS() + " merkkiä.");
         }
-        
-   
 
         return super.getVirheet().isEmpty();
     }

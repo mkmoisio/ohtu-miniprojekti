@@ -5,14 +5,16 @@
  */
 package apuviritykset;
 
+import apuviritykset.vakiot.Vastaustulosteet;
+
 /**
  *
  * @author mikkomo
  */
-public class BlogpostValidator extends Validator{
-    
+public class BlogpostValidator extends Validator {
+
     private String url;
-    private  String kirjoittaja;
+    private String kirjoittaja;
     private String otsikko;
 
     public BlogpostValidator(String url, String kirjoittaja, String otsikko) {
@@ -21,28 +23,27 @@ public class BlogpostValidator extends Validator{
         this.kirjoittaja = kirjoittaja;
         this.otsikko = otsikko;
     }
-        
 
     @Override
     public boolean validoi() {
-        
-         if (kirjoittaja.isEmpty()) {
-            super.lisaaVirhe("Blogpostvinkkiä ei lisätty, koska annettu kirjoittajan nimi oli tyhjä.");
+
+        if (kirjoittaja.isEmpty()) {
+            super.lisaaVirhe(Vastaustulosteet.BLOGPOSTVINKKIA_EI_LISATTY + ", koska annettu kirjoittajan nimi oli tyhjä.");
 
         }
         if (otsikko.isEmpty()) {
-            super.lisaaVirhe("Blogpostvinkkiä ei lisätty, koska annettu otsikko oli tyhjä.");
+            super.lisaaVirhe(Vastaustulosteet.BLOGPOSTVINKKIA_EI_LISATTY + ", koska annettu otsikko oli tyhjä.");
         }
 
         if (otsikko.length() > Validator.getBLOGPOST_OTSIKKO_MAX_PITUUS()) {
-            super.lisaaVirhe("Blogpostvinkkiä ei lisätty, koska annettu otsikko oli pidempi kuin " + Validator.getBLOGPOST_OTSIKKO_MAX_PITUUS() + " merkkiä.");
+            super.lisaaVirhe(Vastaustulosteet.BLOGPOSTVINKKIA_EI_LISATTY + ", koska annettu otsikko oli pidempi kuin " + Validator.getBLOGPOST_OTSIKKO_MAX_PITUUS() + " merkkiä.");
         }
 
         if (url.length() > Validator.getBLOGPOST_URL_MAX_PITUUS()) {
-            super.lisaaVirhe("Blogpostvinkkiä ei lisätty, koska annettu kirjoittaja oli pidempi kuin " + Validator.getBLOGPOST_URL_MAX_PITUUS() + " merkkiä.");
+            super.lisaaVirhe(Vastaustulosteet.BLOGPOSTVINKKIA_EI_LISATTY + ", koska annettu kirjoittaja oli pidempi kuin " + Validator.getBLOGPOST_URL_MAX_PITUUS() + " merkkiä.");
 
         }
         return super.getVirheet().isEmpty();
     }
-    
+
 }
